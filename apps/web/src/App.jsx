@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Index from "@/pages/index";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Login from "@/pages/login";
 
 function RootRouter() {
   return (
@@ -9,6 +10,7 @@ function RootRouter() {
       <Routes>
         <Route path="/">
           <Route index element={<Index />} />
+          <Route path="login" element={<Login />} />
         </Route>
       </Routes>
     </BrowserRouter>
