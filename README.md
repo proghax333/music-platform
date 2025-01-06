@@ -4,4 +4,4 @@
   <img width="400px" src="./assets/logo-transparent.png" alt="Guitars-n-all Logo" />
 </div>
 
-A platform primarily dedicated to all things guitar.
+A platform dedicated to all things guitar.
