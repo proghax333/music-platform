@@ -16,12 +16,13 @@ function LogoutSettings() {
                 <button>
                   <MdOutlineArrowBack className="w-8 h-8 mt-1" />
                 </button>
-                <h1 className="text-4xl font-extrabold">Logout Settings</h1>
+                <h1 className="text-4xl font-extrabold">Logging out</h1>
               </div>
-              <div className="mx-8 mt-4 ml-auto w-full max-w-20 space-y-1">
-                <button className="w-full rounded-lg bg-slate-900 text-gray-50 p-2 font-semibold">
-                  Save
-                </button>
+
+              <div className="w-full h-full overflow-y-auto">
+                <div className="w-full flex items-center justify-center mt-12">
+                  <div className="loading w-12"></div>
+                </div>
               </div>
             </div>
           </div>

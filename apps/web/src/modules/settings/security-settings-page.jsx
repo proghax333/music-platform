@@ -18,10 +18,63 @@ function SecuritySettings() {
                 </button>
                 <h1 className="text-4xl font-extrabold">Security Settings</h1>
               </div>
-              <div className="mx-8 mt-4 ml-auto w-full max-w-20 space-y-1">
-                <button className="w-full rounded-lg bg-slate-900 text-gray-50 p-2 font-semibold">
-                  Save
-                </button>
+
+              <div className="w-full h-full overflow-y-auto">
+                <h2 className="font-extrabold mx-8 mt-4 text-xl">
+                  Change your password
+                </h2>
+                <div>
+                  <div className="mx-8 mt-4 space-y-1">
+                    <label
+                      htmlFor="oldPassword"
+                      className="font-semibold text-gray-700"
+                    >
+                      Old password
+                    </label>
+                    <input
+                      type="password"
+                      name="oldPassword"
+                      id="oldPassword"
+                      className="border-2 rounded-lg p-2 w-full"
+                    />
+                  </div>
+
+                  <div className="mx-8 mt-4 space-y-1">
+                    <label
+                      htmlFor="newPassword"
+                      className="font-semibold text-gray-700"
+                    >
+                      New password
+                    </label>
+                    <input
+                      type="password"
+                      name="newPassword"
+                      id="newPassword"
+                      className="border-2 rounded-lg p-2 w-full"
+                    />
+                  </div>
+
+                  <div className="mx-8 mt-4 space-y-1">
+                    <label
+                      htmlFor="confirmNewPassword"
+                      className="font-semibold text-gray-700"
+                    >
+                      Confirm new password
+                    </label>
+                    <input
+                      type="password"
+                      name="confirmNewPassword"
+                      id="confirmNewPassword"
+                      className="border-2 rounded-lg p-2 w-full"
+                    />
+                  </div>
+
+                  <div className="mx-8 mt-4 ml-auto w-full max-w-20 space-y-1">
+                    <button className="w-full rounded-lg bg-slate-900 text-gray-50 p-2 font-semibold">
+                      Save
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

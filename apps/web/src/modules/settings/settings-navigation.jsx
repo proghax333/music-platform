@@ -13,7 +13,7 @@ function SettingsNavigation() {
   ];
 
   return (
-    <div className="h-full w-full max-w-64 hidden md:block md:border-r">
+    <div className="h-full w-full max-w-64 hidden md:block md:border-r overflow-y-auto">
       <div>
         <NavLink to={"/"}>
           <span className="block p-2">

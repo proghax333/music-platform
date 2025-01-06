@@ -18,10 +18,13 @@ function PrivacySettings() {
                 </button>
                 <h1 className="text-4xl font-extrabold">Privacy Settings</h1>
               </div>
-              <div className="mx-8 mt-4 ml-auto w-full max-w-20 space-y-1">
-                <button className="w-full rounded-lg bg-slate-900 text-gray-50 p-2 font-semibold">
-                  Save
-                </button>
+
+              <div className="w-full h-full overflow-y-auto">
+                <div className="mx-8 mt-4 ml-auto w-full max-w-20 space-y-1">
+                  <button className="w-full rounded-lg bg-slate-900 text-gray-50 p-2 font-semibold">
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
           </div>
