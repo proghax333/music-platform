@@ -1,8 +1,9 @@
+import { cls } from "@/utils/cls";
 import React from "react";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { NavLink } from "react-router";
 
-function SettingsNavigation() {
+function SettingsNavigation({ className, alwaysExpanded }) {
   const menuItems = [
     { label: "Account", link: "/settings/account" },
     { label: "Addresses", link: "/settings/addresses" },
@@ -13,7 +14,13 @@ function SettingsNavigation() {
   ];
 
   return (
-    <div className="h-full w-full max-w-64 hidden md:block md:border-r overflow-y-auto">
+    <div
+      className={cls(
+        "h-full w-full md:block md:border-r overflow-y-auto",
+        !alwaysExpanded && "max-w-64 hidden",
+        className
+      )}
+    >
       <div>
         <NavLink to={"/"}>
           <span className="block p-2">

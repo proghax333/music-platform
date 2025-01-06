@@ -10,6 +10,7 @@ import ActivitySettings from "@/pages/settings/activity";
 import PrivacySettings from "@/pages/settings/privacy";
 import SecuritySettings from "@/pages/settings/security";
 import LogoutSettings from "@/pages/settings/logout";
+import Settings from "@/pages/settings";
 
 function RootRouter() {
   return (
@@ -19,12 +20,15 @@ function RootRouter() {
           <Route index element={<Index />} />
           <Route path="login" element={<Login />} />
 
-          <Route path="settings/account" element={<AccountSettings />} />
-          <Route path="settings/addresses" element={<AddressesSettings />} />
-          <Route path="settings/activity" element={<ActivitySettings />} />
-          <Route path="settings/privacy" element={<PrivacySettings />} />
-          <Route path="settings/security" element={<SecuritySettings />} />
-          <Route path="settings/logout" element={<LogoutSettings />} />
+          <Route path="settings">
+            <Route index element={<Settings />} />
+            <Route path="account" element={<AccountSettings />} />
+            <Route path="addresses" element={<AddressesSettings />} />
+            <Route path="activity" element={<ActivitySettings />} />
+            <Route path="privacy" element={<PrivacySettings />} />
+            <Route path="security" element={<SecuritySettings />} />
+            <Route path="logout" element={<LogoutSettings />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
