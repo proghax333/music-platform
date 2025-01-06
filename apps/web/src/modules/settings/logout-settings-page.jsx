@@ -1,5 +1,6 @@
 import { MdOutlineArrowBack } from "react-icons/md";
 import SettingsNavigation from "./settings-navigation";
+import { NavLink } from "react-router";
 
 function LogoutSettings() {
   return (
@@ -13,9 +14,11 @@ function LogoutSettings() {
           <div className="w-full h-full">
             <div className="flex-1 flex flex-col w-full h-full">
               <div className="flex gap-6 items-center mt-8 mb-4 mx-8">
-                <button>
-                  <MdOutlineArrowBack className="w-8 h-8 mt-1" />
-                </button>
+                <NavLink to={"/settings"}>
+                  <button>
+                    <MdOutlineArrowBack className="w-8 h-8 mt-1" />
+                  </button>
+                </NavLink>
                 <h1 className="text-4xl font-extrabold">Logging out</h1>
               </div>
 

@@ -1,6 +1,7 @@
 import { MdOutlineArrowBack } from "react-icons/md";
 import SettingsNavigation from "./settings-navigation";
 import Toggle from "@/ui/Toggle";
+import { NavLink } from "react-router";
 
 function ActivitySettings() {
   return (
@@ -14,9 +15,11 @@ function ActivitySettings() {
           <div className="w-full h-full">
             <div className="flex-1 flex flex-col w-full h-full">
               <div className="flex gap-6 items-center mt-8 mb-4 mx-8">
-                <button>
-                  <MdOutlineArrowBack className="w-8 h-8 mt-1" />
-                </button>
+                <NavLink to={"/settings"}>
+                  <button>
+                    <MdOutlineArrowBack className="w-8 h-8 mt-1" />
+                  </button>
+                </NavLink>
                 <h1 className="text-4xl font-extrabold">Activity Settings</h1>
               </div>
 
