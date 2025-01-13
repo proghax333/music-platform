@@ -5,9 +5,19 @@
 @tailwind utilities;
 
 html,
-body,
+body {
+  @apply w-full h-full;
+}
+
 #root {
-  @apply w-full min-h-svh;
+  @apply flex flex-col;
+  @apply w-full;
+
+  min-height: calc(var(--vh, 1vh) * 100);
+
+  @supports (height: 100svh) {
+    min-height: 100svh;
+  }
 }
 
 body {
