@@ -4,6 +4,14 @@ export default {
   content: ["./index.html", "./src/**/*.{jsx,js,tsx,ts,html,css}"],
   theme: {
     extend: {
+      fontFamily: {
+        inter: ["Inter", "Arial", "Helvetica", "sans-serif"],
+        montserrat: ["Montserrat", "Arial", "Helvetica", "sans-serif"],
+        oswald: ["Oswald", "Arial", "Helvetica", "sans-serif"],
+        poppins: ["Poppins", "Arial", "Helvetica", "sans-serif"],
+        roboto: ["Roboto", "Arial", "Helvetica", "sans-serif"],
+        lato: ["Lato", "Arial", "Helvetica", "sans-serif"],
+      },
       colors: {
         primary: {
           50: "var(--color-primary-50)",
