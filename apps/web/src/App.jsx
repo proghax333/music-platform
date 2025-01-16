@@ -12,6 +12,8 @@ import SecuritySettings from "@/pages/settings/security";
 import LogoutSettings from "@/pages/settings/logout";
 import Settings from "@/pages/settings";
 
+import LessonsPage from "@/pages/lessons";
+
 function RootRouter() {
   return (
     <BrowserRouter>
@@ -28,6 +30,10 @@ function RootRouter() {
             <Route path="privacy" element={<PrivacySettings />} />
             <Route path="security" element={<SecuritySettings />} />
             <Route path="logout" element={<LogoutSettings />} />
+          </Route>
+
+          <Route path="lessons">
+            <Route index element={<LessonsPage />} />
           </Route>
         </Route>
       </Routes>
