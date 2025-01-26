@@ -13,6 +13,9 @@ import LogoutSettings from "@/pages/settings/logout";
 import Settings from "@/pages/settings";
 
 import LessonsPage from "@/pages/lessons";
+import Shop from "@/pages/shop/shop";
+import ShopDescription from "@/pages/shop/shop-description";
+import Nav from "@/pages/Nav";
 
 function RootRouter() {
   return (
@@ -31,6 +34,13 @@ function RootRouter() {
             <Route path="security" element={<SecuritySettings />} />
             <Route path="logout" element={<LogoutSettings />} />
           </Route>
+
+          <Route path="shop">
+            <Route index element={<Shop />} />
+            <Route path=":id" element={<ShopDescription />} />
+          </Route>
+
+          <Route path="nav" element={<Nav />} />
 
           <Route path="lessons">
             <Route index element={<LessonsPage />} />
