@@ -11,7 +11,7 @@ body {
 
 #root {
   @apply flex flex-col;
-  @apply w-full;
+  @apply w-full h-full;
 
   min-height: calc(var(--vh, 1vh) * 100);
 
