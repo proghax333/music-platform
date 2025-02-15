@@ -11,12 +11,11 @@ import PrivacySettings from "@/pages/settings/privacy";
 import SecuritySettings from "@/pages/settings/security";
 import LogoutSettings from "@/pages/settings/logout";
 import Settings from "@/pages/settings";
-
 import LessonsPage from "@/pages/lessons";
 import Shop from "@/pages/shop/shop";
 import ShopDescription from "@/pages/shop/shop-description";
-import Nav from "@/pages/Nav";
-
+import Nav from "@/components/Nav";
+import Cart from "./pages/cart/Cart";
 function RootRouter() {
   return (
     <BrowserRouter>
@@ -41,7 +40,7 @@ function RootRouter() {
           </Route>
 
           <Route path="nav" element={<Nav />} />
-
+          <Route path="cart" element={<Cart />} />
           <Route path="lessons">
             <Route index element={<LessonsPage />} />
           </Route>
