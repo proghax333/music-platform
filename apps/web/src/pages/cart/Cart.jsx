@@ -71,10 +71,9 @@ function Cart() {
   // Function to calculate shipping based on subtotal
   const getShipping = () => {
     const subtotal = getSubtotal();
-    return subtotal < 10000 ? 200 : 0; // ₹200 shipping if subtotal is less than ₹10,000
+    return subtotal < 10000 ? 200 : 0;
   };
 
-  // Function to calculate the total (subtotal + shipping)
   const getTotal = () => {
     return getSubtotal() + getShipping();
   };
@@ -84,7 +83,9 @@ function Cart() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Cart Items Section */}
         <div className="flex-1 bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-3xl text-center font-semibold mb-6">Your Cart</h2>
+          <h2 className="text-3xl text-center font-semibold mb-6 border-b-4 pb-4">
+            Your Cart
+          </h2>
           {remove.map((carts) => (
             <div
               key={carts.id}
@@ -93,8 +94,8 @@ function Cart() {
               <div className="flex-shrink-0">
                 <img
                   src={carts.img}
-                  width={220} // Increased width
-                  height={170} // Increased height
+                  width={220}
+                  height={170}
                   alt={carts.name}
                   className="rounded-lg border-2 border-gray-300"
                 />
@@ -151,7 +152,6 @@ function Cart() {
           ))}
         </div>
 
-        {/* Cart Summary Section (Order Summary) */}
         <div className="flex-[0.35] bg-gray-100 p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-6">Order Summary</h2>
           <div className="space-y-4">

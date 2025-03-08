@@ -16,6 +16,10 @@ import Shop from "@/pages/shop/shop";
 import ShopDescription from "@/pages/shop/shop-description";
 import Nav from "@/components/Nav";
 import Cart from "./pages/cart/Cart";
+import ProfilePage from "./pages/Profile/ProfilePage";
+import Payment from "./pages/Payment_Page/Payment";
+import Task from "./pages/Task/Task";
+import TaskDes from "./pages/Task/Taskdes";
 function RootRouter() {
   return (
     <BrowserRouter>
@@ -33,11 +37,17 @@ function RootRouter() {
             <Route path="security" element={<SecuritySettings />} />
             <Route path="logout" element={<LogoutSettings />} />
           </Route>
+          <Route path="Profile" element={<ProfilePage />}></Route>
 
+          <Route path="task">
+            <Route index element={<Task />} />
+            <Route path=":id" element={<TaskDes />} />
+          </Route>
           <Route path="shop">
             <Route index element={<Shop />} />
             <Route path=":id" element={<ShopDescription />} />
           </Route>
+          <Route path="payment" element={<Payment />} />
 
           <Route path="nav" element={<Nav />} />
           <Route path="cart" element={<Cart />} />

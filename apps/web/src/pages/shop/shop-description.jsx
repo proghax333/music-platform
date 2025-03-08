@@ -174,7 +174,7 @@ function ShopDescription() {
 
           <div className="mt-6 text-base">{description.desc}</div>
           <div className="mt-6 text-2xl">Features :</div>
-          <div className="text-lg min-h-72">
+          <div className="text-lg min-h-60">
             <ul className="list-disc list-inside">
               <li>Back & Sides Wood: Linden.</li>
               <li>Body Shape: Cutaway.</li>
@@ -185,20 +185,30 @@ function ShopDescription() {
               <li>Top Wood: Spruce.</li>
             </ul>
           </div>
-          <div className="border-2 min-h-[50px]">
-            <div className="bg-red-100 text-center text-2xl">Color</div>
-
-            <div className="flex border-2 text-center  ">
-              <button className="flex-1">Red</button>
-              <div className="flex-1">Blue</div>
-              <div className="flex-1">Red</div>
-              <div className="flex-1">Blue</div>
+          <div className="border-2 border-black min-h-[30px] p-1">
+            <div className="bg-red-100 text-center text-2xl p-1">Color</div>
+            {/* First row with clickable color circles and vertical borders */}
+            <div className="grid grid-cols-4 text-center p-2 border-b-2 border-black">
+              <button className="flex flex-col items-center border-r-2 border-black">
+                <div className="w-10 h-10 bg-red-500 rounded-full border-2"></div>
+              </button>
+              <button className="flex flex-col items-center border-r-2 border-black">
+                <div className="w-10 h-10 bg-blue-500 rounded-full border-2"></div>
+              </button>
+              <button className="flex flex-col items-center border-r-2 border-black">
+                <div className="w-10 h-10 bg-red-500 rounded-full border-2"></div>
+              </button>
+              <button className="flex flex-col items-center">
+                <div className="w-10 h-10 bg-blue-500 rounded-full border-2"></div>
+              </button>
             </div>
-            <div className="flex border-r-2 text-center">
-              <div className="flex-1">Red</div>
-              <div className="flex-1">Blue</div>
-              <div className="flex-1">Red</div>
-              <div className="flex-1">Blue</div>
+
+            {/* Second row with text labels and vertical borders */}
+            <div className="grid grid-cols-4 text-center p-2">
+              <div className="text-lg border-r-2 border-black">Red</div>
+              <div className="text-lg border-r-2 border-black">Blue</div>
+              <div className="text-lg border-r-2 border-black">Red</div>
+              <div className="text-lg">Blue</div>
             </div>
           </div>
 
