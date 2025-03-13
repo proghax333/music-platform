@@ -47,7 +47,7 @@ function RootRouter() {
             <Route path="security" element={<SecuritySettings />} />
             <Route path="logout" element={<LogoutSettings />} />
           </Route>
-          <Route path="Profile" element={<ProfilePage />}></Route>
+          <Route path="profile" element={<ProfilePage />}></Route>
 
           <Route path="task">
             <Route index element={<Task />} />

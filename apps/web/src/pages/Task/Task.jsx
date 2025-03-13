@@ -1,3 +1,4 @@
+import MainNav from "@/components/main-nav";
 import { useState } from "react";
 import { Link, NavLink } from "react-router";
 
@@ -200,85 +201,90 @@ function Task() {
   });
 
   return (
-    <div className="p-6 min-h-screen w-full border rounded shadow bg-white text-black flex flex-col items-start">
-      <h1 className="text-3xl font-bold mb-6 ">Guitar Practice Tasks</h1>
+    <>
+      <MainNav />
+      <div className="p-6 min-h-screen w-full border rounded shadow bg-white text-black flex flex-col items-start">
+        <h1 className="text-3xl font-bold mb-6 ">Guitar Practice Tasks</h1>
 
-      {/* Filters */}
-      <div className="flex items-center justify-between w-full border-b border-gray-300 pb-3">
-        {/* Genres Filter */}
-        <div className="flex gap-3">
-          {genres.map((genre) => (
-            <button
-              key={genre}
-              onClick={() => setSelectedGenre(genre)}
-              className={`px-4 py-2 rounded ${
-                selectedGenre === genre
-                  ? "bg-black text-white"
-                  : "bg-gray-500 text-white hover:bg-gray-700"
-              }`}
-            >
-              {genre}
-            </button>
-          ))}
-        </div>
-
-        {/* Difficulty Dropdown */}
-        <div>
-          <label className="text-sm font-medium mr-2">Difficulty:</label>
-          <select
-            className="p-2 border rounded"
-            onChange={(e) => setSelectedDifficulty(e.target.value)}
-            value={selectedDifficulty}
-          >
-            {difficulties.map((difficulty) => (
-              <option key={difficulty} value={difficulty}>
-                {difficulty}
-              </option>
+        {/* Filters */}
+        <div className="flex items-center justify-between w-full border-b border-gray-300 pb-3">
+          {/* Genres Filter */}
+          <div className="flex gap-3">
+            {genres.map((genre) => (
+              <button
+                key={genre}
+                onClick={() => setSelectedGenre(genre)}
+                className={`px-4 py-2 rounded ${
+                  selectedGenre === genre
+                    ? "bg-black text-white"
+                    : "bg-gray-500 text-white hover:bg-gray-700"
+                }`}
+              >
+                {genre}
+              </button>
             ))}
-          </select>
-        </div>
-      </div>
+          </div>
 
-      {/* Tasks Table */}
-      <div className="w-full overflow-x-auto border border-gray-300 mt-4">
-        <table className="w-full text-left border-collapse">
-          <thead className="sticky top-0 bg-gray-200">
-            <tr>
-              <th className="p-4 border border-gray-300">Title</th>
-              <th className="p-4 border border-gray-300">Movie</th>
-              <th className="p-4 border border-gray-300">Status</th>
-              <th className="p-4 border border-gray-300">Acceptance</th>
-              <th className="p-4 border border-gray-300">Difficulty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTasks.length > 0 ? (
-              filteredTasks.map((task) => (
-                <tr key={task.id} className="hover:bg-gray-100">
-                  <td className="p-4 border border-gray-300">
-                    <NavLink to={`/task/${task.id}`}>{task.title}</NavLink>
-                  </td>
-                  <td className="p-4 border border-gray-300">{task.Movie}</td>
-                  <td className="p-4 border border-gray-300">{task.status}</td>
-                  <td className="p-4 border border-gray-300">
-                    {task.Acceptance}
-                  </td>
-                  <td className="p-4 border border-gray-300">
-                    {task.difficulty}
+          {/* Difficulty Dropdown */}
+          <div>
+            <label className="text-sm font-medium mr-2">Difficulty:</label>
+            <select
+              className="p-2 border rounded"
+              onChange={(e) => setSelectedDifficulty(e.target.value)}
+              value={selectedDifficulty}
+            >
+              {difficulties.map((difficulty) => (
+                <option key={difficulty} value={difficulty}>
+                  {difficulty}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Tasks Table */}
+        <div className="w-full overflow-x-auto border border-gray-300 mt-4">
+          <table className="w-full text-left border-collapse">
+            <thead className="sticky top-0 bg-gray-200">
+              <tr>
+                <th className="p-4 border border-gray-300">Title</th>
+                <th className="p-4 border border-gray-300">Movie</th>
+                <th className="p-4 border border-gray-300">Status</th>
+                <th className="p-4 border border-gray-300">Acceptance</th>
+                <th className="p-4 border border-gray-300">Difficulty</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTasks.length > 0 ? (
+                filteredTasks.map((task) => (
+                  <tr key={task.id} className="hover:bg-gray-100">
+                    <td className="p-4 border border-gray-300">
+                      <NavLink to={`/task/${task.id}`}>{task.title}</NavLink>
+                    </td>
+                    <td className="p-4 border border-gray-300">{task.Movie}</td>
+                    <td className="p-4 border border-gray-300">
+                      {task.status}
+                    </td>
+                    <td className="p-4 border border-gray-300">
+                      {task.Acceptance}
+                    </td>
+                    <td className="p-4 border border-gray-300">
+                      {task.difficulty}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="p-4 text-center text-gray-500">
+                    No matching tasks found
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="p-4 text-center text-gray-500">
-                  No matching tasks found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

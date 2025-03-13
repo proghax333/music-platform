@@ -1,3 +1,4 @@
+import MainNav from "@/components/main-nav";
 import React, { useState } from "react";
 import { use } from "react";
 import { useParams } from "react-router";
@@ -109,11 +110,12 @@ function ShopDescription() {
 
   const temp = description.sideImg[selectImg]?.img;
 
-  // Limit visible images to 4 at a time
+  // Limit visible images to 4 at a timeTask
   const visibleImages = description.sideImg.slice(startIdx, startIdx + 4);
 
   return (
     <>
+      <MainNav />
       <div className="flex flex-row mt-8 min-h-[100%] border-b-2 ml-6">
         <div className="w-[50%] border-r-2 flex justify-center items-center">
           {/* Image Slider Container */}

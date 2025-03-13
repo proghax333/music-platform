@@ -1,3 +1,4 @@
+import MainNav from "@/components/main-nav";
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router";
 
@@ -125,28 +126,31 @@ function Shop() {
   );
 
   return (
-    <div className="w-full">
-      <div className="flex justify-center my-4 ">
-        <input
-          type="text"
-          placeholder="Search for a guitar..."
-          className="border px-4 py-2 rounded-md shadow-sm w-full md:w-[30%] lg:w-[40%]"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      <div className="flex justify-center w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-8 max-w-[90%]">
-          {filteredProducts.map((product) => (
-            <div className="w-full">
-              {" "}
-              {/* Ensures cards don't overflow */}
-              <ProductCard key={product.id} product={product} />
-            </div>
-          ))}
+    <>
+      <MainNav />
+      <div className="w-full">
+        <div className="flex justify-center my-4 ">
+          <input
+            type="text"
+            placeholder="Search for a guitar..."
+            className="border px-4 py-2 rounded-md shadow-sm w-full md:w-[30%] lg:w-[40%]"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <div className="flex justify-center w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-8 max-w-[90%]">
+            {filteredProducts.map((product) => (
+              <div className="w-full">
+                {" "}
+                {/* Ensures cards don't overflow */}
+                <ProductCard key={product.id} product={product} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

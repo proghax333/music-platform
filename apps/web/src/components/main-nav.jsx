@@ -46,7 +46,7 @@ function MainNav({ className }) {
     },
     {
       name: "Practice",
-      path: "/practice",
+      path: "/Task",
     },
     {
       name: "Events",
