@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator kysely {
+  provider = "prisma-kysely"
+
+  output    = "../src/modules/kysely"
+  fileName  = "types.ts"
+  camelCase = true
+
+  enumFileName = "enums.ts"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URI")
+}
+
+model Test {
+  id Int @id @default(autoincrement())
+}
+
+model Account {
+  id              Int               @id @default(autoincrement())
+  profiles        Profile[]
+  AccountSettings AccountSettings[]
+}
+
+model Role {
+  id       Int       @id @default(autoincrement())
+  profiles Profile[]
+}
+
+model Profile {
+  id Int @id @default(autoincrement())
+
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  name                String
+  description         String
+  profilePicture      String
+  profileSettings     ProfileSettings[]
+  productSellPostings ProductSellPosting[]
+}
+
+model AccountSettings {
+  id Int @id @default(autoincrement())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+}
+
+model ProfileSettings {
+  id Int @id @default(autoincrement())
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId Int
+}
+
+model ProductVariantResource {
+  id Int @id @default(autoincrement())
+
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId Int
+}
+
+model Variant {
+  id Int @id @default(autoincrement())
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+
+  name                String
+  description         String
+  type                String
+  resources           ProductVariantResource[]
+  productSellPostings ProductSellPosting[]
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+
+  code        String
+  name        String
+  description String
+  variants    Variant[]
+}
+
+model ProductSellPosting {
+  id Int @id @default(autoincrement())
+
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId Int
+
+  seller   Profile @relation(fields: [sellerId], references: [id])
+  sellerId Int
+
+  sellingPrice           String
+  baseDiscountPercentage String
+}

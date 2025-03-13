@@ -1,6 +1,3 @@
-function Index() {
-  return <div>Hello, world!</div>;
-  
-}
+import HomePage from "@/modules/home/home-page";
 
-export default Index;
+export default HomePage;
