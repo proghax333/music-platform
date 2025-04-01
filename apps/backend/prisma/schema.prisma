@@ -1,96 +1,83 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
-generator kysely {
-  provider = "prisma-kysely"
-
-  output    = "../src/modules/kysely"
-  fileName  = "types.ts"
-  camelCase = true
-
-  enumFileName = "enums.ts"
-}
-
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URI")
 }
 
 model Test {
-  id Int @id @default(autoincrement())
+  dbId String @id @default(auto()) @map("_id") @db.ObjectId
+  id   String @unique @default(uuid())
 }
 
 model Account {
-  id              Int               @id @default(autoincrement())
+  dbId            String            @id @default(auto()) @map("_id") @db.ObjectId
+  id              String            @unique @default(uuid())
   profiles        Profile[]
-  AccountSettings AccountSettings[]
+  accountSettings AccountSettings[]
 }
 
 model Role {
-  id       Int       @id @default(autoincrement())
+  dbId     String    @id @default(auto()) @map("_id") @db.ObjectId
+  id       String    @unique @default(uuid())
   profiles Profile[]
 }
 
 model Profile {
-  id Int @id @default(autoincrement())
+  dbId String @id @default(auto()) @map("_id") @db.ObjectId
+  id   String @unique @default(uuid())
 
-  role   Role @relation(fields: [roleId], references: [id])
-  roleId Int
-
-  account   Account @relation(fields: [accountId], references: [id])
-  accountId Int
+  roleId    String
+  accountId String
 
   name                String
   description         String
   profilePicture      String
   profileSettings     ProfileSettings[]
   productSellPostings ProductSellPosting[]
+
+  role    Role    @relation(fields: [roleId], references: [id])
+  account Account @relation(fields: [accountId], references: [id])
 }
 
 model AccountSettings {
-  id Int @id @default(autoincrement())
-
-  account   Account @relation(fields: [accountId], references: [id])
-  accountId Int
+  dbId    String  @id @default(auto()) @map("_id") @db.ObjectId
+  id      String  @unique @default(uuid())
+  account Account @relation(fields: [id], references: [id])
 }
 
 model ProfileSettings {
-  id Int @id @default(autoincrement())
-
-  profile   Profile @relation(fields: [profileId], references: [id])
-  profileId Int
+  dbId    String  @id @default(auto()) @map("_id") @db.ObjectId
+  id      String  @unique @default(uuid())
+  profile Profile @relation(fields: [id], references: [id])
 }
 
 model ProductVariantResource {
-  id Int @id @default(autoincrement())
-
-  variant   Variant @relation(fields: [variantId], references: [id])
-  variantId Int
+  dbId    String  @id @default(auto()) @map("_id") @db.ObjectId
+  id      String  @unique @default(uuid())
+  variant Variant @relation(fields: [id], references: [id])
 }
 
 model Variant {
-  id Int @id @default(autoincrement())
+  dbId      String @id @default(auto()) @map("_id") @db.ObjectId
+  id        String @unique @default(uuid())
+  productId String
 
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int
+  name        String
+  description String
+  type        String
 
-  name                String
-  description         String
-  type                String
   resources           ProductVariantResource[]
   productSellPostings ProductSellPosting[]
+
+  product Product @relation(fields: [productId], references: [id])
 }
 
 model Product {
-  id Int @id @default(autoincrement())
-
+  dbId        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @unique @default(uuid())
   code        String
   name        String
   description String
@@ -98,14 +85,13 @@ model Product {
 }
 
 model ProductSellPosting {
-  id Int @id @default(autoincrement())
-
-  variant   Variant @relation(fields: [variantId], references: [id])
-  variantId Int
-
-  seller   Profile @relation(fields: [sellerId], references: [id])
-  sellerId Int
-
+  dbId                   String @id @default(auto()) @map("_id") @db.ObjectId
+  id                     String @unique @default(uuid())
+  variantId              String
+  sellerId               String
   sellingPrice           String
   baseDiscountPercentage String
+
+  variant Variant @relation(fields: [variantId], references: [id])
+  seller  Profile @relation(fields: [sellerId], references: [id])
 }

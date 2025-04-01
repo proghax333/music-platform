@@ -1,24 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { DB } from "@/modules/kysely/types";
-import { Kysely } from "kysely";
-import { InjectKysely } from "../kysely/decorators/kysely.decorator";
+import { PrismaService } from "../prisma/services/prisma.service";
 
 @Injectable()
 export class AppService {
-  constructor(@InjectKysely() private db: Kysely<DB>) {}
+  constructor(private prisma: PrismaService) {}
 
   async getHello(): Promise<string> {
-    console.log(this.db);
+    const items = await this.prisma.account.findMany({
+      where: {},
+    });
 
-    const result = await this.db
-      .insertInto("Test")
-      .values({})
-      .executeTakeFirstOrThrow();
+    if (items.length > 0) {
+      return `${items[0].id}`;
+    }
 
-    const temp = await this.db.selectFrom("Test").select("id").execute();
-
-    console.log(temp);
-
-    return String(result.insertId);
+    return "No name!";
   }
 }
