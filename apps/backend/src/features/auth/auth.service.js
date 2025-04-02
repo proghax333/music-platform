@@ -27,7 +27,12 @@ export class AuthService {
       name,
     });
 
-    const userObject = user.toObject();
+    user.profiles.push(profile._id);
+    await user.save();
+
+    const newUser = await this.User.findById(user._id).populate("profiles");
+
+    const userObject = newUser.toObject();
     delete userObject.passwordHash;
 
     return userObject;
