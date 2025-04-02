@@ -2,6 +2,7 @@ import MainNav from "@/components/main-nav";
 import Input from "@/ui/Input";
 import React from "react";
 import { MdArrowLeft, MdArrowRight } from "react-icons/md";
+import { NavLink } from "react-router";
 
 function EventsPage() {
   return (
@@ -10,7 +11,6 @@ function EventsPage() {
 
       <main className="flex-1 flex flex-col w-full h-full overflow-y-hidden items-center">
         <div className="flex-1 flex w-full max-w-6xl h-full border-l">
-          {/* left filtering section */}
           <div className="w-72 lg:max-w-72 flex flex-col border-r pt-4">
             <div className="w-full flex gap-4 justify-start px-4 items-center">
               <button className="w-10 h-10 flex items-center justify-center border rounded-lg">
@@ -30,7 +30,6 @@ function EventsPage() {
             <div className="p-4"></div>
           </div>
 
-          {/* right events list */}
           <div className="flex-1 flex overflow-y-auto">
             <div className="w-full h-full flex flex-col overflow-y-auto p-4 gap-4">
               <EventCard />
@@ -57,6 +56,7 @@ function EventCard() {
           <span className="font-extrabold text-primary-800 text-3xl">Z</span>
         </div>
       </div>
+
       <div className="text-base-content-50 w-full border-l border-r pb-2">
         <div className="flex w-full justify-between">
           <div className="ml-28">

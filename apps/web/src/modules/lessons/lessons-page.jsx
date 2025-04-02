@@ -62,7 +62,7 @@ function LessonsPage() {
 
   return (
     <>
-      <MainNav className={"m-2 lg:m-4"} />
+      <MainNav className={""} />
 
       <main className="flex flex-col place-items-center">
         <div

@@ -10,6 +10,8 @@ import { AnimatePresence } from "motion/react";
 import { NavLink } from "react-router";
 import SiteLogo from "./site-logo";
 
+import { FaShoppingCart } from "react-icons/fa";
+
 function MainNav({ className }) {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const isMediumDevice = useMediaQuery(
@@ -52,10 +54,6 @@ function MainNav({ className }) {
       name: "Events",
       path: "/events",
     },
-    {
-      name: "About",
-      path: "/about",
-    },
   ];
 
   const smallMenuItems = [
@@ -71,7 +69,7 @@ function MainNav({ className }) {
   return (
     <nav
       className={cls(
-        "flex flex-col border-b lg:border lg:rounded-md lg:mt-4 lg:mx-4",
+        "flex flex-col border-b lg:border lg:rounded-md lg:mt-2 lg:mx-4",
         className
       )}
     >
@@ -126,7 +124,14 @@ function MainNav({ className }) {
                   );
                 })}
 
-                <div className="ml-auto flex items-center justify-center">
+                <div className="ml-auto flex items-center justify-center gap-4">
+                  <NavLink
+                    to={"/cart"}
+                    className="w-12 h-12 rounded-full border flex items-center"
+                  >
+                    <FaShoppingCart className="ml-3" size={20} />
+                  </NavLink>
+
                   <button className="w-12 h-12 bg-accent-400 border border-accent-300 text-lg text-accent-content-400 rounded-full flex items-center justify-center">
                     A
                   </button>

@@ -28,6 +28,24 @@ function ShopDescription() {
           img: "https://themeisle.com/blog/wp-content/uploads/2024/06/Online-Image-Optimizer-Test-Image-PNG-Version.png",
         },
       ],
+      Variant: [
+        {
+          id: "1",
+          img: "https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+        {
+          id: "2",
+          img: " https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+        {
+          id: "3",
+          img: " https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+        {
+          id: "4",
+          img: " https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+      ],
     },
     {
       id: "2",
@@ -48,6 +66,24 @@ function ShopDescription() {
         {
           id: "6",
           img: "https://themeisle.com/blog/wp-content/uploads/2024/06/Online-Image-Optimizer-Test-Image-PNG-Version.png",
+        },
+      ],
+      Variant: [
+        {
+          id: "1",
+          img: "https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+        {
+          id: "2",
+          img: " https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+        {
+          id: "3",
+          img: " https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+        {
+          id: "4",
+          img: " https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
         },
       ],
     },
@@ -82,6 +118,24 @@ function ShopDescription() {
           name: "blue",
           image:
             "https://sterlingmusic.in/cdn/shop/files/DSC03531-E.jpg?v=1727238565",
+        },
+      ],
+      Variant: [
+        {
+          id: "1",
+          img: "https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+        {
+          id: "2",
+          img: " https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+        {
+          id: "3",
+          img: " https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
+        },
+        {
+          id: "4",
+          img: " https://yamaha.ndcdn.in/media/catalog/product/cache/9e0f31af0cdc06df956748b13dabad87/f/s/fsc_ta_rr_3.jpg",
         },
       ],
     },
@@ -187,9 +241,9 @@ function ShopDescription() {
               <li>Top Wood: Spruce.</li>
             </ul>
           </div>
+
           <div className="border-2 border-black min-h-[30px] p-1">
             <div className="bg-red-100 text-center text-2xl p-1">Color</div>
-            {/* First row with clickable color circles and vertical borders */}
             <div className="grid grid-cols-4 text-center p-2 border-b-2 border-black">
               <button className="flex flex-col items-center border-r-2 border-black">
                 <div className="w-10 h-10 bg-red-500 rounded-full border-2"></div>
@@ -205,7 +259,6 @@ function ShopDescription() {
               </button>
             </div>
 
-            {/* Second row with text labels and vertical borders */}
             <div className="grid grid-cols-4 text-center p-2">
               <div className="text-lg border-r-2 border-black">Red</div>
               <div className="text-lg border-r-2 border-black">Blue</div>

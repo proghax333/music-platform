@@ -166,6 +166,7 @@ function ProductCard({ product }) {
             </NavLink>
           ))}
         </div>
+
         <p className="text-xl font-[400] mr-4 text-end mb-5">
           <span className="text-base font-bold align-text-top">₹</span>
           {product.price}

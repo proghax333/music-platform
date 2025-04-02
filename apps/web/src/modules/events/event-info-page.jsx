@@ -90,7 +90,6 @@ function EventInfoPage() {
             </div>
           </div>
 
-          {/* Related Events */}
           <div className="mt-6">
             <h3 className="text-xl font-semibold mx-4">You may also like</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">

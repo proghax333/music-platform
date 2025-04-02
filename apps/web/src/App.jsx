@@ -29,6 +29,8 @@ import EventInfoPage from "@/pages/events/event-info";
 
 import DashboardLayout from "@/modules/dashboard/dashboard-layout";
 import ProductsView from "./modules/dashboard/products/products-view";
+import AudioRecorder from "./pages/Record/AudioRecorder";
+import Checkout from "./pages/Cart/Checkout";
 
 function RootRouter() {
   return (
@@ -48,6 +50,7 @@ function RootRouter() {
             <Route path="logout" element={<LogoutSettings />} />
           </Route>
           <Route path="profile" element={<ProfilePage />}></Route>
+          <Route path="eventsinfo" element={<EventInfoPage />}></Route>
 
           <Route path="task">
             <Route index element={<Task />} />
@@ -57,8 +60,9 @@ function RootRouter() {
             <Route index element={<Shop />} />
             <Route path=":id" element={<ShopDescription />} />
           </Route>
-          <Route path="payment" element={<Payment />} />
+          <Route path="checkout" element={<Checkout />} />
 
+          <Route path="payment" element={<Payment />} />
           <Route path="nav" element={<Nav />} />
           <Route path="cart" element={<Cart />} />
           <Route path="lessons">
@@ -71,6 +75,7 @@ function RootRouter() {
             <Route path=":id" element={<EventInfoPage />} />
           </Route>
 
+          <Route path="rec" element={<AudioRecorder />} />
           <Route path="about">
             <Route index element={<AboutPage />} />
           </Route>
