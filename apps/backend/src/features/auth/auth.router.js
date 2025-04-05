@@ -8,6 +8,10 @@ export class AuthRouter {
     this.authController = authController;
   }
 
+  static get deps() {
+    return ["authController"];
+  }
+
   build() {
     const router = express.Router();
 

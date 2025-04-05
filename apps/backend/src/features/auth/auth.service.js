@@ -3,14 +3,21 @@ import bcrypt from "bcrypt";
 export const SALT_ROUNDS = 10;
 
 export class AuthService {
+  /** @type {import("mongoose").Connection} */
+  db;
   /** @type {import("mongoose").Model} */
   Profile;
   /** @type {import("mongoose").Model} */
   User;
 
-  constructor(Profile, User) {
+  constructor(db, Profile, User) {
+    this.db = db;
     this.Profile = Profile;
     this.User = User;
+  }
+
+  static get deps() {
+    return ["db", "Profile", "User"];
   }
 
   async signup({ username, email, password, name }) {

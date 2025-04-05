@@ -9,6 +9,10 @@ export class AuthController {
     this.authService = authService;
   }
 
+  static get deps() {
+    return ["authService"];
+  }
+
   "/login" = [
     controller((req, res, next) => {
       const { username, password } = req.body;
