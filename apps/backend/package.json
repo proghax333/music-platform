@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon -w src -e js,ts,json --exec \"node src/index.js\"",
+    "dev": "nodemon -w src -w graphql -e js,ts,json,graphql --exec \"node src/index.js\"",
     "start": "node src/index.js"
   },
   "keywords": [],
@@ -12,14 +12,18 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@apollo/sandbox": "^2.7.1",
+    "@apollo/server": "^4.11.3",
     "bcrypt": "^5.1.1",
     "bottlejs": "^2.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "graphql": "^16.10.0",
     "http-errors": "^2.0.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "mongoose": "^8.13.1",
     "morgan": "^1.10.0",
     "zod": "^3.24.2"

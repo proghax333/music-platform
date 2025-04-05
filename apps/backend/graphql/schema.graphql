@@ -1,0 +1,75 @@
+type AuthProvider {
+  providerId: String!
+  provider: String!
+  email: String!
+  accessToken: String
+}
+
+type Profile {
+  _id: ObjectId!
+  user: User
+  name: String!
+  avatar: String
+  bio: String
+  settings: Object
+}
+
+type User {
+  _id: ObjectId!
+  username: String!
+  email: String!
+  providers: [AuthProvider!]!
+  profiles: [Profile!]!
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+type Query {
+  hello: String!
+
+  profile(id: ObjectId!): Profile
+}
+
+input LoginMutationInput {
+  username: String!
+  password: String!
+}
+
+type LoginMutationResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  user: User
+  accessToken: String
+  refreshToken: String
+}
+
+input SignupMutationInput {
+  name: String!
+  username: String!
+  email: String!
+  password: String!
+}
+
+type SignupMutationResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  user: User
+}
+
+type Mutation {
+  login(input: LoginMutationInput!): LoginMutationResponse!
+  signup(input: SignupMutationInput!): SignupMutationResponse!
+  logout: Boolean!
+  refreshToken: String
+}
+
+scalar Date
+scalar Object
+scalar JSON
+scalar ObjectId

@@ -1,5 +1,4 @@
-import { AuthController } from "./auth.controller.js";
-import { AuthRouter } from "./auth.router.js";
+import { AuthResolver } from "./auth.resolver.js";
 import { AuthService } from "./auth.service.js";
 
 export class AuthModule {
@@ -9,8 +8,7 @@ export class AuthModule {
    */
   static async registerAuthModule(di) {
     di.service("authService", AuthService, ...AuthService.deps);
-    di.service("authController", AuthController, ...AuthController.deps);
-    di.service("authRouter", AuthRouter, ...AuthRouter.deps);
+    di.service("authResolver", AuthResolver, ...AuthResolver.deps);
 
     return di;
   }

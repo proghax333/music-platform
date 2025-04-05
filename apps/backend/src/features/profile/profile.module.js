@@ -1,4 +1,6 @@
 import { createProfileModel } from "./profile.model.js";
+import { ProfileService } from "./profile.service.js";
+import { ProfileResolver } from "./profile.resolver.js";
 
 export class ProfileModule {
   /**
@@ -7,6 +9,8 @@ export class ProfileModule {
    */
   static async registerProfileModule(di) {
     di.factory("Profile", createProfileModel);
+    di.service("profileService", ProfileService, "Profile");
+    di.service("profileResolver", ProfileResolver, "profileService");
 
     return di;
   }

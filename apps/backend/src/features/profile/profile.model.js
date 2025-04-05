@@ -6,7 +6,7 @@ export const createProfileModel = ({ db }) => {
    */
   const ProfileSchema = new Schema(
     {
-      userId: { type: Types.ObjectId, ref: "User", required: true }, // Reference to the User
+      user: { type: Types.ObjectId, ref: "User", required: true }, // Reference to the User
       name: { type: String, required: true, trim: true }, // Profile name
       avatar: { type: String }, // Profile picture URL
       bio: { type: String, trim: true }, // Short bio or description

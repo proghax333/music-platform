@@ -7,6 +7,9 @@ import { ProfileModule } from "./features/profile/profile.module.js";
 import { DBModule } from "./features/db/db.module.js";
 import { EnvModule } from "./features/env/env.module.js";
 import { authMiddleware } from "./features/auth/auth.middleware.js";
+import { GraphQLModule } from "./features/graphql/graphql.module.js";
+
+import { ObjectId } from "./lib/types.js";
 
 async function main() {
   const di = createDIContainer();
@@ -28,17 +31,66 @@ async function main() {
   // Register the authMiddleware to be accessable throughout the app.
   di.service("authMiddleware", authMiddleware, "userService", "authService");
 
+  await GraphQLModule.registerGraphQLModule(di);
   await DBModule.registerDBModule(di);
+
   await UserModule.registerUserModule(di);
   await ProfileModule.registerProfileModule(di);
   await AuthModule.registerAuthModule(di);
 
-  const authRouter = di.container.authRouter.build();
+  /** @type {GraphQLModule} */
+  const graphqlModule = di.container.graphqlModule;
 
-  const v1Router = express.Router().use("/auth", authRouter);
+  const typeDefs = await graphqlModule.readTypeDefs("./graphql/schema.graphql");
+  const resolvers = {
+    Date: graphqlModule.getDateCustomType(),
+    Object: graphqlModule.getObjectCustomType(),
+    JSON: graphqlModule.getJSONCustomType(),
+    ObjectId: graphqlModule.getObjectIdCustomType(),
+  };
 
-  // Register the v1 router.
-  app.use("/api/v1", v1Router);
+  graphqlModule.setOptions({
+    introspection: true,
+  });
+  graphqlModule.setTypedefs(typeDefs);
+  graphqlModule.setResolvers(resolvers);
+
+  /** @type {import("./features/auth/auth.resolver.js").AuthResolver} */
+  const authResolver = di.container.authResolver;
+  /** @type {import("./features/profile/profile.resolver.js").ProfileResolver} */
+  const profileResolver = di.container.profileResolver;
+
+  graphqlModule.addResolvers(authResolver.getResolvers());
+  graphqlModule.addResolvers(profileResolver.getResolvers());
+
+  const graphqlApolloSandboxMiddleware =
+    await graphqlModule.createApolloSandboxMiddleware();
+
+  const graphqlExpressMiddleware = await graphqlModule.createExpressMiddleware({
+    context: (req, res) => {
+      const authMiddleware = di.container.authMiddleware;
+      const userService = di.container.userService;
+      const authService = di.container.authService;
+
+      return {
+        req,
+        res,
+        authMiddleware,
+        userService,
+        authService,
+      };
+    },
+  });
+
+  app.get("/graphql", graphqlApolloSandboxMiddleware);
+  app.use("/graphql", graphqlExpressMiddleware);
+
+  // const authRouter = di.container.authRouter.build();
+
+  // const v1Router = express.Router().use("/auth", authRouter);
+
+  // // Register the v1 router.
+  // app.use("/api/v1", v1Router);
 
   const PORT = process.env.PORT || 3500;
 
