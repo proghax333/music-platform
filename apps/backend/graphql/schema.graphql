@@ -33,6 +33,42 @@ type Greeting {
   message: GreetingMessage!
 }
 
+type Image {
+  id: String!
+  url: String!
+}
+
+type Product {
+  _id: ObjectId!
+  name: String!
+  description: String!
+  images: [Image]!
+  sku: String
+  features: [Object]!
+  price: String!
+
+  variants: [ProductVariant!]
+  productPostings: [ProductPosting!]
+}
+
+type ProductVariant {
+  _id: ObjectId
+  product: Product
+  name: String
+  description: String
+  type: String
+  images: [Image]
+  sku: String
+  features: [Object]
+  price: String
+}
+
+type ProductPosting {
+  variant: ProductVariant
+  seller: Profile
+  price: String!
+}
+
 type Query {
   hello: String!
 
@@ -74,11 +110,49 @@ type SignupMutationResponse {
   user: User
 }
 
+input ImageInput {
+  id: String!
+  url: String!
+}
+
+input CreateProductVariantInput {
+  name: String
+  description: String
+  type: String
+  images: [ImageInput]
+  sku: String
+  features: [Object]
+  price: String
+}
+
+input CreateProductInput {
+  name: String!
+  description: String!
+  images: [ImageInput]!
+  sku: String
+  features: [Object]!
+  price: String!
+
+  variants: [CreateProductVariantInput!]
+}
+
+type CreateProductResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  product: Product
+}
+
 type Mutation {
   login(input: LoginMutationInput!): LoginMutationResponse!
   signup(input: SignupMutationInput!): SignupMutationResponse!
   logout: Boolean!
   refreshToken: String
+
+  # Product mutations
+  createProduct(input: CreateProductInput!): CreateProductResponse!
 }
 
 scalar Date

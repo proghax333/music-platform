@@ -8,6 +8,8 @@ import { DBModule } from "./features/db/db.module.js";
 import { EnvModule } from "./features/env/env.module.js";
 import { authMiddleware } from "./features/auth/auth.middleware.js";
 import { GraphQLModule } from "./features/graphql/graphql.module.js";
+import { ProductModule } from "./features/product/product.module.js";
+
 
 import { ObjectId } from "./lib/types.js";
 
@@ -37,6 +39,7 @@ async function main() {
   await UserModule.registerUserModule(di);
   await ProfileModule.registerProfileModule(di);
   await AuthModule.registerAuthModule(di);
+  await ProductModule.registerProductModule(di);
 
   /** @type {GraphQLModule} */
   const graphqlModule = di.container.graphqlModule;
@@ -65,9 +68,12 @@ async function main() {
   const profileResolver = di.container.profileResolver;
   /** @type {import("./features/user/user.resolver.js").UserResolver} */
   const userResolver = di.container.userResolver;
+  /** @type {import("./features/product/product.resolver.js").ProductResolver} */
+  const productResolver = di.container.productResolver;
 
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
+  graphqlModule.addResolvers(productResolver.getResolvers());
   // graphqlModule.addResolvers();
 
   const graphqlApolloSandboxMiddleware =
