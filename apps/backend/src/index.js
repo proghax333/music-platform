@@ -47,6 +47,10 @@ async function main() {
     Object: graphqlModule.getObjectCustomType(),
     JSON: graphqlModule.getJSONCustomType(),
     ObjectId: graphqlModule.getObjectIdCustomType(),
+
+    Query: {
+      hello: () => "Hello world!",
+    },
   };
 
   graphqlModule.setOptions({
@@ -59,9 +63,12 @@ async function main() {
   const authResolver = di.container.authResolver;
   /** @type {import("./features/profile/profile.resolver.js").ProfileResolver} */
   const profileResolver = di.container.profileResolver;
+  /** @type {import("./features/user/user.resolver.js").UserResolver} */
+  const userResolver = di.container.userResolver;
 
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
+  // graphqlModule.addResolvers();
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();

@@ -24,8 +24,20 @@ type User {
   updatedAt: Date!
 }
 
+type GreetingMessage {
+  id: Int!
+  text: String!
+}
+
+type Greeting {
+  message: GreetingMessage!
+}
+
 type Query {
   hello: String!
+
+  message: GreetingMessage!
+  greeting(name: String!): Greeting!
 
   profile(id: ObjectId!): Profile
 }

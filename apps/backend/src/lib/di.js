@@ -1,5 +1,43 @@
 import Bottle from "bottlejs";
 
+Bottle.prototype.lazyService = function (
+  name,
+  service,
+  options = {
+    deps: [],
+    lazyDeps: [],
+  }
+) {
+  if (!options.deps) {
+    options.deps = [];
+  }
+
+  if (!options.lazyDeps) {
+    options.lazyDeps = [];
+  }
+
+  this.service(name, service, ...options.deps);
+
+  let initialized = false;
+  this.middleware(name, (service, next) => {
+    if (initialized) {
+      return next();
+    }
+    initialized = true;
+
+    options.lazyDeps.forEach((dep) => {
+      const value = this.container[dep];
+      if (value) {
+        service[dep] = value;
+      } else {
+        throw new Error(`Dependency "${dep}" not found in container.`);
+      }
+    });
+
+    return next();
+  });
+};
+
 export function createDIContainer(name) {
   const di = new Bottle(name);
   return di;

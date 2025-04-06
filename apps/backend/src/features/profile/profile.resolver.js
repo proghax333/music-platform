@@ -5,12 +5,17 @@ export class ProfileResolver {
   /** @type {ProfileService} */
   profileService;
 
-  constructor(profileService) {
+  constructor(profileService, userService) {
     this.profileService = profileService;
+    this.userService = userService;
   }
 
   static get deps() {
-    return ["profileService"];
+    return ["profileService", "userService"];
+  }
+
+  static get lazyDeps() {
+    return ["userResolver"];
   }
 
   profile = resolver(async (parent, args, context) => {
@@ -31,6 +36,10 @@ export class ProfileResolver {
     return {
       Query: {
         profile: this.profile,
+      },
+
+      Profile: {
+        user: this.userResolver._User,
       },
     };
   };

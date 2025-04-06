@@ -10,7 +10,10 @@ export class ProfileModule {
   static async registerProfileModule(di) {
     di.factory("Profile", createProfileModel);
     di.service("profileService", ProfileService, "Profile");
-    di.service("profileResolver", ProfileResolver, "profileService");
+    di.lazyService("profileResolver", ProfileResolver, {
+      deps: ProfileResolver.deps,
+      lazyDeps: ProfileResolver.lazyDeps,
+    });
 
     return di;
   }

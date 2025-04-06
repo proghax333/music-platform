@@ -1,4 +1,6 @@
 import { createUserModel } from "./user.model.js";
+import { UserResolver } from "./user.resolver.js";
+import { UserService } from "./user.service.js";
 
 export class UserModule {
   /**
@@ -7,6 +9,11 @@ export class UserModule {
    */
   static async registerUserModule(di) {
     di.factory("User", createUserModel);
+    di.service("userService", UserService, ...UserService.deps);
+    di.lazyService("userResolver", UserResolver, {
+      deps: UserResolver.deps,
+      lazyDeps: UserResolver.lazyDeps,
+    });
 
     return di;
   }
