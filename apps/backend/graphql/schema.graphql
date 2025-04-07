@@ -125,12 +125,6 @@ input CreateProductVariantInput {
   price: String
 }
 
-input CreateProductPostingInput {
-  variant: ObjectId!
-  seller: ObjectId!
-  price: String!
-}
-
 input CreateProductInput {
   name: String!
   description: String!
@@ -151,13 +145,19 @@ type CreateProductResponse {
   product: Product
 }
 
+input CreateProductPostingInput {
+  variant: ObjectId!
+  seller: ObjectId!
+  price: String!
+}
+
 type CreateProductPostingResponse {
   code: Int!
   success: Boolean!
   message: String!
   errors: [String!]
 
-  ProductPosting: ProductPosting
+  productPosting: ProductPosting
 }
 
 type Mutation {
