@@ -56,7 +56,7 @@ export class ProductResolver{
 
         console.log(product);
 
-        const productObject = await product.toObject();
+        const productObject = await product.tedoObject();
 
 
         return {
@@ -73,14 +73,43 @@ export class ProductResolver{
         return variants.map(x => x.toObject());
     }
 
+    createProductPosting = resolver(async (parent, args, context , info)=>{
+        const{
+            variant,
+            seller,
+            price
+        } = args.input;
+
+        const productPosting = await this.ProductPosting.create({
+            variant,
+            seller,
+            price
+        });
+
+        const productPostingObject = await productPosting.tedoObject();
+
+        return{
+            message: "Product has been posted",
+            productPosting: productPostingObject
+        }
+    })
+
+
     getResolvers = () => {
         return {
             Mutation: {
-                createProduct: this.createProduct
+                createProduct: this.createProduct,
+                createProductPosting: this.createProductPosting
+
             },
             Product: {
                 variants: this._ProductVariant
             }
         };
     }
+
+
+
 }
+
+

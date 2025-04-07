@@ -48,7 +48,7 @@ type Product {
   price: String!
 
   variants: [ProductVariant!]
-  productPostings: [ProductPosting!]
+  ProductPostings: [ProductPosting!]
 }
 
 type ProductVariant {
@@ -125,6 +125,12 @@ input CreateProductVariantInput {
   price: String
 }
 
+input CreateProductPostingInput {
+  variant: ObjectId!
+  seller: ObjectId!
+  price: String!
+}
+
 input CreateProductInput {
   name: String!
   description: String!
@@ -145,6 +151,15 @@ type CreateProductResponse {
   product: Product
 }
 
+type CreateProductPostingResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+  errors: [String!]
+
+  ProductPosting: ProductPosting
+}
+
 type Mutation {
   login(input: LoginMutationInput!): LoginMutationResponse!
   signup(input: SignupMutationInput!): SignupMutationResponse!
@@ -153,6 +168,9 @@ type Mutation {
 
   # Product mutations
   createProduct(input: CreateProductInput!): CreateProductResponse!
+  createProductPosting(
+    input: CreateProductPostingInput!
+  ): CreateProductPostingResponse!
 }
 
 scalar Date
