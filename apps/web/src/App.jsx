@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+
+import { queryClient } from "@/lib/react-query";
 
 import Login from "@/pages/login";
 
@@ -31,6 +33,8 @@ import DashboardLayout from "@/modules/dashboard/dashboard-layout";
 import ProductsView from "./modules/dashboard/products/products-view";
 import AudioRecorder from "./pages/Record/AudioRecorder";
 import Checkout from "./pages/Cart/Checkout";
+import { SessionProvider } from "./modules/session/SessionProvider";
+import { WaitForSessionLoading } from "./modules/session/WaitForSessionLoading";
 
 function RootRouter() {
   return (
@@ -98,13 +102,14 @@ function RootRouter() {
   );
 }
 
-// Client for react-query
-const queryClient = new QueryClient();
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RootRouter />
+      <SessionProvider>
+        <WaitForSessionLoading>
+          <RootRouter />
+        </WaitForSessionLoading>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }

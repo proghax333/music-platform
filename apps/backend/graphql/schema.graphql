@@ -81,6 +81,7 @@ type Query {
   greeting(name: String!): Greeting!
 
   profile(id: ObjectId!): Profile
+  me: User
 }
 
 input LoginMutationInput {

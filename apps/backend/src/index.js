@@ -10,7 +10,6 @@ import { authMiddleware } from "./features/auth/auth.middleware.js";
 import { GraphQLModule } from "./features/graphql/graphql.module.js";
 import { ProductModule } from "./features/product/product.module.js";
 
-
 import { ObjectId } from "./lib/types.js";
 
 async function main() {
@@ -73,6 +72,7 @@ async function main() {
 
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
+  graphqlModule.addResolvers(userResolver.getResolvers());
   graphqlModule.addResolvers(productResolver.getResolvers());
   // graphqlModule.addResolvers();
 
@@ -80,10 +80,16 @@ async function main() {
     await graphqlModule.createApolloSandboxMiddleware();
 
   const graphqlExpressMiddleware = await graphqlModule.createExpressMiddleware({
-    context: (req, res) => {
+    context: async ({ req, res }) => {
       const authMiddleware = di.container.authMiddleware;
       const userService = di.container.userService;
       const authService = di.container.authService;
+
+      let user = null;
+      const token = req.headers["authorization"]?.split(" ")?.[1];
+      if (token) {
+        user = await authService.getUserFromToken(token);
+      }
 
       return {
         req,
@@ -91,6 +97,7 @@ async function main() {
         authMiddleware,
         userService,
         authService,
+        user,
       };
     },
   });

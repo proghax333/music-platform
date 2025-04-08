@@ -76,23 +76,27 @@ export class AuthService {
       throw createHttpError(401, "Invalid credentials.");
     }
 
-    const accessToken = this.generateAccessToken(user._id);
-    const refreshToken = this.generateRefreshToken(user._id);
+    const accessToken = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
 
     return { user, accessToken, refreshToken };
   }
 
   generateAccessToken(user) {
-    const token = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
+    const token = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "15m",
     });
     return token;
   }
 
   generateRefreshToken(user) {
-    const token = jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { _id: user._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
     return token;
   }
 
@@ -108,7 +112,7 @@ export class AuthService {
   async getUserFromToken(token) {
     try {
       const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      return decoded.user;
+      return decoded;
     } catch (error) {
       throw createHttpError(401, "Invalid token.");
     }

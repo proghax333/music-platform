@@ -1,4 +1,12 @@
+import { useLoginMutation } from "@/lib/api/auth";
+import { GRAPHQL_ENDPOINT } from "@/lib/graphql";
+import { api } from "@/lib/http";
+import { useSession } from "@/modules/session/useSession";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 function Login() {
   const slides = [
@@ -33,6 +41,22 @@ function Login() {
     setcurrentIndex(newIndex);
   };
 
+  const { register, handleSubmit } = useForm();
+  const { login } = useSession();
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    try {
+      await login(data);
+
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
+  };
+
   return (
     <>
       <div className=" flex flex-col  items-center justify-center h-screen  bg-gray-900">
@@ -42,13 +66,14 @@ function Login() {
               <h1 className="pb-8 text-center text-3xl font-bold">
                 Login Page
               </h1>
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <label className="block mb-2">
                   <span className="text-gray-700">Username</span>
                   <input
                     type="text"
                     placeholder="Enter your username"
                     className="mt-1 block w-full border border-gray-300 rounded-3xl p-2 "
+                    {...register("username", { required: true })}
                   />
                 </label>
 
@@ -58,6 +83,7 @@ function Login() {
                     type="password"
                     placeholder="Password"
                     className="mt-1 block w-full border border-gray-300 rounded-3xl p-2 "
+                    {...register("password", { required: true })}
                   />
                 </label>
                 <div className="w-full flex justify-center">

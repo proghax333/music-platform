@@ -10,7 +10,9 @@ export class UserService {
     return ["User"];
   }
 
-  getUserById(id) {
-    return this.User.findById(id).exec();
+  async getUserById(id) {
+    const user = await this.User.findById(id);
+    console.log("Found user: ", user);
+    return user.toObject();
   }
 }
