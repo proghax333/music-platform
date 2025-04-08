@@ -48,11 +48,11 @@ type Product {
   price: String!
 
   variants: [ProductVariant!]
-  ProductPostings: [ProductPosting!]
+  productPostings: [ProductPosting!]
 }
 
 type ProductVariant {
-  _id: ObjectId
+  _id: ObjectId!
   product: Product
   name: String
   description: String
@@ -64,10 +64,15 @@ type ProductVariant {
 }
 
 type ProductPosting {
+  _id: ObjectId!
   variant: ProductVariant
   seller: Profile
   price: String!
 }
+
+###
+# Queries: All GraphQL queries.
+###
 
 type Query {
   hello: String!
@@ -115,7 +120,7 @@ input ImageInput {
   url: String!
 }
 
-input CreateProductVariantInput {
+input CreateProductInput_variants {
   name: String
   description: String
   type: String
@@ -133,7 +138,7 @@ input CreateProductInput {
   features: [Object]!
   price: String!
 
-  variants: [CreateProductVariantInput!]
+  variants: [CreateProductInput_variants!]
 }
 
 type CreateProductResponse {
@@ -143,6 +148,54 @@ type CreateProductResponse {
   errors: [String!]
 
   product: Product
+}
+
+input UpdateProductVariantInput {
+  _id: ObjectId
+  name: String
+  description: String
+  type: String
+  images: [ImageInput]
+  sku: String
+  features: [Object]
+  price: String
+}
+
+input UpdateProductInput {
+  name: String
+  description: String
+  images: [ImageInput]
+  sku: String
+  features: [Object]
+  price: String
+
+  variants: [UpdateProductVariantInput!]
+}
+
+type UpdateProductResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  product: Product
+}
+
+type DeleteProductResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
+input UpdateProductVariantInput {
+  name: String
+  description: String
+  type: String
+  images: [ImageInput]
+  sku: String
+  features: [Object]
+  price: String
 }
 
 input CreateProductPostingInput {
@@ -160,6 +213,74 @@ type CreateProductPostingResponse {
   productPosting: ProductPosting
 }
 
+input CreateProductVariantInput {
+  product: ObjectId!
+  name: String
+  description: String
+  type: String
+  images: [ImageInput]
+  sku: String
+  features: [Object]
+  price: String
+}
+
+type CreateProductVariantResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  productVariant: ProductVariant
+}
+
+input UpdateProductVariantInput {
+  name: String
+  description: String
+  type: String
+  images: [ImageInput]
+  sku: String
+  features: [Object]
+  price: String
+}
+
+type UpdateProductVariantResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  productVariant: ProductVariant
+}
+
+type DeleteProductVariantResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
+input UpdateProductPostingInput {
+  variant: ObjectId!
+  seller: ObjectId!
+  price: String!
+}
+
+type UpdateProductPostingResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  productPosting: ProductPosting
+}
+
+type DeleteProductPostingResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
 type Mutation {
   login(input: LoginMutationInput!): LoginMutationResponse!
   signup(input: SignupMutationInput!): SignupMutationResponse!
@@ -168,9 +289,39 @@ type Mutation {
 
   # Product mutations
   createProduct(input: CreateProductInput!): CreateProductResponse!
+  updateProduct(input: UpdateProductInput!): UpdateProductResponse!
+  deleteProduct(id: ObjectId!): DeleteProductResponse!
+
+  # Product variant mutations
+  createProductVariant(
+    input: CreateProductVariantInput!
+  ): CreateProductVariantResponse!
+  updateProductVariant(
+    id: ObjectId!
+    input: UpdateProductVariantInput!
+  ): UpdateProductVariantResponse!
+  deleteProductVariant(id: ObjectId!): DeleteProductVariantResponse!
+
+  # Product posting mutations
   createProductPosting(
     input: CreateProductPostingInput!
   ): CreateProductPostingResponse!
+  updateProductPosting(
+    id: ObjectId!
+    input: UpdateProductPostingInput!
+  ): UpdateProductPostingResponse!
+  deleteProductPosting(id: ObjectId!): DeleteProductPostingResponse!
+}
+
+"""
+The specification includes the pagination metadata
+in a common type.
+"""
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 scalar Date

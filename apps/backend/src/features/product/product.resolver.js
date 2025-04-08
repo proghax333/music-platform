@@ -55,8 +55,6 @@ export class ProductResolver {
       });
     }
 
-    console.log(product);
-
     const productObject = await product.toObject();
 
     return {
@@ -65,13 +63,104 @@ export class ProductResolver {
     };
   });
 
-  Product_variants = async (parent, args, context) => {
-    const variants = await this.ProductVariant.find({
-      product: parent._id,
+  updateProduct = resolver(async (parent, args, context, info) => {
+    const { id } = args.input;
+    const { variants, ...newData } = args.input;
+
+    const updatedProduct = await this.Product.findByIdAndUpdate(id, newData, {
+      new: true,
     });
 
-    return variants.map((x) => x.toObject());
-  };
+    for (const variant of variants) {
+      const result = await this.ProductVariant.findByIdAndUpdate(
+        variant._id,
+        variant,
+        {
+          new: true,
+        }
+      );
+      if (!result) {
+        throw createHttpError(404, "Product variant not found.");
+      }
+    }
+
+    const productObject = await this.Product.findById(id);
+
+    return {
+      message: "Product updated successfully",
+      product: productObject,
+    };
+  });
+
+  deleteProduct = resolver(async (parent, args, context, info) => {
+    const { id } = args.input;
+
+    const result = await this.Product.findByIdAndDelete(id);
+    if (!result) {
+      throw createHttpError(404, "Product not found.");
+    }
+
+    return {
+      message: "Product deleted successfully",
+    };
+  });
+
+  createProductVariant = resolver(async (parent, args, context, info) => {
+    const { name, description, type, images, sku, features, price, product } =
+      args.input;
+
+    const productVariant = await this.ProductVariant.create({
+      name,
+      description,
+      type,
+      images,
+      features,
+      sku,
+      price,
+      product,
+    });
+
+    const productVariantObject = await productVariant.toObject();
+
+    return {
+      message: "Product variant created successfully",
+      productVariant: productVariantObject,
+    };
+  });
+
+  updateProductVariant = resolver(async (parent, args, context, info) => {
+    const { id } = args.input;
+    const updatedProductVariant = await this.ProductVariant.findByIdAndUpdate(
+      id,
+      args.input,
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedProductVariant) {
+      throw createHttpError(404, "Product variant not found.");
+    }
+
+    return {
+      message: "Product variant updated successfully",
+      productVariant: updatedProductVariant.toObject(),
+    };
+  });
+
+  deleteProductVariant = resolver(async (parent, args, context, info) => {
+    const { id } = args.input;
+
+    const result = await this.ProductVariant.findByIdAndDelete(id);
+
+    if (!result) {
+      throw createHttpError(404, "Product variant not found.");
+    }
+
+    return {
+      message: "Product variant deleted",
+    };
+  });
 
   createProductPosting = resolver(async (parent, args, context, info) => {
     const { variant, seller, price } = args.input;
@@ -89,6 +178,61 @@ export class ProductResolver {
       productPosting: productPostingObject,
     };
   });
+
+  updateProductPosting = resolver(async (parent, args, context, info) => {
+    const { id } = args.input;
+
+    const updatedProductPosting = await this.ProductPosting.findByIdAndUpdate(
+      id,
+      args.input,
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedProductPosting) {
+      throw createHttpError(404, "Product posting not found.");
+    }
+
+    return {
+      message: "Product posting has been updated",
+      productPosting: updatedProductPosting.toObject(),
+    };
+  });
+
+  deleteProductPosting = resolver(async (parent, args, context, info) => {
+    const { id } = args.input;
+
+    const result = await this.ProductPosting.findByIdAndDelete(id);
+
+    if (!result) {
+      throw createHttpError(404, "Product posting not found.");
+    }
+
+    return {
+      message: "Product posting deleted successfully",
+    };
+  });
+
+  Product_variants = async (parent, args, context) => {
+    const variants = await this.ProductVariant.find({
+      product: parent._id,
+    });
+
+    return variants.map((x) => x.toObject());
+  };
+
+  Product_productPostings = async (parent, args, context) => {
+    const variants = await this.ProductVariant.find({
+      product: parent._id,
+    });
+
+    const productPostings = await this.ProductPosting.find({
+      variant: { $in: variants.map((x) => x._id) },
+    });
+
+    return productPostings.map((x) => x.toObject());
+  };
 
   ProductPosting_variant = async (parent, args, context) => {
     const variant = await this.ProductVariant.findById(parent.variant);
@@ -108,10 +252,22 @@ export class ProductResolver {
     return {
       Mutation: {
         createProduct: this.createProduct,
+        updateProduct: this.updateProduct,
+        deleteProduct: this.deleteProduct,
+
+        createProductVariant: this.createProductVariant,
+        updateProductVariant: this.updateProductVariant,
+        deleteProductVariant: this.deleteProductVariant,
+
+        createProductPosting: this.createProductPosting,
+        updateProductPosting: this.updateProductPosting,
+        deleteProductPosting: this.deleteProductPosting,
+
         createProductPosting: this.createProductPosting,
       },
       Product: {
         variants: this.Product_variants,
+        productPostings: this.Product_productPostings,
       },
       ProductVariant: {
         product: this.ProductVariant_product,
