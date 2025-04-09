@@ -103,7 +103,16 @@ export class AuthService {
   async verifyAccessToken(token) {
     try {
       const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      return decoded.user;
+      return decoded;
+    } catch (error) {
+      throw createHttpError(401, "Invalid token.");
+    }
+  }
+
+  async verifyRefreshToken(token) {
+    try {
+      const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+      return decoded;
     } catch (error) {
       throw createHttpError(401, "Invalid token.");
     }
@@ -124,7 +133,7 @@ export class AuthService {
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET
       );
-      const user = await this.User.findById(decoded.user._id);
+      const user = await this.User.findById(decoded._id);
 
       if (!user) {
         throw createHttpError(401, "Invalid token.");

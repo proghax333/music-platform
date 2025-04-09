@@ -2,10 +2,12 @@ import { useLoginMutation } from "@/lib/api/auth";
 import { GRAPHQL_ENDPOINT } from "@/lib/graphql";
 import { api } from "@/lib/http";
 import { useSession } from "@/modules/session/useSession";
+import { wait } from "@/utils/common";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { useForm } from "react-hook-form";
+import { FaRegCircleCheck, FaRegCircleXmark } from "react-icons/fa6";
 import { useNavigate } from "react-router";
 
 function Login() {
@@ -45,13 +47,29 @@ function Login() {
   const { login } = useSession();
   const navigate = useNavigate();
 
+  const [alert, setAlert] = useState({
+    show: false,
+  });
+
   const onSubmit = async (data) => {
     try {
-      await login(data);
+      const { success } = await login(data);
 
-      setTimeout(() => {
+      if (success) {
+        setAlert({
+          show: true,
+          type: "success",
+          message: "Logged in successfully! Redirecting you...",
+        });
+        await wait(2000);
         navigate("/");
-      }, 2000);
+      } else {
+        setAlert({
+          show: true,
+          type: "error",
+          message: "Invalid username/password entered.",
+        });
+      }
     } catch (err) {
       console.error("Login failed:", err);
     }
@@ -66,6 +84,29 @@ function Login() {
               <h1 className="pb-8 text-center text-3xl font-bold">
                 Login Page
               </h1>
+              {alert.show && (
+                <>
+                  {alert.type === "success" && (
+                    <div
+                      role="alert"
+                      className="alert alert-success text-white mb-4"
+                    >
+                      <FaRegCircleCheck />
+                      <span>{alert.message}</span>
+                    </div>
+                  )}
+
+                  {alert.type === "error" && (
+                    <div
+                      role="alert"
+                      className="alert alert-error text-white mb-4"
+                    >
+                      <FaRegCircleXmark />
+                      <span>{alert.message}</span>
+                    </div>
+                  )}
+                </>
+              )}
               <form onSubmit={handleSubmit(onSubmit)}>
                 <label className="block mb-2">
                   <span className="text-gray-700">Username</span>

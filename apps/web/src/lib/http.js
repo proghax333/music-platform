@@ -1,9 +1,12 @@
 import axios from "axios";
 import { emitter } from "./events";
+import { GRAPHQL_ENDPOINT } from "./graphql";
+
+export const BASE_URL = "http://localhost:3500";
 
 // Create axios instance
 export const api = axios.create({
-  baseURL: "http://localhost:3500",
+  baseURL: BASE_URL,
 });
 
 // Track refresh token requests
@@ -28,14 +31,28 @@ const refreshAccessToken = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) throw new Error("No refresh token available");
 
-    const response = await axios.post(
-      "http://localhost:3500/api/auth/refresh",
-      {
-        refreshToken,
-      }
-    );
+    const response = await axios.post(`${BASE_URL}${GRAPHQL_ENDPOINT}`, {
+      query: `
+mutation RefreshToken($input: RefreshTokenMutationInput!) {
+  refreshToken(input: $input) {
+        success
+        message
+        errors
+        
+        accessToken
+  }
+}
+        `,
+      variables: {
+        input: {
+          refreshToken,
+        },
+      },
+    });
 
-    const { accessToken } = response.data;
+    const { accessToken } = response.data?.data?.refreshToken || {};
+    if (!accessToken) throw new Error("Failed to refresh access token");
+
     localStorage.setItem("accessToken", accessToken);
 
     // Retry all failed requests
@@ -68,8 +85,13 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const response = error.response?.data || {};
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 ||
+        response?.errors?.some((x) => x.message.includes("Invalid token"))) &&
+      !originalRequest._retry
+    ) {
       if (originalRequest.meta.retryCount >= MAX_RETRIES) {
         console.warn("Max retries reached. Logging out...");
         handleLogout();

@@ -100,6 +100,19 @@ type LoginMutationResponse {
   refreshToken: String
 }
 
+input RefreshTokenMutationInput {
+  refreshToken: String!
+}
+
+type RefreshTokenMutationResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  accessToken: String
+}
+
 input SignupMutationInput {
   name: String!
   username: String!
@@ -286,7 +299,7 @@ type Mutation {
   login(input: LoginMutationInput!): LoginMutationResponse!
   signup(input: SignupMutationInput!): SignupMutationResponse!
   logout: Boolean!
-  refreshToken: String
+  refreshToken(input: RefreshTokenMutationInput): RefreshTokenMutationResponse!
 
   # Product mutations
   createProduct(input: CreateProductInput!): CreateProductResponse!

@@ -3,7 +3,7 @@ import React from "react";
 import { useSession } from "../session/useSession";
 
 function HomePage() {
-  const { isLoggedIn, user } = useSession();
+  const { isLoggedIn, user, getCurrentProfile } = useSession();
 
   return (
     <>
