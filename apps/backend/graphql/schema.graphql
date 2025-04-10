@@ -38,6 +38,41 @@ type Image {
   url: String!
 }
 
+type ProductVariantEdge {
+  node: ProductVariant
+  cursor: String
+}
+
+type ProductVariantConnection {
+  edges: [ProductVariantEdge!]
+  pageInfo: PageInfo
+  totalCount: Int
+}
+
+type ProductPostingEdge {
+  node: ProductPosting
+  cursor: String
+}
+
+type ProductPostingConnection {
+  edges: [ProductPostingEdge!]
+  pageInfo: PageInfo
+  totalCount: Int
+}
+
+type Category {
+  _id: ObjectId
+  name: String
+  parent: Category
+
+  children: [Category]
+}
+
+type Brand {
+  _id: ObjectId
+  name: String
+}
+
 type Product {
   _id: ObjectId!
   name: String!
@@ -47,8 +82,24 @@ type Product {
   features: [Object]!
   price: String!
 
-  variants: [ProductVariant!]
-  productPostings: [ProductPosting!]
+  brand: Brand
+  category: Category
+
+  variants(
+    before: String
+    after: String
+    first: Int
+    last: Int
+    sort: String
+  ): ProductVariantConnection
+
+  productPostings(
+    before: String
+    after: String
+    first: Int
+    last: Int
+    sort: String
+  ): ProductPostingConnection
 }
 
 type ProductVariant {
@@ -70,6 +121,39 @@ type ProductPosting {
   price: String!
 }
 
+type ProductEdge {
+  node: Product
+  cursor: String
+}
+
+type ProductConnection {
+  totalCount: Int
+  edges: [ProductEdge!]
+  pageInfo: PageInfo
+}
+
+type BrandEdge {
+  node: Brand
+  cursor: String
+}
+
+type BrandConnection {
+  totalCount: Int
+  edges: [BrandEdge!]
+  pageInfo: PageInfo
+}
+
+type CategoryEdge {
+  node: Category
+  cursor: String
+}
+
+type CategoryConnection {
+  totalCount: Int
+  edges: [CategoryEdge!]
+  pageInfo: PageInfo
+}
+
 ###
 # Queries: All GraphQL queries.
 ###
@@ -82,6 +166,35 @@ type Query {
 
   profile(id: ObjectId!): Profile
   me: User
+
+  products(
+    first: Int
+    last: Int
+    before: String
+    after: String
+    sort: String
+    filter: Object
+  ): ProductConnection
+
+  brands(
+    first: Int
+    last: Int
+    before: String
+    after: String
+    sort: String
+    filter: Object
+  ): BrandConnection
+
+  categories(
+    first: Int
+    last: Int
+    before: String
+    after: String
+    sort: String
+    filter: Object
+  ): CategoryConnection
+
+  allCategories: [Object]
 }
 
 input LoginMutationInput {
@@ -152,6 +265,9 @@ input CreateProductInput {
   features: [Object]!
   price: String!
 
+  brand: ObjectId
+  category: ObjectId
+
   variants: [CreateProductInput_variants!]
 }
 
@@ -173,6 +289,9 @@ input UpdateProductVariantInput {
   sku: String
   features: [Object]
   price: String
+
+  brand: ObjectId
+  category: ObjectId
 }
 
 input UpdateProductInput {
@@ -295,6 +414,74 @@ type DeleteProductPostingResponse {
   errors: [String!]
 }
 
+input CreateCategoryInput {
+  name: String
+  parent: ObjectId
+}
+
+type CreateCategoryResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  category: Category
+}
+
+input UpdateCategoryInput {
+  name: String
+  parent: ObjectId
+}
+
+type UpdateCategoryResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  category: Category
+}
+
+type DeleteCategoryResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
+input CreateBrandInput {
+  name: String
+}
+
+type CreateBrandResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  brand: Brand
+}
+
+input UpdateBrandInput {
+  name: String
+}
+
+type UpdateBrandResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  brand: Brand
+}
+
+type DeleteBrandResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
 type Mutation {
   login(input: LoginMutationInput!): LoginMutationResponse!
   signup(input: SignupMutationInput!): SignupMutationResponse!
@@ -325,6 +512,19 @@ type Mutation {
     input: UpdateProductPostingInput!
   ): UpdateProductPostingResponse!
   deleteProductPosting(id: ObjectId!): DeleteProductPostingResponse!
+
+  # Category mutations
+  createCategory(input: CreateCategoryInput!): CreateCategoryResponse!
+  updateCategory(
+    id: ObjectId!
+    input: UpdateCategoryInput!
+  ): UpdateCategoryResponse!
+  deleteCategory(id: ObjectId!): DeleteCategoryResponse!
+
+  # Brand mutations
+  createBrand(input: CreateBrandInput!): CreateBrandResponse!
+  updateBrand(id: ObjectId!, input: UpdateBrandInput!): UpdateBrandResponse!
+  deleteBrand(id: ObjectId!): DeleteBrandResponse!
 }
 
 """

@@ -16,7 +16,8 @@ export const SessionProvider = ({ children }) => {
 
   const loginMutation = useLoginMutation({
     onSuccess: ({ data }) => {
-      const { success, accessToken, refreshToken, user } = data?.login || {};
+      const { success, accessToken, refreshToken, user, message } =
+        data?.login || {};
 
       if (success) {
         const currentProfile = user.profiles[0];
@@ -30,6 +31,8 @@ export const SessionProvider = ({ children }) => {
         queryClient.invalidateQueries(QUERY_ME());
 
         emitter.emit("login");
+      } else {
+        throw new Error(message);
       }
     },
     onError: (error) => {

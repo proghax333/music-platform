@@ -1,11 +1,6 @@
-import { useLoginMutation } from "@/lib/api/auth";
-import { GRAPHQL_ENDPOINT } from "@/lib/graphql";
-import { api } from "@/lib/http";
 import { useSession } from "@/modules/session/useSession";
 import { wait } from "@/utils/common";
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-
 import { useForm } from "react-hook-form";
 import { FaRegCircleCheck, FaRegCircleXmark } from "react-icons/fa6";
 import { useNavigate } from "react-router";
@@ -53,6 +48,12 @@ function Login() {
 
   const onSubmit = async (data) => {
     try {
+      setAlert({
+        show: true,
+        type: "info",
+        message: "Logging in...",
+      });
+
       const { success } = await login(data);
 
       if (success) {
@@ -102,6 +103,16 @@ function Login() {
                       className="alert alert-error text-white mb-4"
                     >
                       <FaRegCircleXmark />
+                      <span>{alert.message}</span>
+                    </div>
+                  )}
+
+                  {alert.type === "info" && (
+                    <div
+                      role="alert"
+                      className="alert alert-info text-white mb-4"
+                    >
+                      <span className="loading loading-spinner loading-md"></span>
                       <span>{alert.message}</span>
                     </div>
                   )}

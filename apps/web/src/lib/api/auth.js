@@ -75,3 +75,31 @@ mutation LogoutMutation {
 
   return logoutMutation;
 };
+
+export const useSignupMutation = ({ ...options } = {}) => {
+  return useMutation({
+    mutationFn: async (data) => {
+      const response = await api.post(GRAPHQL_ENDPOINT, {
+        query: `
+        mutation SignupMutation($input: SignupMutationInput!) {
+          signup(input: $input) {
+            code
+            success
+            message
+            user {
+              _id
+              username
+              email
+            }
+          }
+        }
+`,
+        variables: {
+          input: data,
+        },
+      });
+      return response.data;
+    },
+    ...options,
+  });
+};

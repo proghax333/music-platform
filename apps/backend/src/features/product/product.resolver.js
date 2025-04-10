@@ -1,5 +1,6 @@
 import createHttpError from "http-errors";
 import { resolver } from "../../lib/graphql.js";
+import { paginate } from "../../lib/pagination.js";
 
 export class ProductResolver {
   /** @type {import("mongoose").Model} */
@@ -12,18 +13,131 @@ export class ProductResolver {
   Profile;
   /** @type {import("mongoose").Model} */
   User;
+  /** @type {import("mongoose").Model} */
+  Brand;
+  /** @type {import("mongoose").Model} */
+  Category;
 
-  constructor(Product, ProductVariant, ProductPosting, Profile, User) {
+  constructor(
+    Product,
+    ProductVariant,
+    ProductPosting,
+    Profile,
+    User,
+    Brand,
+    Category
+  ) {
     this.Product = Product;
     this.ProductVariant = ProductVariant;
     this.ProductPosting = ProductPosting;
     this.Profile = Profile;
     this.User = User;
+    this.Brand = Brand;
+    this.Category = Category;
   }
 
   static get deps() {
-    return ["Product", "ProductVariant", "ProductPosting", "Profile", "User"];
+    return [
+      "Product",
+      "ProductVariant",
+      "ProductPosting",
+      "Profile",
+      "User",
+      "Brand",
+      "Category",
+    ];
   }
+
+  products = async (parent, args, context) => {
+    const pipeline = this.Product.aggregate();
+
+    const productConnection = await paginate(pipeline, args);
+    return productConnection;
+  };
+
+  brands = async (parent, args, context) => {
+    const pipeline = this.Brand.aggregate();
+    const brandConnection = await paginate(pipeline, {
+      ...args,
+      all: true,
+    });
+
+    return brandConnection;
+  };
+
+  categories = async (parent, args, context) => {
+    const pipeline = this.Category.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "parent",
+          as: "children",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              "$$ROOT",
+              {
+                children: {
+                  $map: {
+                    input: "$children",
+                    as: "child",
+                    in: "$$child._id",
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    ]);
+    const categoryConnection = await paginate(pipeline, {
+      ...args,
+    });
+    return categoryConnection;
+  };
+
+  allCategories = async (parent, args, context) => {
+    let categories = await this.Category.find();
+    categories = categories.map((x) => x.toObject());
+
+    const roots = [];
+
+    const categoryMap = {};
+    for (const category of categories) {
+      const { _id } = category;
+      delete category.__v;
+
+      const parent = category.parent;
+      let currentEntry = categoryMap[_id];
+      if (currentEntry) {
+        Object.assign(currentEntry, category);
+      } else {
+        category.children = [];
+        currentEntry = categoryMap[_id] = category;
+      }
+
+      if (!parent) {
+        roots.push(category);
+      } else {
+        let parentEntry = categoryMap[parent];
+
+        if (!parentEntry) {
+          parentEntry = categoryMap[parent] = {
+            _id: parent,
+            children: [],
+          };
+        }
+
+        parentEntry.children.push(currentEntry);
+      }
+    }
+
+    return roots;
+  };
 
   createProduct = resolver(async (parent, args, context, info) => {
     const {
@@ -36,8 +150,6 @@ export class ProductResolver {
 
       variants,
     } = args.input;
-
-    console.log(args.input);
 
     const product = await this.Product.create({
       name,
@@ -214,12 +326,138 @@ export class ProductResolver {
     };
   });
 
+  createCategory = resolver(async (_parent, args, context) => {
+    const { name, parent } = args.input;
+
+    const category = await this.Category.create({
+      name,
+      parent,
+    });
+
+    if (!category) {
+      throw new Error("Could not create category.");
+    }
+
+    return {
+      message: "Category created successfully.",
+      category: category.toObject(),
+    };
+  });
+
+  updateCategory = resolver(async (_parent, args, context) => {
+    const { name, parent } = args.input;
+    const { id } = args;
+
+    const category = await this.Category.findById(id);
+
+    if (!category) {
+      throw createHttpError(404, "Category not found.");
+    }
+
+    Object.assign(category, {
+      name,
+      parent,
+    });
+
+    await category.save();
+
+    return {
+      message: "Category updated successfully.",
+      category: category.toObject(),
+    };
+  });
+
+  deleteCategory = resolver(async (_parent, args, context) => {
+    const { id } = args;
+
+    const category = await this.Category.findById(id);
+    if (!category) {
+      throw createHttpError(404, "Category not found.");
+    }
+
+    const result = await this.Category.deleteOne({ _id: id });
+    if (result.deletedCount < 1) {
+      throw createHttpError(500, "Could not delete the category.");
+    }
+
+    return {
+      message: "Category deleted successfully.",
+    };
+  });
+
+  createBrand = resolver(async (parent, args, context) => {
+    try {
+      const data = args.input;
+      const brand = await this.Brand.create({ name: data.name });
+      return {
+        message: "Brand created.",
+        brand,
+      };
+    } catch (error) {
+      throw new Error(`Failed to create brand: ${error.message}`);
+    }
+  });
+
+  updateBrand = resolver(async (parent, args, context) => {
+    try {
+      const data = args.input;
+      const { id } = args;
+      const brand = await this.Brand.findByIdAndUpdate(
+        id,
+        { name: data.name },
+        { new: true }
+      );
+      if (!brand) {
+        throw createHttpError(404, "Brand not found");
+      }
+      return {
+        message: "Brand updated.",
+        brand,
+      };
+    } catch (error) {
+      throw new Error(`Failed to update brand: ${error.message}`);
+    }
+  });
+
+  deleteBrand = resolver(async (parent, args, context) => {
+    try {
+      const { id } = args;
+      const brand = await this.Brand.findByIdAndDelete(id);
+      if (!brand) {
+        throw createHttpError(404, "Brand not found");
+      }
+      return { message: "Brand deleted successfully" };
+    } catch (error) {
+      throw new Error(`Failed to delete brand: ${error.message}`);
+    }
+  });
+
+  Product_brand = async (parent, args, context) => {
+    const brand = await this.Brand.findById(parent.brand);
+    return brand;
+  };
+
+  Product_category = async (parent, args, context) => {
+    const category = await this.Category.findById(parent.category);
+    return category;
+  };
+
   Product_variants = async (parent, args, context) => {
-    const variants = await this.ProductVariant.find({
+    const { before, after, first, last, sort } = args;
+
+    const pipeline = this.ProductVariant.aggregate().match({
       product: parent._id,
     });
 
-    return variants.map((x) => x.toObject());
+    const productVariantConnection = await paginate(pipeline, {
+      before,
+      after,
+      first,
+      last,
+      sort,
+    });
+
+    return productVariantConnection;
   };
 
   Product_productPostings = async (parent, args, context) => {
@@ -227,11 +465,12 @@ export class ProductResolver {
       product: parent._id,
     });
 
-    const productPostings = await this.ProductPosting.find({
+    const pipeline = this.ProductPosting.aggregate().match({
       variant: { $in: variants.map((x) => x._id) },
     });
 
-    return productPostings.map((x) => x.toObject());
+    const productPostingConnection = await paginate(pipeline, args);
+    return productPostingConnection;
   };
 
   ProductPosting_variant = async (parent, args, context) => {
@@ -248,8 +487,27 @@ export class ProductResolver {
     return product.toObject();
   };
 
+  Category_children = async (parent, args, context) => {
+    const items = [];
+
+    console.log(parent);
+
+    for (const child of parent.children) {
+      const category = await this.Category.findById(child);
+      items.push(category);
+    }
+
+    return items;
+  };
+
   getResolvers = () => {
     return {
+      Query: {
+        products: this.products,
+        brands: this.brands,
+        categories: this.categories,
+        allCategories: this.allCategories,
+      },
       Mutation: {
         createProduct: this.createProduct,
         updateProduct: this.updateProduct,
@@ -263,9 +521,21 @@ export class ProductResolver {
         updateProductPosting: this.updateProductPosting,
         deleteProductPosting: this.deleteProductPosting,
 
-        createProductPosting: this.createProductPosting,
+        createCategory: this.createCategory,
+        updateCategory: this.updateCategory,
+        deleteCategory: this.deleteCategory,
+
+        createBrand: this.createBrand,
+        updateBrand: this.updateBrand,
+        deleteBrand: this.deleteBrand,
+      },
+      Category: {
+        children: this.Category_children,
       },
       Product: {
+        brand: this.Product_brand,
+        category: this.Product_category,
+
         variants: this.Product_variants,
         productPostings: this.Product_productPostings,
       },

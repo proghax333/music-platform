@@ -1,95 +1,109 @@
-import { Schema , Types } from "mongoose";
+import { Schema, Types } from "mongoose";
 
 const nonNullNonEmptyArray = (message) => {
-    return {
-        validator: function(arr) {
-            return Array.isArray(arr) && arr.length > 0;
-        },
-        message: message || "array must be a non-empty array",
-    };
-}
+  return {
+    validator: function (arr) {
+      return Array.isArray(arr) && arr.length > 0;
+    },
+    message: message || "array must be a non-empty array",
+  };
+};
 
-export const createProductModel = ({db}) =>{
+export const createBrandModel = ({ db }) => {
+  const BrandSchema = new Schema({
+    name: { type: String, required: true },
+  });
 
-    const ProductSchema = new Schema(
-        {
-            name :{ type : String , required : true , trim : true },
-            description : {type : String , required : true, trim : true},
-            images : {
-                type: [
-                    {
-                        id : {type:String},
-                        url : {type : String , required : true}
-                    }
-                ],
-                required: true,
-                validate: nonNullNonEmptyArray("images must a non-empty array of objects")
-            },
-            sku : {type: String },
-            features : {
-                type: [
-                    {
-                        type: Object
-                    }
-                ],
-                required: true,
-                validate: nonNullNonEmptyArray("features must a non-empty array of objects")
-            },
-            price : {type: String , required :true},
-        },
-        {timestamps:true}
-    );
+  const Brand = db.model("Brand", BrandSchema);
+  return Brand;
+};
 
-    ProductSchema.virtual('variants', {
-        ref: 'ProductVariant',
-        localField: '_id',
-        foreignField: 'product',
-    });
+export const createCategoryModel = ({ db }) => {
+  const CategorySchema = new Schema({
+    name: { type: String, required: true },
+    parent: { type: Types.ObjectId, ref: "Category" },
+  });
 
-    const Product = db.model("Product" , ProductSchema);
-    return Product; 
+  const Category = db.model("Category", CategorySchema);
+  return Category;
+};
 
+export const createProductModel = ({ db }) => {
+  const ProductSchema = new Schema(
+    {
+      name: { type: String, required: true, trim: true },
+      description: { type: String, required: true, trim: true },
+      images: {
+        type: [
+          {
+            id: { type: String },
+            url: { type: String, required: true },
+          },
+        ],
+        required: true,
+        validate: nonNullNonEmptyArray(
+          "images must a non-empty array of objects"
+        ),
+      },
+      sku: { type: String },
+      features: {
+        type: [
+          {
+            type: Object,
+          },
+        ],
+        required: true,
+        validate: nonNullNonEmptyArray(
+          "features must a non-empty array of objects"
+        ),
+      },
+      price: { type: String, required: true },
+      brand: { type: Types.ObjectId, ref: "Brand" },
+      category: { type: Types.ObjectId, ref: "Category" },
+    },
+    { timestamps: true }
+  );
 
-}
+  ProductSchema.virtual("variants", {
+    ref: "ProductVariant",
+    localField: "_id",
+    foreignField: "product",
+  });
 
-export const createProductVariantModel = ({db})=>{
-    const ProductVariantSchema = new Schema (
-        {
-            product: { type: Types.ObjectId, ref: "Product", required: true },
-            name :{ type : String , required : true , trim : true },
-            description : {type : String , required : true, trim : true},
-            type : {type : String},
-            images : [
-                {
-                    id : {type:String },
-                    url : {type : String , required : true}
-                }
-            ],
-            sku : {type: String },
-            features : [
-                {
-                    type: Object
-                }
-            ],
-            price : {type: String },
-            
-        }
+  const Product = db.model("Product", ProductSchema);
+  return Product;
+};
 
-    );
-const Variant = db.model("ProductVariant", ProductVariantSchema);
-return Variant;
+export const createProductVariantModel = ({ db }) => {
+  const ProductVariantSchema = new Schema({
+    product: { type: Types.ObjectId, ref: "Product", required: true },
+    name: { type: String, required: true, trim: true },
+    description: { type: String, required: true, trim: true },
+    type: { type: String },
+    images: [
+      {
+        id: { type: String },
+        url: { type: String, required: true },
+      },
+    ],
+    sku: { type: String },
+    features: [
+      {
+        type: Object,
+      },
+    ],
+    price: { type: String },
+  });
+  const Variant = db.model("ProductVariant", ProductVariantSchema);
+  return Variant;
+};
 
-        }
-
-
-export const createProductPosting =({db})=>{
-  const ProductPostingSchema = new Schema ({
+export const createProductPosting = ({ db }) => {
+  const ProductPostingSchema = new Schema({
     variant: { type: Types.ObjectId, ref: "Product", required: true },
     seller: { type: Types.ObjectId, ref: "Profile", required: true },
-    price : {type: String, required :true}           
-  }
-);
-const ProductPosting = db.model("ProductPosting", ProductPostingSchema);
-return ProductPosting;
-
-}
+    price: { type: String, required: true },
+  });
+  const ProductPosting = db.model("ProductPosting", ProductPostingSchema);
+  return ProductPosting;
+};
