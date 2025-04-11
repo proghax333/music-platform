@@ -1,4 +1,5 @@
 import { Schema, Types } from "mongoose";
+import { createFindDataLoader } from "../../lib/dataloader.js";
 
 const nonNullNonEmptyArray = (message) => {
   return {
@@ -18,6 +19,10 @@ export const createBrandModel = ({ db }) => {
   return Brand;
 };
 
+export const createBrandDataLoader = ({ Brand }) => {
+  return createFindDataLoader(Brand);
+};
+
 export const createCategoryModel = ({ db }) => {
   const CategorySchema = new Schema({
     name: { type: String, required: true },
@@ -26,6 +31,10 @@ export const createCategoryModel = ({ db }) => {
 
   const Category = db.model("Category", CategorySchema);
   return Category;
+};
+
+export const createCategoryDataLoader = ({ Category }) => {
+  return createFindDataLoader(Category);
 };
 
 export const createProductModel = ({ db }) => {
@@ -74,6 +83,10 @@ export const createProductModel = ({ db }) => {
   return Product;
 };
 
+export const createProductDataLoader = ({ Product }) => {
+  return createFindDataLoader(Product);
+};
+
 export const createProductVariantModel = ({ db }) => {
   const ProductVariantSchema = new Schema({
     product: { type: Types.ObjectId, ref: "Product", required: true },
@@ -98,6 +111,10 @@ export const createProductVariantModel = ({ db }) => {
   return Variant;
 };
 
+export const createProductVariantDataLoader = ({ ProductVariant }) => {
+  return createFindDataLoader(ProductVariant);
+};
+
 export const createProductPosting = ({ db }) => {
   const ProductPostingSchema = new Schema({
     variant: { type: Types.ObjectId, ref: "Product", required: true },
@@ -106,4 +123,8 @@ export const createProductPosting = ({ db }) => {
   });
   const ProductPosting = db.model("ProductPosting", ProductPostingSchema);
   return ProductPosting;
+};
+
+export const createProductPostingDataLoader = ({ ProductPosting }) => {
+  return createFindDataLoader(ProductPosting);
 };

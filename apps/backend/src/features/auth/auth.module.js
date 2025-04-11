@@ -7,8 +7,8 @@ export class AuthModule {
    * @param {import("bottlejs")} di - The unique name of the service.
    */
   static async registerAuthModule(di) {
-    di.service("authService", AuthService, ...AuthService.deps);
-    di.service("authResolver", AuthResolver, ...AuthResolver.deps);
+    di.service("authService", AuthService);
+    di.service("authResolver", AuthResolver);
 
     return di;
   }

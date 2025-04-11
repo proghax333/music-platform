@@ -1,4 +1,4 @@
-import { createUserModel } from "./user.model.js";
+import { createUserDataLoader, createUserModel } from "./user.model.js";
 import { UserResolver } from "./user.resolver.js";
 import { UserService } from "./user.service.js";
 
@@ -9,11 +9,10 @@ export class UserModule {
    */
   static async registerUserModule(di) {
     di.factory("User", createUserModel);
-    di.service("userService", UserService, ...UserService.deps);
-    di.lazyService("userResolver", UserResolver, {
-      deps: UserResolver.deps,
-      lazyDeps: UserResolver.lazyDeps,
-    });
+    di.factory("UserDataLoader", createUserDataLoader);
+
+    di.service("userService", UserService);
+    di.service("userResolver", UserResolver);
 
     return di;
   }

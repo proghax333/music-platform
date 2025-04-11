@@ -3,34 +3,33 @@ import { createHttpError } from "../../lib/http.js";
 export class UserResolver {
   /** @type {import("./user.service").UserService} */
   userService;
+  /** @type {import("../profile/profile.service").ProfileService} */
+  profileService;
+  /** @type {import("dataloader")} */
+  ProfileDataLoader;
+  /** @type {import("dataloader")} */
+  UserDataLoader;
 
-  constructor(userService, profileService) {
-    this.userService = userService;
-    this.profileService = profileService;
-  }
+  constructor() {}
 
   static get deps() {
-    return ["userService", "profileService"];
+    return [
+      "userService",
+      "profileService",
+      "ProfileDataLoader",
+      "UserDataLoader",
+    ];
   }
 
   static get lazyDeps() {
     return ["profileResolver"];
   }
 
-  _User = async (parent, args, context) => {
-    const user = await this.userService.getUserById(parent.user);
-    if (!user) {
-      throw createHttpError(404, "User not found.");
-    }
-
-    return user;
-  };
-
   User_profiles = async (parent, args, context) => {
     const result = [];
 
     for (const p of parent.profiles) {
-      const profile = await this.profileService.getProfile(p);
+      const profile = await this.ProfileDataLoader.load(p);
       if (!profile) {
         throw createHttpError(404, "Profile not found.");
       }
@@ -45,7 +44,7 @@ export class UserResolver {
       throw createHttpError(401, "Unauthorized.");
     }
 
-    const user = await this.userService.getUserById(context.user._id);
+    const user = await this.UserDataLoader.load(context.user._id);
     if (!user) {
       throw createHttpError(404, "User not found.");
     }

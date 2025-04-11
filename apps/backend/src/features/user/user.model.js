@@ -1,4 +1,5 @@
 import { Schema, Types } from "mongoose";
+import { createFindDataLoader } from "../../lib/dataloader.js";
 
 export const createUserModel = ({ db }) => {
   /**
@@ -31,4 +32,8 @@ export const createUserModel = ({ db }) => {
 
   const User = db.model("User", UserSchema);
   return User;
+};
+
+export const createUserDataLoader = ({ User }) => {
+  return createFindDataLoader(User);
 };

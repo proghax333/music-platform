@@ -18,23 +18,22 @@ export class ProductResolver {
   /** @type {import("mongoose").Model} */
   Category;
 
-  constructor(
-    Product,
-    ProductVariant,
-    ProductPosting,
-    Profile,
-    User,
-    Brand,
-    Category
-  ) {
-    this.Product = Product;
-    this.ProductVariant = ProductVariant;
-    this.ProductPosting = ProductPosting;
-    this.Profile = Profile;
-    this.User = User;
-    this.Brand = Brand;
-    this.Category = Category;
-  }
+  /** @type {import("dataloader")} */
+  ProductDataLoader;
+  /** @type {import("dataloader")} */
+  ProductVariantDataLoader;
+  /** @type {import("dataloader")} */
+  ProductPostingDataLoader;
+  /** @type {import("dataloader")} */
+  ProfileDataLoader;
+  /** @type {import("dataloader")} */
+  UserDataLoader;
+  /** @type {import("dataloader")} */
+  BrandDataLoader;
+  /** @type {import("dataloader")} */
+  CategoryDataLoader;
+
+  constructor() {}
 
   static get deps() {
     return [
@@ -45,6 +44,14 @@ export class ProductResolver {
       "User",
       "Brand",
       "Category",
+
+      "ProductDataLoader",
+      "ProductVariantDataLoader",
+      "ProductPostingDataLoader",
+      "ProfileDataLoader",
+      "UserDataLoader",
+      "BrandDataLoader",
+      "CategoryDataLoader",
     ];
   }
 
@@ -147,6 +154,8 @@ export class ProductResolver {
       sku,
       features,
       price,
+      category,
+      brand,
 
       variants,
     } = args.input;
@@ -158,6 +167,8 @@ export class ProductResolver {
       sku,
       features,
       price,
+      category,
+      brand,
     });
 
     for (const variant of variants) {
@@ -433,12 +444,12 @@ export class ProductResolver {
   });
 
   Product_brand = async (parent, args, context) => {
-    const brand = await this.Brand.findById(parent.brand);
+    const brand = await this.BrandDataLoader.load(parent.brand);
     return brand;
   };
 
   Product_category = async (parent, args, context) => {
-    const category = await this.Category.findById(parent.category);
+    const category = await this.CategoryDataLoader.load(parent.category);
     return category;
   };
 
@@ -474,30 +485,25 @@ export class ProductResolver {
   };
 
   ProductPosting_variant = async (parent, args, context) => {
-    const variant = await this.ProductVariant.findById(parent.variant);
+    const variant = await this.ProductVariantDataLoader.load(parent.variant);
     return variant.toObject();
   };
 
   ProductVariant_product = async (parent, args, context) => {
-    const product = await this.Product.findById(parent.product);
+    const product = await this.ProductDataLoader.load(parent.product);
     if (!product) {
       throw createHttpError(404, "Product not found.");
     }
 
-    return product.toObject();
+    return product;
   };
 
   Category_children = async (parent, args, context) => {
-    const items = [];
+    const children = await this.Category.find({
+      parent: parent._id,
+    });
 
-    console.log(parent);
-
-    for (const child of parent.children) {
-      const category = await this.Category.findById(child);
-      items.push(category);
-    }
-
-    return items;
+    return children;
   };
 
   getResolvers = () => {

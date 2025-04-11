@@ -4,6 +4,11 @@ import {
   createProductModel,
   createProductPosting,
   createProductVariantModel,
+  createBrandDataLoader,
+  createCategoryDataLoader,
+  createProductDataLoader,
+  createProductPostingDataLoader,
+  createProductVariantDataLoader,
 } from "./product.model.js";
 import { ProductResolver } from "./product.resolver.js";
 
@@ -19,6 +24,12 @@ export class ProductModule {
     di.factory("Brand", createBrandModel);
     di.factory("Category", createCategoryModel);
 
-    di.service("productResolver", ProductResolver, ...ProductResolver.deps);
+    di.factory("ProductDataLoader", createProductDataLoader);
+    di.factory("ProductPostingDataLoader", createProductPostingDataLoader);
+    di.factory("ProductVariantDataLoader", createProductVariantDataLoader);
+    di.factory("BrandDataLoader", createBrandDataLoader);
+    di.factory("CategoryDataLoader", createCategoryDataLoader);
+
+    di.service("productResolver", ProductResolver);
   }
 }

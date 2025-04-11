@@ -1,4 +1,7 @@
-import { createProfileModel } from "./profile.model.js";
+import {
+  createProfileDataLoader,
+  createProfileModel,
+} from "./profile.model.js";
 import { ProfileService } from "./profile.service.js";
 import { ProfileResolver } from "./profile.resolver.js";
 
@@ -9,11 +12,10 @@ export class ProfileModule {
    */
   static async registerProfileModule(di) {
     di.factory("Profile", createProfileModel);
-    di.service("profileService", ProfileService, "Profile");
-    di.lazyService("profileResolver", ProfileResolver, {
-      deps: ProfileResolver.deps,
-      lazyDeps: ProfileResolver.lazyDeps,
-    });
+    di.factory("ProfileDataLoader", createProfileDataLoader);
+
+    di.service("profileService", ProfileService);
+    di.service("profileResolver", ProfileResolver);
 
     return di;
   }

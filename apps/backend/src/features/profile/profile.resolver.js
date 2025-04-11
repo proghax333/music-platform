@@ -1,36 +1,47 @@
-import { resolver } from "../../lib/graphql.js";
-import { ProfileService } from "./profile.service.js";
-
 export class ProfileResolver {
-  /** @type {ProfileService} */
+  /** @type {import("./profile.service.js").ProfileService} */
   profileService;
+  /** @type {import("../user/user.service.js").UserService} */
+  profileService;
+  /** @type {import("dataloader")} */
+  UserDataLoader;
+  /** @type {import("dataloader")} */
+  ProfileDataLoader;
 
-  constructor(profileService, userService) {
-    this.profileService = profileService;
-    this.userService = userService;
-  }
+  constructor() {}
 
   static get deps() {
-    return ["profileService", "userService"];
+    return [
+      "profileService",
+      "userService",
+
+      "UserDataLoader",
+      "ProfileDataLoader",
+    ];
   }
 
   static get lazyDeps() {
     return ["userResolver"];
   }
 
-  profile = resolver(async (parent, args, context) => {
+  profile = async (parent, args, context) => {
     let { id } = args;
     if (!id) {
       id = parent.profile;
     }
 
-    const profile = await this.profileService.getProfile(id);
+    const profile = await this.ProfileDataLoader.load(id);
     if (!profile) {
       throw createHttpError(404, "Profile not found.");
     }
 
     return profile;
-  });
+  };
+
+  Profile_user = async (parent, args, context) => {
+    const user = await this.UserDataLoader.load(parent.user);
+    return user;
+  };
 
   getResolvers = () => {
     return {
@@ -39,7 +50,7 @@ export class ProfileResolver {
       },
 
       Profile: {
-        user: this.userResolver._User,
+        user: this.Profile_user,
       },
     };
   };

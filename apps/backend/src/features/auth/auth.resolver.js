@@ -5,9 +5,7 @@ export class AuthResolver {
   /** @type {AuthService} */
   authService;
 
-  constructor(authService) {
-    this.authService = authService;
-  }
+  constructor() {}
 
   static get deps() {
     return ["authService"];

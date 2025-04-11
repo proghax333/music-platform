@@ -1,4 +1,5 @@
 import { Schema, Types } from "mongoose";
+import { createFindDataLoader } from "../../lib/dataloader.js";
 
 export const createProfileModel = ({ db }) => {
   /**
@@ -19,4 +20,8 @@ export const createProfileModel = ({ db }) => {
 
   const Profile = db.model("Profile", ProfileSchema);
   return Profile;
+};
+
+export const createProfileDataLoader = ({ Profile }) => {
+  return createFindDataLoader(Profile);
 };
