@@ -17,6 +17,8 @@ export class ProductResolver {
   Brand;
   /** @type {import("mongoose").Model} */
   Category;
+  /** @type {import("mongoose").Model} */
+  Review;
 
   /** @type {import("dataloader")} */
   ProductDataLoader;

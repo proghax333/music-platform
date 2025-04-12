@@ -154,6 +154,28 @@ type CategoryConnection {
   pageInfo: PageInfo
 }
 
+type Review {
+  _id: ObjectId!
+  author: Profile
+  refType: String
+  refId: ObjectId
+  rating: Float!
+  content: String
+  createdAt: Date
+  updatedAt: Date
+}
+
+type ReviewEdge {
+  node: Review
+  cursor: String
+}
+
+type ReviewConnection {
+  totalCount: Int
+  edges: [ReviewEdge!]
+  pageInfo: PageInfo
+}
+
 ###
 # Queries: All GraphQL queries.
 ###
@@ -195,6 +217,18 @@ type Query {
   ): CategoryConnection
 
   allCategories: [Object]
+
+  reviews(
+    first: Int
+    last: Int
+    before: String
+    after: String
+    sort: String
+
+    refId: ObjectId!
+  ): ReviewConnection
+
+  review(id: ObjectId!): Review
 }
 
 input LoginMutationInput {
@@ -482,6 +516,44 @@ type DeleteBrandResponse {
   errors: [String!]
 }
 
+input CreateReviewInput {
+  author: ObjectId
+  refType: String
+  refId: ObjectId
+  rating: Float!
+  content: String
+}
+
+type CreateReviewResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  review: Review
+}
+
+input UpdateReviewInput {
+  rating: Float!
+  content: String
+}
+
+type UpdateReviewResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  review: Review
+}
+
+type DeleteReviewResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
 type Mutation {
   login(input: LoginMutationInput!): LoginMutationResponse!
   signup(input: SignupMutationInput!): SignupMutationResponse!
@@ -525,6 +597,11 @@ type Mutation {
   createBrand(input: CreateBrandInput!): CreateBrandResponse!
   updateBrand(id: ObjectId!, input: UpdateBrandInput!): UpdateBrandResponse!
   deleteBrand(id: ObjectId!): DeleteBrandResponse!
+
+  # Review mutations
+  createReview(input: CreateReviewInput!): CreateReviewResponse!
+  updateReview(id: ObjectId!, input: UpdateReviewInput!): UpdateReviewResponse!
+  deleteReview(id: ObjectId!): DeleteReviewResponse!
 }
 
 """

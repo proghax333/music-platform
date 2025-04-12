@@ -92,8 +92,8 @@ export class GraphQLModule {
 
   createServer() {
     const server = new ApolloServer({
-      typeDefs: this.typeDefs,
-      resolvers: this.resolvers,
+      typeDefs: this.options.typeDefs,
+      resolvers: this.options.resolvers,
       ...this.options,
     });
 

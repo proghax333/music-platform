@@ -11,6 +11,7 @@ import { GraphQLModule } from "./features/graphql/graphql.module.js";
 import { ProductModule } from "./features/product/product.module.js";
 
 import { ObjectId } from "./lib/types.js";
+import { ReviewModule } from "./features/review/review.module.js";
 
 async function main() {
   const di = createDIContainer();
@@ -39,16 +40,17 @@ async function main() {
   await ProfileModule.registerProfileModule(di);
   await AuthModule.registerAuthModule(di);
   await ProductModule.registerProductModule(di);
+  await ReviewModule.registerReviewModule(di);
 
   /** @type {GraphQLModule} */
   const graphqlModule = di.container.graphqlModule;
 
   const typeDefs = await graphqlModule.readTypeDefs("./graphql/schema.graphql");
   const resolvers = {
-    Date: graphqlModule.getDateCustomType(),
-    Object: graphqlModule.getObjectCustomType(),
-    JSON: graphqlModule.getJSONCustomType(),
-    ObjectId: graphqlModule.getObjectIdCustomType(),
+    Date: await graphqlModule.getDateCustomType(),
+    Object: await graphqlModule.getObjectCustomType(),
+    JSON: await graphqlModule.getJSONCustomType(),
+    ObjectId: await graphqlModule.getObjectIdCustomType(),
 
     Query: {
       hello: () => "Hello world!",
@@ -69,12 +71,14 @@ async function main() {
   const userResolver = di.container.userResolver;
   /** @type {import("./features/product/product.resolver.js").ProductResolver} */
   const productResolver = di.container.productResolver;
+  /** @type {import("./features/review/review.resolver.js").ReviewResolver} */
+  const reviewResolver = di.container.reviewResolver;
 
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
   graphqlModule.addResolvers(userResolver.getResolvers());
   graphqlModule.addResolvers(productResolver.getResolvers());
-  // graphqlModule.addResolvers();
+  graphqlModule.addResolvers(reviewResolver.getResolvers());
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();
