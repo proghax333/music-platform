@@ -11,7 +11,7 @@ function SiteLogo() {
       rounded-md
     "
         >
-          Guitars n' all
+          Lyv Music
         </h2>
       </NavLink>
     </div>
