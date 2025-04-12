@@ -10,7 +10,6 @@ import { authMiddleware } from "./features/auth/auth.middleware.js";
 import { GraphQLModule } from "./features/graphql/graphql.module.js";
 import { ProductModule } from "./features/product/product.module.js";
 
-import { ObjectId } from "./lib/types.js";
 import { ReviewModule } from "./features/review/review.module.js";
 
 async function main() {
