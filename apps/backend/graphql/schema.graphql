@@ -73,13 +73,18 @@ type Brand {
   name: String
 }
 
+type Feature {
+  name: String
+  value: String
+}
+
 type Product {
   _id: ObjectId!
   name: String!
   description: String!
   images: [Image]!
   sku: String
-  features: [Object]!
+  features: [Feature]!
   price: String!
 
   brand: Brand
@@ -281,6 +286,11 @@ input ImageInput {
   url: String!
 }
 
+input FeatureInput {
+  name: String!
+  value: String!
+}
+
 input CreateProductInput_variants {
   name: String
   description: String
@@ -296,7 +306,7 @@ input CreateProductInput {
   description: String!
   images: [ImageInput]!
   sku: String
-  features: [Object]!
+  features: [FeatureInput]!
   price: String!
 
   brand: ObjectId
@@ -314,18 +324,15 @@ type CreateProductResponse {
   product: Product
 }
 
-input UpdateProductVariantInput {
+input UpdateProductInput_variants {
   _id: ObjectId
   name: String
   description: String
   type: String
   images: [ImageInput]
   sku: String
-  features: [Object]
+  features: [FeatureInput]
   price: String
-
-  brand: ObjectId
-  category: ObjectId
 }
 
 input UpdateProductInput {
@@ -333,10 +340,10 @@ input UpdateProductInput {
   description: String
   images: [ImageInput]
   sku: String
-  features: [Object]
+  features: [FeatureInput]
   price: String
 
-  variants: [UpdateProductVariantInput!]
+  variants: [UpdateProductInput_variants!]
 }
 
 type UpdateProductResponse {
@@ -355,7 +362,8 @@ type DeleteProductResponse {
   errors: [String!]
 }
 
-input UpdateProductVariantInput {
+input CreateProductVariantInput {
+  product: ObjectId!
   name: String
   description: String
   type: String
@@ -365,23 +373,7 @@ input UpdateProductVariantInput {
   price: String
 }
 
-input CreateProductPostingInput {
-  variant: ObjectId!
-  seller: ObjectId!
-  price: String!
-}
-
-type CreateProductPostingResponse {
-  code: Int!
-  success: Boolean!
-  message: String!
-  errors: [String!]
-
-  productPosting: ProductPosting
-}
-
-input CreateProductVariantInput {
-  product: ObjectId!
+input UpdateProductVariantInput {
   name: String
   description: String
   type: String
@@ -400,16 +392,6 @@ type CreateProductVariantResponse {
   productVariant: ProductVariant
 }
 
-input UpdateProductVariantInput {
-  name: String
-  description: String
-  type: String
-  images: [ImageInput]
-  sku: String
-  features: [Object]
-  price: String
-}
-
 type UpdateProductVariantResponse {
   code: Int!
   success: Boolean!
@@ -424,6 +406,21 @@ type DeleteProductVariantResponse {
   success: Boolean!
   message: String
   errors: [String!]
+}
+
+input CreateProductPostingInput {
+  variant: ObjectId!
+  seller: ObjectId!
+  price: String!
+}
+
+type CreateProductPostingResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+  errors: [String!]
+
+  productPosting: ProductPosting
 }
 
 input UpdateProductPostingInput {
