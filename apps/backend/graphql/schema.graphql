@@ -181,6 +181,116 @@ type ReviewConnection {
   pageInfo: PageInfo
 }
 
+type Course_image {
+  url: String
+}
+
+type Course {
+  _id: ObjectId!
+  title: String!
+  description: String!
+  instructors: [Profile!]
+  images: [Course_image!]
+  published: Boolean
+  sections: [Section!]
+
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Section_item {
+  ref: ObjectId
+  refType: String
+}
+
+type Section {
+  title: String!
+  course: Course
+  items: [Section_item]
+  order: Int
+
+  lessons: [Lesson!]
+
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Lesson_resource {
+  title: String
+  url: String
+  type: String
+}
+
+type Lesson {
+  title: String
+  content: String
+  videoUrl: String
+  resources: [Lesson_resource]
+
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Quiz_option {
+  text: String
+  isCorrect: Boolean
+}
+
+type Quiz_matchPair {
+  left: String
+  right: String
+}
+
+type Quiz_question {
+  type: String
+  text: String
+  options: [Quiz_option]
+  correctAnswers: [String]
+  matchPairs: [Quiz_matchPair]
+  explanation: String
+  points: Int
+}
+
+type Quiz {
+  _id: ObjectId!
+  title: String!
+  description: String
+  timeLimit: Int
+  randomizeQuestions: Boolean
+  passingScore: Int
+  questions: [Quiz_question]
+  course: Course
+
+  createdAt: Date
+  updatedAt: Date
+}
+
+type QuizAttempt_matchedPair {
+  left: String
+  right: String
+}
+
+type QuizAttempt_answer {
+  questionIndex: Int
+  selectedOptions: [String]
+  writtenAnswer: String
+  matchedPairs: [QuizAttempt_matchedPair]
+  isCorrect: Boolean
+}
+
+type QuizAttempt {
+  _id: ObjectId!
+  quiz: Quiz!
+  user: Profile!
+  answers: [QuizAttempt_answer]
+  score: Float
+  completedAt: Date
+  duration: Int
+
+  createdAt: Date
+  updatedAt: Date
+}
+
 ###
 # Queries: All GraphQL queries.
 ###
@@ -236,6 +346,10 @@ type Query {
   review(id: ObjectId!): Review
 }
 
+########################
+#### MUTATION TYPES ####
+########################
+
 input LoginMutationInput {
   username: String!
   password: String!
@@ -290,6 +404,8 @@ input FeatureInput {
   name: String!
   value: String!
 }
+
+### Product ###
 
 input CreateProductInput_variants {
   name: String
@@ -362,18 +478,10 @@ type DeleteProductResponse {
   errors: [String!]
 }
 
+### Product Variant ###
+
 input CreateProductVariantInput {
   product: ObjectId!
-  name: String
-  description: String
-  type: String
-  images: [ImageInput]
-  sku: String
-  features: [Object]
-  price: String
-}
-
-input UpdateProductVariantInput {
   name: String
   description: String
   type: String
@@ -392,6 +500,16 @@ type CreateProductVariantResponse {
   productVariant: ProductVariant
 }
 
+input UpdateProductVariantInput {
+  name: String
+  description: String
+  type: String
+  images: [ImageInput]
+  sku: String
+  features: [Object]
+  price: String
+}
+
 type UpdateProductVariantResponse {
   code: Int!
   success: Boolean!
@@ -407,6 +525,8 @@ type DeleteProductVariantResponse {
   message: String
   errors: [String!]
 }
+
+### Product Posting ###
 
 input CreateProductPostingInput {
   variant: ObjectId!
@@ -445,6 +565,8 @@ type DeleteProductPostingResponse {
   errors: [String!]
 }
 
+### Category ###
+
 input CreateCategoryInput {
   name: String
   parent: ObjectId
@@ -480,6 +602,8 @@ type DeleteCategoryResponse {
   errors: [String!]
 }
 
+### Brand ###
+
 input CreateBrandInput {
   name: String
 }
@@ -513,6 +637,7 @@ type DeleteBrandResponse {
   errors: [String!]
 }
 
+### Review ###
 input CreateReviewInput {
   author: ObjectId
   refType: String
@@ -550,6 +675,184 @@ type DeleteReviewResponse {
   message: String
   errors: [String!]
 }
+
+#####################
+### Course Inputs ###
+#####################
+input CourseImageInput {
+  url: String
+}
+
+input CreateCourseInput {
+  title: String!
+  description: String
+  instructors: [ObjectId!]!
+  images: [CourseImageInput]
+  published: Boolean
+  sections: [ObjectId!]
+}
+
+input UpdateCourseInput {
+  _id: ObjectId!
+  title: String
+  description: String
+  instructors: [ObjectId!]
+  images: [CourseImageInput]
+  published: Boolean
+  sections: [ObjectId!]
+}
+
+input DeleteCourseInput {
+  _id: ObjectId!
+}
+
+######################
+### Section Inputs ###
+######################
+input SectionItemInput {
+  ref: ObjectId!
+  type: String! # Should match ["Lesson", "Quiz"]
+}
+
+input CreateSectionInput {
+  title: String!
+  course: ObjectId!
+  items: [SectionItemInput!]
+  order: Int!
+}
+
+input UpdateSectionInput {
+  _id: ObjectId!
+  title: String
+  course: ObjectId
+  items: [SectionItemInput!]
+  order: Int
+}
+
+input DeleteSectionInput {
+  _id: ObjectId!
+}
+
+#####################
+### Lesson Inputs ###
+#####################
+
+input LessonResourceInput {
+  title: String
+  url: String
+  type: String # Should match ["pdf", "link", "image", "file"]
+}
+
+input CreateLessonInput {
+  course: ObjectId
+  title: String!
+  content: String
+  videoUrl: String
+  resources: [LessonResourceInput]
+}
+
+input UpdateLessonInput {
+  _id: ObjectId!
+  title: String
+  content: String
+  videoUrl: String
+  resources: [LessonResourceInput]
+}
+
+input DeleteLessonInput {
+  _id: ObjectId!
+}
+
+###################
+### Quiz Inputs ###
+###################
+
+input QuizOptionInput {
+  text: String
+  isCorrect: Boolean
+}
+
+input QuizMatchPairInput {
+  left: String
+  right: String
+}
+
+input QuizQuestionInput {
+  type: String!
+  text: String!
+  options: [QuizOptionInput]
+  correctAnswers: [String]
+  matchPairs: [QuizMatchPairInput]
+  explanation: String
+  points: Int
+}
+
+input CreateQuizInput {
+  title: String!
+  description: String
+  timeLimit: Int
+  randomizeQuestions: Boolean
+  passingScore: Int
+  questions: [QuizQuestionInput]
+  course: ObjectId
+}
+
+input UpdateQuizInput {
+  _id: ObjectId!
+  title: String
+  description: String
+  timeLimit: Int
+  randomizeQuestions: Boolean
+  passingScore: Int
+  questions: [QuizQuestionInput]
+  course: ObjectId
+}
+
+input DeleteQuizInput {
+  _id: ObjectId!
+}
+
+###########################
+### Quiz Attempt Inputs ###
+###########################
+
+input QuizAttemptMatchedPairInput {
+  left: String
+  right: String
+}
+
+input QuizAttemptAnswerInput {
+  questionIndex: Int
+  selectedOptions: [String]
+  writtenAnswer: String
+  matchedPairs: [QuizAttemptMatchedPairInput]
+  isCorrect: Boolean
+}
+
+input CreateQuizAttemptInput {
+  quiz: ObjectId!
+  profile: ObjectId!
+  answers: [QuizAttemptAnswerInput]
+  score: Float
+  completedAt: Date
+  duration: Int
+}
+
+input UpdateQuizAttemptInput {
+  _id: ObjectId!
+  quiz: ObjectId
+  profile: ObjectId
+  answers: [QuizAttemptAnswerInput]
+  score: Float
+  completedAt: Date
+  duration: Int
+}
+
+input DeleteQuizAttemptInput {
+  _id: ObjectId!
+}
+
+### ------ ###
 
 type Mutation {
   login(input: LoginMutationInput!): LoginMutationResponse!

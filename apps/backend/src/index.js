@@ -11,6 +11,8 @@ import { GraphQLModule } from "./features/graphql/graphql.module.js";
 import { ProductModule } from "./features/product/product.module.js";
 
 import { ReviewModule } from "./features/review/review.module.js";
+import { CourseModule } from "./features/course/course.module.js";
+import { ChatModule } from "./features/chat/chat.module.js";
 
 async function main() {
   const di = createDIContainer();
@@ -40,6 +42,8 @@ async function main() {
   await AuthModule.registerAuthModule(di);
   await ProductModule.registerProductModule(di);
   await ReviewModule.registerReviewModule(di);
+  await CourseModule.registerCourseModule(di);
+  await ChatModule.registerChatModule(di);
 
   /** @type {GraphQLModule} */
   const graphqlModule = di.container.graphqlModule;

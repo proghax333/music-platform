@@ -1,23 +1,26 @@
 import { Schema } from "mongoose";
+import { createFindDataLoader } from "../../lib/dataloader.js";
 
 /**
  * Creates and returns the Course model using the given Mongoose connection.
  *
  * @param {Object} params
- * @param {import("mongoose").Connection} params.db - The Mongoose connection to use.
- * @returns {import("mongoose").Model} The Course model.
+ * @param {import("mongoose").Connection} params.db
+ * @returns {import("mongoose").Model}
  */
 export const createCourseModel = ({ db }) => {
   const CourseSchema = new Schema(
     {
       title: { type: String, required: true, trim: true },
-      description: { type: String },
-      instructor: {
-        type: Schema.Types.ObjectId,
-        ref: "Profile",
-        required: true,
-      },
-      image: { type: String },
+      description: { type: String, default: "" },
+      instructors: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "Profile",
+          required: true,
+        },
+      ],
+      images: [{ url: String }],
       published: { type: Boolean, default: false },
       sections: [{ type: Schema.Types.ObjectId, ref: "Section" }],
     },
@@ -27,12 +30,16 @@ export const createCourseModel = ({ db }) => {
   return db.model("Course", CourseSchema);
 };
 
+export const createCourseDataLoader = ({ Course }) => {
+  return createFindDataLoader(Course);
+};
+
 /**
  * Creates and returns the Section model using the given Mongoose connection.
  *
  * @param {Object} params
- * @param {import("mongoose").Connection} params.db - The Mongoose connection to use.
- * @returns {import("mongoose").Model} The Section model.
+ * @param {import("mongoose").Connection} params.db
+ * @returns {import("mongoose").Model}
  */
 export const createSectionModel = ({ db }) => {
   const SectionSchema = new Schema(
@@ -62,12 +69,16 @@ export const createSectionModel = ({ db }) => {
   return db.model("Section", SectionSchema);
 };
 
+export const createSectionDataLoader = ({ Section }) => {
+  return createFindDataLoader(Section);
+};
+
 /**
  * Creates and returns the Lesson model using the given Mongoose connection.
  *
  * @param {Object} params
- * @param {import("mongoose").Connection} params.db - The Mongoose connection to use.
- * @returns {import("mongoose").Model} The Lesson model.
+ * @param {import("mongoose").Connection} params.db
+ * @returns {import("mongoose").Model}
  */
 export const createLessonModel = ({ db }) => {
   const LessonSchema = new Schema(
@@ -89,12 +100,16 @@ export const createLessonModel = ({ db }) => {
   return db.model("Lesson", LessonSchema);
 };
 
+export const createLessonDataLoader = ({ Lesson }) => {
+  return createFindDataLoader(Lesson);
+};
+
 /**
  * Creates and returns the Quiz model using the given Mongoose connection.
  *
  * @param {Object} params
- * @param {import("mongoose").Connection} params.db - The Mongoose connection to use.
- * @returns {import("mongoose").Model} The Quiz model.
+ * @param {import("mongoose").Connection} params.db
+ * @returns {import("mongoose").Model}
  */
 export const createQuizModel = ({ db }) => {
   const QuestionSchema = new Schema(
@@ -145,12 +160,16 @@ export const createQuizModel = ({ db }) => {
   return db.model("Quiz", QuizSchema);
 };
 
+export const createQuizDataLoader = ({ Quiz }) => {
+  return createFindDataLoader(Quiz);
+};
+
 /**
  * Creates and returns the QuizAttempt model using the given Mongoose connection.
  *
  * @param {Object} params
- * @param {import("mongoose").Connection} params.db - The Mongoose connection to use.
- * @returns {import("mongoose").Model} The QuizAttempt model.
+ * @param {import("mongoose").Connection} params.db
+ * @returns {import("mongoose").Model}
  */
 export const createQuizAttemptModel = ({ db }) => {
   const QuizAttemptSchema = new Schema(
@@ -174,4 +193,8 @@ export const createQuizAttemptModel = ({ db }) => {
   );
 
   return db.model("QuizAttempt", QuizAttemptSchema);
+};
+
+export const createQuizAttemptDataLoader = ({ QuizAttempt }) => {
+  return createFindDataLoader(QuizAttempt);
 };
