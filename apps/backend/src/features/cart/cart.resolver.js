@@ -1,131 +1,127 @@
 import createHttpError from "http-errors";
 import { resolver } from "../../lib/graphql.js";
 
-export class CartResolver{
-    /** @type {import("mongoose").Model} */
-    CartItem;
-    /** @type {import("mongoose").Model} */
-    ProductVariant;
-    /** @type {import("mongoose").Model} */
-    Profile;
+export class CartResolver {
+  /** @type {import("mongoose").Model} */
+  CartItem;
+  /** @type {import("mongoose").Model} */
+  ProductVariant;
+  /** @type {import("mongoose").Model} */
+  Profile;
 
-    /** @type {import("dataloader")} */
-    ProductVariantDataLoader;
-    /** @type {import("dataloader")} */
-    ProfileDataLoader;
+  /** @type {import("dataloader")} */
+  ProductVariantDataLoader;
+  /** @type {import("dataloader")} */
+  ProfileDataLoader;
 
-    constructor() { }
+  constructor() {}
 
-    static get deps(){
-        return[
-            "CartItem",
-            "ProductVariant",
-            "Profile",
+  static get deps() {
+    return [
+      "CartItem",
+      "ProductVariant",
+      "Profile",
 
-            "ProductVariantDataLoader",
-            "ProfileDataLoader"
-        ];
-    }
+      "ProductVariantDataLoader",
+      "ProfileDataLoader",
+    ];
+  }
 
-    cartItems = async (parent, args, context) => {
-        const { profile } = args;
+  cartItems = async (parent, args, context) => {
+    const { profile } = args;
 
-        const cartItems = await this.CartItem.find({
-            profile,
-        });
-        
-        return cartItems;
+    const cartItems = await this.CartItem.find({
+      profile,
+    });
+
+    return cartItems;
+  };
+
+  createCartItem = resolver(async (parent, args, context, info) => {
+    const { profile, variant, quantity } = args.input;
+
+    const result = await this.CartItem.create({
+      profile,
+      variant,
+      quantity,
+    });
+
+    return {
+      message: "Cart item added.",
+      cartItem: result,
     };
+  });
 
-    createCartItem= resolver(async (parent,args,context,info)=>{
-        const {
-            profile,
-            variant,
-            quantity,
-        } = args.input;
+  updateCartItem = resolver(async (parent, args, context, info) => {
+    const { quantity } = args.input;
 
-        const result = await this.CartItem.create({
-            profile,
-            variant,
-            quantity
-        });
+    const { id } = args;
 
-        return {
-            message: "Cart item added.",
-            cartItem: result
-        }
-    })
+    const result = await this.CartItem.findByIdAndUpdate(
+      id,
+      {
+        quantity,
+      },
+      { new: true }
+    );
 
-
-    updateCartItem = resolver(async (parent,args,context,info)=>{
-        const {
-            quantity,
-        } = args.input;
-
-        const { id } = args;
-
-        const result = await this.CartItem.findByIdAndUpdate(id, {
-            quantity,
-        }, { new: true });
-
-        if(!result) {
-            throw createHttpError(404, "Cart item not found");
-        }
-
-        return {
-            message: "Cart item updated.",
-            cartItem: result
-        }
-    })
-
-
-    deleteCartItem = resolver(async (parent,args,context,info)=>{
-        const { id } = args;
-
-        const result = await this.CartItem.findByIdAndDelete(id);
-
-        if(!result) {
-            throw createHttpError(404, "Cart item not found");
-        }
-
-        return {
-            message: "Cart item deleted."
-        }
-    })
-
-    CartItem_total = async (parent, args, context) => {
-        const variant = await this.ProductVariant.findById(parent.variant);
-        const { quantity } = parent;
-
-        const total = Number(variant.price) * Number(quantity);
-        return total.toFixed(2);
+    if (!result) {
+      throw createHttpError(404, "Cart item not found");
     }
 
-    CartItem_variant = async (parent, args, context) => {
-        const result = await this.ProductVariant.findById(parent.variant);
-        return result;
+    return {
+      message: "Cart item updated.",
+      cartItem: result,
+    };
+  });
+
+  deleteCartItem = resolver(async (parent, args, context, info) => {
+    const { id } = args;
+
+    const result = await this.CartItem.findByIdAndDelete(id);
+
+    if (!result) {
+      throw createHttpError(404, "Cart item not found");
     }
 
-    CartItem_profile = async (parent, args, context) => {
-        const result = await this.Profile.findById(parent.profile);
-        return result;
-    }
+    return {
+      message: "Cart item deleted.",
+    };
+  });
 
-    getResolvers = ()=>{
-        return {
-            Query: {
-                cartItems: this.cartItems,
-            },
-            Mutation : {
-                createCartItem : this.createCartItem,
-                updateCartItem: this.updateCartItem,
-                deleteCartItem: this.deleteCartItem,
-            },
-            CartItem: {
-                total: this.CartItem_total,
-                variant: this.CartItem_variant,
-                profile: this.CartItem_profile,
-            }
-        }
-    }
+  CartItem_total = async (parent, args, context) => {
+    const variant = await this.ProductVariant.findById(parent.variant);
+    const { quantity } = parent;
+
+    const total = Number(variant.price) * Number(quantity);
+    return total.toFixed(2);
+  };
+
+  CartItem_variant = async (parent, args, context) => {
+    const result = await this.ProductVariantDataLoader.load(parent.variant);
+    return result;
+  };
+
+  CartItem_profile = async (parent, args, context) => {
+    const result = await this.ProfileDataLoader.load(parent.profile);
+    return result;
+  };
+
+  getResolvers = () => {
+    return {
+      Query: {
+        cartItems: this.cartItems,
+      },
+      Mutation: {
+        createCartItem: this.createCartItem,
+        updateCartItem: this.updateCartItem,
+        deleteCartItem: this.deleteCartItem,
+      },
+      CartItem: {
+        total: this.CartItem_total,
+        variant: this.CartItem_variant,
+        profile: this.CartItem_profile,
+      },
+    };
+  };
 }
