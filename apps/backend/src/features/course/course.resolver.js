@@ -218,11 +218,11 @@ export class CourseResolver {
 
         createSection: this.createSection,
         updateSection: this.updateSection,
-        updateSection: this.deleteSection,
+        deleteSection: this.deleteSection,
 
         createLesson: this.createLesson,
         updateLesson: this.updateLesson,
-        updateLesson: this.deleteLesson,
+        deleteLesson: this.deleteLesson,
 
         createQuiz: this.createQuiz,
         updateQuiz: this.updateQuiz,
