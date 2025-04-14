@@ -1010,13 +1010,13 @@ type DeleteQuizAttemptResponse {
 
 # Cart Item
 
-input AddCartItemInput {
+input CreateCartItemInput {
   profile: ObjectId!
   variant: ObjectId!
   quantity: String!
 }
 
-type AddCartItemResponse {
+type CreateCartItemResponse {
   code: Int!
   success: Boolean!
   message: String
@@ -1035,7 +1035,7 @@ type UpdateCartItemResponse {
   errors: [String!]
   cartItem: CartItem
 }
-type RemoveCartItemResponse {
+type DeleteCartItemResponse {
   code: Int!
   success: Boolean!
   message: String
@@ -1124,8 +1124,8 @@ type Mutation {
   ): UpdateQuizAttemptResponse!
   deleteQuizAttempt(id: ObjectId!): DeleteQuizAttemptResponse!
   #Cart
-  createCartItem(input: AddCartItemInput!): AddCartItemResponse!
-  deleteCartItem(id: ObjectId!): RemoveCartItemResponse!
+  createCartItem(input: CreateCartItemInput!): CreateCartItemResponse!
+  deleteCartItem(id: ObjectId!): DeleteCartItemResponse!
   updateCartItem(
     id: ObjectId!
     input: UpdateCartItemInput!
