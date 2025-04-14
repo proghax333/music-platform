@@ -1,4 +1,5 @@
 import { Buffer } from "node:buffer";
+import { ObjectId } from "./types.js";
 
 export function encodeCursor(value) {
   return Buffer.from(JSON.stringify(value)).toString("base64");
@@ -26,10 +27,13 @@ export function decodeCursor(cursor) {
  */
 export async function paginate(
   aggregate,
-  { before, after, first, last, sort = "_id", all = false }
+  { before, after, first, last, sort = "_id", all = false },
+  aggregateOptions = undefined
 ) {
   const sortField = sort;
   const isPaginatingBackward = !!last;
+
+  /** @type {import("mongoose").Model} */
   const model = aggregate._model;
 
   const basePipeline = aggregate.pipeline();
@@ -61,11 +65,15 @@ export async function paginate(
 
   // Default limit = 10 if not specified
   const limit = first || last || 10;
-  const cursorValue = before
+  let cursorValue = before
     ? decodeCursor(before)
     : after
     ? decodeCursor(after)
     : null;
+
+  if (cursorValue && sortField === "_id") {
+    cursorValue = new ObjectId(cursorValue);
+  }
 
   const matchStage = {};
   if (after) matchStage[sortField] = { $gt: cursorValue };
@@ -81,8 +89,8 @@ export async function paginate(
   const countPipeline = [...basePipeline, { $count: "count" }];
 
   const [results, totalResult] = await Promise.all([
-    model.aggregate(paginationPipeline).exec(),
-    model.aggregate(countPipeline).exec(),
+    model.aggregate(paginationPipeline, aggregateOptions).exec(),
+    model.aggregate(countPipeline, aggregateOptions).exec(),
   ]);
 
   const totalCount = totalResult[0]?.count || 0;
