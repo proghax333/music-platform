@@ -45,7 +45,10 @@ export class CourseResolver {
   createCourse = resolver(async (parent, args, context) => {
     const data = args.input;
     const course = await this.Course.create(data);
-    return course;
+    return {
+      message: "Course created.",
+      course,
+    };
   });
 
   updateCourse = resolver(async (parent, args, context) => {
@@ -58,26 +61,31 @@ export class CourseResolver {
       throw createHttpError("Course not found.");
     }
 
-    return course;
+    return {
+      message: "Course updated.",
+      course,
+    };
   });
 
   deleteCourse = resolver(async (parent, args, context) => {
-    const data = args.input;
-    const course = await this.Course.findByIdAndDelete(args.id, data, {
-      new: true,
-    });
+    const course = await this.Course.findByIdAndDelete(args.id);
 
     if (!course) {
       throw createHttpError("Course not found.");
     }
-    return course;
+
+    return {
+      message: "Course deleted.",
+    };
   });
 
-  // Section
   createSection = resolver(async (parent, args, context) => {
     const data = args.input;
     const section = await this.Section.create(data);
-    return section;
+    return {
+      message: "Section created.",
+      section,
+    };
   });
 
   updateSection = resolver(async (parent, args, context) => {
@@ -90,26 +98,31 @@ export class CourseResolver {
       throw createHttpError("Section not found.");
     }
 
-    return section;
+    return {
+      message: "Section updated.",
+      section,
+    };
   });
 
   deleteSection = resolver(async (parent, args, context) => {
-    const data = args.input;
-    const section = await this.Section.findByIdAndDelete(args.id, data, {
-      new: true,
-    });
+    const section = await this.Section.findByIdAndDelete(args.id);
 
     if (!section) {
       throw createHttpError("Section not found.");
     }
-    return section;
+
+    return {
+      message: "Section deleted.",
+    };
   });
 
-  // Lesson
   createLesson = resolver(async (parent, args, context) => {
     const data = args.input;
     const lesson = await this.Lesson.create(data);
-    return lesson;
+    return {
+      message: "Lesson created.",
+      lesson,
+    };
   });
 
   updateLesson = resolver(async (parent, args, context) => {
@@ -122,26 +135,31 @@ export class CourseResolver {
       throw createHttpError("Lesson not found.");
     }
 
-    return lesson;
+    return {
+      message: "Lesson updated.",
+      lesson,
+    };
   });
 
   deleteLesson = resolver(async (parent, args, context) => {
-    const data = args.input;
-    const lesson = await this.Lesson.findByIdAndDelete(args.id, data, {
-      new: true,
-    });
+    const lesson = await this.Lesson.findByIdAndDelete(args.id);
 
     if (!lesson) {
       throw createHttpError("Lesson not found.");
     }
-    return lesson;
+
+    return {
+      message: "Lesson deleted.",
+    };
   });
 
-  // Quiz
   createQuiz = resolver(async (parent, args, context) => {
     const data = args.input;
     const quiz = await this.Quiz.create(data);
-    return quiz;
+    return {
+      message: "Quiz created.",
+      quiz,
+    };
   });
 
   updateQuiz = resolver(async (parent, args, context) => {
@@ -154,26 +172,31 @@ export class CourseResolver {
       throw createHttpError("Quiz not found.");
     }
 
-    return quiz;
+    return {
+      message: "Quiz updated.",
+      quiz,
+    };
   });
 
   deleteQuiz = resolver(async (parent, args, context) => {
-    const data = args.input;
-    const quiz = await this.Quiz.findByIdAndDelete(args.id, data, {
-      new: true,
-    });
+    const quiz = await this.Quiz.findByIdAndDelete(args.id);
 
     if (!quiz) {
       throw createHttpError("Quiz not found.");
     }
-    return quiz;
+
+    return {
+      message: "Quiz deleted.",
+    };
   });
 
-  // Quiz
   createQuizAttempt = resolver(async (parent, args, context) => {
     const data = args.input;
     const quizAttempt = await this.QuizAttempt.create(data);
-    return quizAttempt;
+    return {
+      message: "Quiz attempt created.",
+      quizAttempt,
+    };
   });
 
   updateQuizAttempt = resolver(async (parent, args, context) => {
@@ -190,23 +213,22 @@ export class CourseResolver {
       throw createHttpError("Quiz attempt not found.");
     }
 
-    return quizAttempt;
+    return {
+      message: "Quiz attempt updated.",
+      quizAttempt,
+    };
   });
 
   deleteQuizAttempt = resolver(async (parent, args, context) => {
-    const data = args.input;
-    const quizAttempt = await this.QuizAttempt.findByIdAndDelete(
-      args.id,
-      data,
-      {
-        new: true,
-      }
-    );
+    const quizAttempt = await this.QuizAttempt.findByIdAndDelete(args.id);
 
     if (!quizAttempt) {
       throw createHttpError("Quiz attempt not found.");
     }
-    return quizAttempt;
+
+    return {
+      message: "Quiz attempt deleted.",
+    };
   });
 
   getResolvers = () => {
