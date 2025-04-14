@@ -293,6 +293,14 @@ type QuizAttempt {
   updatedAt: Date
 }
 
+type CartItem {
+  _id: ObjectId!
+  profile: ObjectId
+  variant: ProductVariant
+  quantity: String!
+  total: String!
+}
+
 ###
 # Queries: All GraphQL queries.
 ###
@@ -998,6 +1006,42 @@ type DeleteQuizAttemptResponse {
   errors: [String!]
 }
 
+# Cart Item
+
+input AddCartItemInput {
+  profile: ObjectId!
+  variant: ObjectId!
+  quantity: String!
+}
+
+type AddCartItemResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  cartItem: CartItem!
+}
+
+input UpdateCartItemInput {
+  profile: ObjectId
+  variant: ObjectId
+  quantity: String
+}
+
+type UpdateCartItemResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  cartItem: CartItem!
+}
+type RemoveCartItemResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
 ### ------ ###
 
 type Mutation {
@@ -1079,6 +1123,13 @@ type Mutation {
     input: UpdateQuizAttemptInput!
   ): UpdateQuizAttemptResponse!
   deleteQuizAttempt(id: ObjectId!): DeleteQuizAttemptResponse!
+  #Cart
+  createCartItem(input: AddCartItemInput!): AddCartItemResponse!
+  deleteCartItem(id: ObjectId!): RemoveCartItemResponse!
+  updateCartItem(
+    id: ObjectId!
+    input: UpdateCartItemInput!
+  ): UpdateCartItemResponse!
 }
 
 """
