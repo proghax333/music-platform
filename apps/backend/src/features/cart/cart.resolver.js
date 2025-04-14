@@ -6,15 +6,38 @@ export class CartResolver{
     CartItem;
     /** @type {import("mongoose").Model} */
     ProductVariant;
+    /** @type {import("mongoose").Model} */
+    Profile;
 
-    constructor(CartItem, ProductVariant){
-        this.CartItem = CartItem;
-        this.ProductVariant = ProductVariant;
-    }
+    /** @type {import("dataloader")} */
+    ProductVariantDataLoader;
+    /** @type {import("dataloader")} */
+    ProfileDataLoader;
+
+    constructor() { }
+
     static get deps(){
-        return["CartItem", "ProductVariant"];
+        return[
+            "CartItem",
+            "ProductVariant",
+            "Profile",
+
+            "ProductVariantDataLoader",
+            "ProfileDataLoader"
+        ];
     }
-    creatCartItem= resolver(async (parent,args,context,info)=>{
+
+    cartItems = async (parent, args, context) => {
+        const { profile } = args;
+
+        const cartItems = await this.CartItem.find({
+            profile,
+        });
+        
+        return cartItems;
+    };
+
+    createCartItem= resolver(async (parent,args,context,info)=>{
         const {
             profile,
             variant,
@@ -33,6 +56,43 @@ export class CartResolver{
         }
     })
 
+
+    updateCartItem = resolver(async (parent,args,context,info)=>{
+        const {
+            quantity,
+        } = args.input;
+
+        const { id } = args;
+
+        const result = await this.CartItem.findByIdAndUpdate(id, {
+            quantity,
+        }, { new: true });
+
+        if(!result) {
+            throw createHttpError(404, "Cart item not found");
+        }
+
+        return {
+            message: "Cart item updated.",
+            cartItem: result
+        }
+    })
+
+
+    deleteCartItem = resolver(async (parent,args,context,info)=>{
+        const { id } = args;
+
+        const result = await this.CartItem.findByIdAndDelete(id);
+
+        if(!result) {
+            throw createHttpError(404, "Cart item not found");
+        }
+
+        return {
+            message: "Cart item deleted."
+        }
+    })
+
     CartItem_total = async (parent, args, context) => {
         const variant = await this.ProductVariant.findById(parent.variant);
         const { quantity } = parent;
@@ -41,13 +101,30 @@ export class CartResolver{
         return total.toFixed(2);
     }
 
+    CartItem_variant = async (parent, args, context) => {
+        const result = await this.ProductVariant.findById(parent.variant);
+        return result;
+    }
+
+    CartItem_profile = async (parent, args, context) => {
+        const result = await this.Profile.findById(parent.profile);
+        return result;
+    }
+
     getResolvers = ()=>{
         return {
+            Query: {
+                cartItems: this.cartItems,
+            },
             Mutation : {
-                createCartItem : this.creatCartItem
+                createCartItem : this.createCartItem,
+                updateCartItem: this.updateCartItem,
+                deleteCartItem: this.deleteCartItem,
             },
             CartItem: {
-                total: this.CartItem_total
+                total: this.CartItem_total,
+                variant: this.CartItem_variant,
+                profile: this.CartItem_profile,
             }
         }
     }

@@ -295,7 +295,7 @@ type QuizAttempt {
 
 type CartItem {
   _id: ObjectId!
-  profile: ObjectId
+  profile: Profile
   variant: ProductVariant
   quantity: String!
   total: String!
@@ -354,6 +354,8 @@ type Query {
   ): ReviewConnection
 
   review(id: ObjectId!): Review
+
+  cartItems(profile: ObjectId!): [CartItem!]!
 }
 
 ########################
@@ -1023,8 +1025,6 @@ type AddCartItemResponse {
 }
 
 input UpdateCartItemInput {
-  profile: ObjectId
-  variant: ObjectId
   quantity: String
 }
 
@@ -1033,7 +1033,7 @@ type UpdateCartItemResponse {
   success: Boolean!
   message: String
   errors: [String!]
-  cartItem: CartItem!
+  cartItem: CartItem
 }
 type RemoveCartItemResponse {
   code: Int!
