@@ -20,6 +20,9 @@ export class ProductResolver {
   /** @type {import("mongoose").Model} */
   Review;
 
+  /** @type {import("mongoose").Connection} */
+  db;
+
   /** @type {import("dataloader")} */
   ProductDataLoader;
   /** @type {import("dataloader")} */
@@ -46,6 +49,8 @@ export class ProductResolver {
       "User",
       "Brand",
       "Category",
+
+      "db",
 
       "ProductDataLoader",
       "ProductVariantDataLoader",
@@ -173,13 +178,14 @@ export class ProductResolver {
       brand,
     });
 
-    for (const variant of variants) {
-      const result = await this.ProductVariant.create({
+    const variantDocs = variants.map((variant) => {
+      return {
         ...variant,
         product: product._id,
-      });
-    }
+      };
+    });
 
+    await this.ProductVariant.create(variantDocs);
     const productObject = await product.toObject();
 
     return {
