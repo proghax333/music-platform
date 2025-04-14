@@ -76,12 +76,15 @@ async function main() {
   const productResolver = di.container.productResolver;
   /** @type {import("./features/review/review.resolver.js").ReviewResolver} */
   const reviewResolver = di.container.reviewResolver;
+  /** @type {import("./features/course/course.resolver.js").CourseResolver} */
+  const courseResolver = di.container.courseResolver;
 
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
   graphqlModule.addResolvers(userResolver.getResolvers());
   graphqlModule.addResolvers(productResolver.getResolvers());
   graphqlModule.addResolvers(reviewResolver.getResolvers());
+  graphqlModule.addResolvers(courseResolver.getResolvers());
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();

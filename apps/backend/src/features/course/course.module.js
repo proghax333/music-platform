@@ -10,6 +10,7 @@ import {
   createSectionDataLoader,
   createSectionModel,
 } from "./course.model.js";
+import { CourseResolver } from "./course.resolver.js";
 
 export class CourseModule {
   /**
@@ -28,5 +29,7 @@ export class CourseModule {
     di.factory("LessonDataLoader", createLessonDataLoader);
     di.factory("QuizDataLoader", createQuizDataLoader);
     di.factory("QuizAttemptDataLoader", createQuizAttemptDataLoader);
+
+    di.service("courseResolver", CourseResolver);
   }
 }

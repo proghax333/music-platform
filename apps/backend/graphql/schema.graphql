@@ -775,6 +775,53 @@ type DeleteSectionResponse {
   errors: [String!]
 }
 
+######################
+### Section Inputs ###
+######################
+
+input SectionItemInput {
+  ref: ObjectId!
+  type: String! # Allowed: "Lesson", "Quiz"
+}
+
+input CreateSectionInput {
+  title: String!
+  course: ObjectId!
+  items: [SectionItemInput!]
+  order: Int!
+}
+
+type CreateSectionResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  section: Section
+}
+
+input UpdateSectionInput {
+  _id: ObjectId!
+  title: String
+  course: ObjectId
+  items: [SectionItemInput!]
+  order: Int
+}
+
+type UpdateSectionResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  section: Section
+}
+
+type DeleteSectionResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
 #####################
 ### Lesson Inputs ###
 #####################
@@ -1011,6 +1058,14 @@ type Mutation {
   createLesson(input: CreateLessonInput!): CreateLessonResponse!
   updateLesson(id: ObjectId!, input: UpdateLessonInput!): UpdateLessonResponse!
   deleteLesson(id: ObjectId!): DeleteLessonResponse!
+
+  # Section mutations
+  createSection(input: CreateSectionInput!): CreateSectionResponse!
+  updateSection(
+    id: ObjectId!
+    input: UpdateSectionInput!
+  ): UpdateSectionResponse!
+  deleteSection(id: ObjectId!): DeleteSectionResponse!
 
   # Quiz mutations
   createQuiz(input: CreateQuizInput!): CreateQuizResponse!
