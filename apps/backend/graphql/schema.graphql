@@ -464,6 +464,7 @@ input UpdateProductInput_variants {
 }
 
 input UpdateProductInput {
+  _id: ObjectId
   name: String
   description: String
   images: [ImageInput]
@@ -513,6 +514,7 @@ type CreateProductVariantResponse {
 }
 
 input UpdateProductVariantInput {
+  _id: ObjectId
   name: String
   description: String
   type: String
@@ -556,9 +558,10 @@ type CreateProductPostingResponse {
 }
 
 input UpdateProductPostingInput {
-  variant: ObjectId!
-  seller: ObjectId!
-  price: String!
+  _id: ObjectId
+  variant: ObjectId
+  seller: ObjectId
+  price: String
 }
 
 type UpdateProductPostingResponse {
@@ -594,6 +597,7 @@ type CreateCategoryResponse {
 }
 
 input UpdateCategoryInput {
+  _id: ObjectId
   name: String
   parent: ObjectId
 }
@@ -630,6 +634,7 @@ type CreateBrandResponse {
 }
 
 input UpdateBrandInput {
+  _id: ObjectId
   name: String
 }
 
@@ -668,6 +673,7 @@ type CreateReviewResponse {
 }
 
 input UpdateReviewInput {
+  _id: ObjectId
   rating: Float!
   content: String
 }
@@ -1025,6 +1031,7 @@ type CreateCartItemResponse {
 }
 
 input UpdateCartItemInput {
+  _id: ObjectId
   quantity: String
 }
 
