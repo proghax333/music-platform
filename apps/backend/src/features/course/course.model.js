@@ -20,6 +20,7 @@ export const createCourseModel = ({ db }) => {
           required: true,
         },
       ],
+      tags: [String],
       images: [{ url: String }],
       published: { type: Boolean, default: false },
       sections: [{ type: Schema.Types.ObjectId, ref: "Section" }],

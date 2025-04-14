@@ -181,6 +181,8 @@ type ReviewConnection {
   pageInfo: PageInfo
 }
 
+### Course ###
+
 type Course_image {
   url: String
 }
@@ -679,6 +681,7 @@ type DeleteReviewResponse {
 #####################
 ### Course Inputs ###
 #####################
+
 input CourseImageInput {
   url: String
 }
@@ -692,6 +695,14 @@ input CreateCourseInput {
   sections: [ObjectId!]
 }
 
+type CreateCourseResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  course: Course
+}
+
 input UpdateCourseInput {
   _id: ObjectId!
   title: String
@@ -702,13 +713,25 @@ input UpdateCourseInput {
   sections: [ObjectId!]
 }
 
-input DeleteCourseInput {
-  _id: ObjectId!
+type UpdateCourseResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  course: Course
+}
+
+type DeleteCourseResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
 }
 
 ######################
 ### Section Inputs ###
 ######################
+
 input SectionItemInput {
   ref: ObjectId!
   type: String! # Should match ["Lesson", "Quiz"]
@@ -721,6 +744,14 @@ input CreateSectionInput {
   order: Int!
 }
 
+type CreateSectionResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  section: Section
+}
+
 input UpdateSectionInput {
   _id: ObjectId!
   title: String
@@ -729,8 +760,19 @@ input UpdateSectionInput {
   order: Int
 }
 
-input DeleteSectionInput {
-  _id: ObjectId!
+type UpdateSectionResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  section: Section
+}
+
+type DeleteSectionResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
 }
 
 #####################
@@ -751,6 +793,14 @@ input CreateLessonInput {
   resources: [LessonResourceInput]
 }
 
+type CreateLessonResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  lesson: Lesson
+}
+
 input UpdateLessonInput {
   _id: ObjectId!
   title: String
@@ -759,8 +809,19 @@ input UpdateLessonInput {
   resources: [LessonResourceInput]
 }
 
-input DeleteLessonInput {
-  _id: ObjectId!
+type UpdateLessonResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  lesson: Lesson
+}
+
+type DeleteLessonResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
 }
 
 ###################
@@ -797,6 +858,14 @@ input CreateQuizInput {
   course: ObjectId
 }
 
+type CreateQuizResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  quiz: Quiz
+}
+
 input UpdateQuizInput {
   _id: ObjectId!
   title: String
@@ -808,8 +877,19 @@ input UpdateQuizInput {
   course: ObjectId
 }
 
-input DeleteQuizInput {
-  _id: ObjectId!
+type UpdateQuizResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  quiz: Quiz
+}
+
+type DeleteQuizResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
 }
 
 ###########################
@@ -838,6 +918,14 @@ input CreateQuizAttemptInput {
   duration: Int
 }
 
+type CreateQuizAttemptResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  quizAttempt: QuizAttempt
+}
+
 input UpdateQuizAttemptInput {
   _id: ObjectId!
   quiz: ObjectId
@@ -848,8 +936,19 @@ input UpdateQuizAttemptInput {
   duration: Int
 }
 
-input DeleteQuizAttemptInput {
-  _id: ObjectId!
+type UpdateQuizAttemptResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+  quizAttempt: QuizAttempt
+}
+
+type DeleteQuizAttemptResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
 }
 
 ### ------ ###
@@ -902,6 +1001,29 @@ type Mutation {
   createReview(input: CreateReviewInput!): CreateReviewResponse!
   updateReview(id: ObjectId!, input: UpdateReviewInput!): UpdateReviewResponse!
   deleteReview(id: ObjectId!): DeleteReviewResponse!
+
+  # Course mutations
+  createCourse(input: CreateCourseInput!): CreateCourseResponse!
+  updateCourse(id: ObjectId!, input: UpdateCourseInput!): UpdateCourseResponse!
+  deleteCourse(id: ObjectId!): DeleteCourseResponse!
+
+  # Lesson mutations
+  createLesson(input: CreateLessonInput!): CreateLessonResponse!
+  updateLesson(id: ObjectId!, input: UpdateLessonInput!): UpdateLessonResponse!
+  deleteLesson(id: ObjectId!): DeleteLessonResponse!
+
+  # Quiz mutations
+  createQuiz(input: CreateQuizInput!): CreateQuizResponse!
+  updateQuiz(id: ObjectId!, input: UpdateQuizInput!): UpdateQuizResponse!
+  deleteQuiz(id: ObjectId!): DeleteQuizResponse!
+
+  # Quiz attempt mutations
+  createQuizAttempt(input: CreateQuizAttemptInput!): CreateQuizAttemptResponse!
+  updateQuizAttempt(
+    id: ObjectId!
+    input: UpdateQuizAttemptInput!
+  ): UpdateQuizAttemptResponse!
+  deleteQuizAttempt(id: ObjectId!): DeleteQuizAttemptResponse!
 }
 
 """
