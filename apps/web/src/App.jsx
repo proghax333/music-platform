@@ -35,6 +35,8 @@ import AudioRecorder from "./pages/Record/AudioRecorder";
 import Checkout from "./pages/Cart/Checkout";
 import { SessionProvider } from "./modules/session/SessionProvider";
 import { WaitForSessionLoading } from "./modules/session/WaitForSessionLoading";
+import ChatsPage from "./modules/chat/chats-page";
+import { ChatMainPanel } from "./modules/chat/chats-main-panel";
 
 function RootRouter() {
   return (
@@ -86,6 +88,10 @@ function RootRouter() {
 
           <Route path="practice">
             <Route index element={<PracticePage />} />
+          </Route>
+
+          <Route path="chats" element={<ChatsPage />}>
+            <Route path=":chatId" element={<ChatMainPanel />} />
           </Route>
 
           <Route path="dashboard" element={<DashboardLayout />}>
