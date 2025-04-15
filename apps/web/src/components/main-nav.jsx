@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { RxHamburgerMenu } from "react-icons/rx";
 import { RxCross1 } from "react-icons/rx";
@@ -7,10 +7,12 @@ import { cls } from "@/utils/cls";
 
 import * as motion from "motion/react-client";
 import { AnimatePresence } from "motion/react";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import SiteLogo from "./site-logo";
 
 import { FaShoppingCart } from "react-icons/fa";
+import { Popover } from "@mui/material";
+import { useSession } from "@/modules/session/useSession";
 
 function MainNav({ className }) {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
@@ -29,9 +31,23 @@ function MainNav({ className }) {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   };
 
+  const menuId = "main-menu";
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuAnchorElRef = useRef();
+
+  const handleOpenMenu = () => {
+    setIsMenuOpen(true);
+  };
+
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   const showSmallMenu = isSmallDevice || isMediumDevice;
   // const showSmallMenu = false;
   const showLargeMenu = !showSmallMenu;
+
+  const session = useSession();
 
   const items = [
     {
@@ -132,9 +148,54 @@ function MainNav({ className }) {
                     <FaShoppingCart className="ml-3" size={20} />
                   </NavLink>
 
-                  <button className="w-12 h-12 bg-accent-400 border border-accent-300 text-lg text-accent-content-400 rounded-full flex items-center justify-center">
+                  <button
+                    aria-describedby={menuId}
+                    onClick={handleOpenMenu}
+                    className="w-12 h-12 bg-accent-400 border border-accent-300 text-lg text-accent-content-400 rounded-full flex items-center justify-center"
+                    ref={menuAnchorElRef}
+                  >
                     A
                   </button>
+
+                  {session.isLoggedIn && (
+                    <Popover
+                      id={menuId}
+                      open={isMenuOpen}
+                      anchorEl={menuAnchorElRef.current}
+                      onClose={handleCloseMenu}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                      }}
+                    >
+                      <div
+                        className="min-w-52 flex flex-col"
+                        onClick={(e) => {
+                          if (e.target.tagName === "A") {
+                            handleCloseMenu();
+                          }
+                        }}
+                      >
+                        <NavLink
+                          className="p-2 px-4"
+                          to={`/profiles/${session.getCurrentProfile()._id}`}
+                        >
+                          Profile
+                        </NavLink>
+                        <NavLink className="p-2 px-4" to={"/settings"}>
+                          Settings
+                        </NavLink>
+                        <hr />
+                        <NavLink className="p-2 px-4" to={"/logout"}>
+                          Logout
+                        </NavLink>
+                      </div>
+                    </Popover>
+                  )}
                 </div>
               </div>
             </div>
