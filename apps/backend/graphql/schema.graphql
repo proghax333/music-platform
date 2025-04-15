@@ -159,12 +159,19 @@ type CategoryConnection {
   pageInfo: PageInfo
 }
 
+type Review_resource {
+  title: String
+  url: String
+  type: String
+}
+
 type Review {
   _id: ObjectId!
   author: Profile
   refType: String
   refId: ObjectId
   rating: Float!
+  resources: [Review_resource!]
   content: String
   createdAt: Date
   updatedAt: Date
@@ -655,12 +662,19 @@ type DeleteBrandResponse {
 }
 
 ### Review ###
+input ReviewResourceInput {
+  title: String
+  url: String
+  type: String
+}
+
 input CreateReviewInput {
   author: ObjectId
   refType: String
   refId: ObjectId
   rating: Float!
   content: String
+  resources: [ReviewResourceInput!]
 }
 
 type CreateReviewResponse {
@@ -676,6 +690,7 @@ input UpdateReviewInput {
   _id: ObjectId
   rating: Float!
   content: String
+  resources: [ReviewResourceInput!]
 }
 
 type UpdateReviewResponse {
