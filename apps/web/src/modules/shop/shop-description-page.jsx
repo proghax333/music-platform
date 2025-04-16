@@ -189,7 +189,9 @@ function ShopDescription() {
         </div>
 
         <div className="w-[50%] flex-row ml-6">
-          <p className="text-primary-800 text-5xl font-semibold">{name}</p>
+          <p className="text-primary-800 text-5xl font-semibold">
+            {product.name}
+          </p>
           <div className="mt-4">
             <RatingSummary
               rating={rating}

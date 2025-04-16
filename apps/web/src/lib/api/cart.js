@@ -6,6 +6,31 @@ export const QUERY_CARTITEMS=(profile)=>{
     return ["cartItems",profile]
 }
 
+export const useDeleteCartItemMutation = (options = {}) =>{
+    const query = `mutation DeleteCartItem($deleteCartItemId: ObjectId!) {
+  deleteCartItem(id: $deleteCartItemId) {
+    code
+    message
+    success
+    errors
+  }
+}`
+return useMutation({
+    mutationFn: async ({id}) => {
+        const response =await api.post(GRAPHQL_ENDPOINT, {
+            query,
+            variables :{
+                deleteCartItemId: id
+            },
+        });
+        const result = response.data;
+        return result.data.deleteCartItem;
+
+    },
+    ...options
+})
+}
+
 export const useUpdateCartItemMutation = (options = {}) =>{
     const query = `mutation UpdateCartItem($updateCartItemId: ObjectId!, $updateCartItemInput: UpdateCartItemInput!) {
   updateCartItem(id: $updateCartItemId, input: $updateCartItemInput) {

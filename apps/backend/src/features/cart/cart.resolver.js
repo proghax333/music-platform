@@ -39,6 +39,11 @@ export class CartResolver {
 
   createCartItem = resolver(async (parent, args, context, info) => {
     const { profile, variant, quantity } = args.input;
+    const quantityNumber = Number(quantity);
+
+    if(isNaN(quantityNumber) || quantityNumber <= 0) {
+      throw createHttpError(400, "Invalid quantity provided.");
+    }
 
     const result = await this.CartItem.create({
       profile,

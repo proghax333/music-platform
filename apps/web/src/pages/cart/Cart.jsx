@@ -2,6 +2,7 @@ import MainNav from "@/components/main-nav";
 import {
   QUERY_CARTITEMS,
   useCartItemsQuery,
+  useDeleteCartItemMutation,
   useUpdateCartItemMutation,
 } from "@/lib/api/cart";
 import { useSession } from "@/modules/session/useSession";
@@ -17,27 +18,6 @@ function Cart() {
       name: "Havana Curved 39 inch",
       Price: 8000,
       Color: "Blue",
-    },
-    {
-      id: "2",
-      img: "https://m.media-amazon.com/images/I/515EFIbG87L.jpg",
-      name: "Havana Curved 39 inch",
-      Price: 6000,
-      Color: "Red",
-    },
-    {
-      id: "3",
-      img: "https://m.mediaamazon.com/images/I/515EFIbG87L.jpg",
-      name: "Havana Curved 39 inch",
-      Price: 8000,
-      Color: "Blue",
-    },
-    {
-      id: "4",
-      img: "https://m.media-amazon.com/images/I/515EFIbG87L.jpg",
-      name: "Havana Curved 39 inch",
-      Price: 6000,
-      Color: "Red",
     },
   ];
 
@@ -58,18 +38,17 @@ function Cart() {
     },
   });
 
-  const [remove, setRemove] = useState(cart);
-  const [quantities, setQuantities] = useState(
-    cart.reduce((acc, item) => {
-      acc[item.id] = 1;
-      return acc;
-    }, {})
-  );
+  const deleteCartItemMutation = useDeleteCartItemMutation({
+    onSuccess: () => {
+      refetchCartItems();
+    },
+  });
 
   const handleRemove = (id) => {
-    // if (window.confirm("Do you want to remove this item?")) {
-    //   setRemove((prev) => prev.filter((item) => item.id !== id));
-    // }
+    console.log("Item remove");
+    if (window.confirm("Do you want to remove this item?")) {
+      deleteCartItemMutation.mutate({ id });
+    }
   };
 
   const Increased = (item) => {
@@ -92,10 +71,7 @@ function Cart() {
 
   // Function to calculate the subtotal
   const getSubtotal = () => {
-    return remove.reduce(
-      (acc, item) => acc + quantities[item.id] * item.Price,
-      0
-    );
+    return cartItems.reduce((acc, item) => acc + Number(item.total), 0);
   };
 
   // Function to calculate shipping based on subtotal
@@ -122,32 +98,32 @@ function Cart() {
               <h2 className="text-3xl text-center font-semibold mb-6 border-b-4 pb-4">
                 Your Cart
               </h2>
-              {cartItems.map((carts) => (
+              {cartItems.map((item) => (
                 <div
-                  key={carts._id}
+                  key={item._id}
                   className="flex border-b pb-4 mb-6 hover:shadow-xl transition duration-300 ease-in-out"
                 >
                   <div className="flex-shrink-0">
                     <img
-                      src={carts.variant.images[0].url}
+                      src={item.variant.images[0].url}
                       width={220}
                       height={170}
-                      alt={carts.variant.product.name}
+                      alt={item.variant.product.name}
                       className="rounded-lg border-2 border-gray-300"
                     />
                   </div>
                   <div className="ml-6 flex-1">
                     <h3 className="text-2xl font-semibold text-gray-800">
-                      {carts.variant.product.name}
+                      {item.variant.product.name}
                     </h3>
                     <p className="text-xl text-gray-600">
                       Variant :{" "}
                       <span className="font-medium text-gray-800">
-                        {carts.variant.name}
+                        {item.variant.name}
                       </span>
                     </p>
                     <p className="text-xl font-bold text-gray-800 mt-2">
-                      Price: ₹{carts.variant.price}
+                      Price: ₹{item.variant.price}
                     </p>
 
                     <div className="flex items-center mt-2 space-x-6">
@@ -155,31 +131,31 @@ function Cart() {
                       <button
                         className="px-4 py-1 bg-gray-400 text-white rounded-full"
                         onClick={() =>
-                          cart.quantity == "1"
-                            ? handleRemove(carts)
-                            : Decreased(carts)
+                          item.quantity == "1"
+                            ? handleRemove(item._id)
+                            : Decreased(item)
                         }
                       >
                         <p className="text-2xl">-</p>
                       </button>
                       <span className="mx-4 text-xl font-semibold">
-                        {carts.quantity}
+                        {item.quantity}
                       </span>
                       <button
                         className="px-4 py-1 bg-black text-white  rounded-full"
-                        onClick={() => Increased(carts)}
+                        onClick={() => Increased(item)}
                       >
                         <p className="text-2xl">+</p>
                       </button>
                     </div>
 
                     <p className="text-xl font-semibold mt-4">
-                      Total: ₹{carts.total}
+                      Total: ₹{item.total}
                     </p>
 
                     <button
                       className="mt-4 text-red-500 font-medium hover:underline"
-                      onClick={() => handleRemove(carts)}
+                      onClick={() => handleRemove(item._id)}
                     >
                       Remove Item
                     </button>
