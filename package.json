@@ -12,5 +12,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@headlessui/react": "^2.2.1",
+    "react-simple-star-rating": "^5.1.7"
+  }
 }
