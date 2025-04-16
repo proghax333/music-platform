@@ -69,6 +69,16 @@ export class ProductResolver {
     return productConnection;
   };
 
+  product = async (parent, args, context) => {
+    const product = await this.ProductDataLoader.load(args.id);
+    return product;
+  };
+
+  productVariant = async (parent, args, context) => {
+    const productVariant = await this.ProductVariantDataLoader.load(args.id);
+    return productVariant;
+  };
+
   brands = async (parent, args, context) => {
     const pipeline = this.Brand.aggregate();
     const brandConnection = await paginate(pipeline, {
@@ -521,6 +531,8 @@ export class ProductResolver {
         brands: this.brands,
         categories: this.categories,
         allCategories: this.allCategories,
+        product: this.product,
+        productVariant: this.productVariant,
       },
       Mutation: {
         createProduct: this.createProduct,

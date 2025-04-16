@@ -330,6 +330,9 @@ type Query {
     filter: Object
   ): ProductConnection
 
+  product(id: ObjectId!): Product
+  productVariant(id: ObjectId!): ProductVariant
+
   brands(
     first: Int
     last: Int

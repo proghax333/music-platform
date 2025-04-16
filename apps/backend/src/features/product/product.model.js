@@ -92,7 +92,7 @@ export const createProductVariantModel = ({ db }) => {
   const ProductVariantSchema = new Schema({
     product: { type: Types.ObjectId, ref: "Product", required: true },
     name: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true },
+    description: { type: String,trim: true },
     type: { type: String },
     images: [
       {
