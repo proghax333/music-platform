@@ -1,7 +1,7 @@
 import { controller } from "../../lib/controller.js";
 import { createHttpError } from "../../lib/http.js";
 
-export function authMiddleware(userService, authService) {
+export function authMiddleware({ userService, authService }) {
   return controller(async (req, res, next) => {
     let token = req.headers.authorization;
 
@@ -20,15 +20,15 @@ export function authMiddleware(userService, authService) {
       return next(createHttpError(401, "Unauthorized"));
     }
 
-    const user = await userService.getUserById(isValidToken.id);
+    const user = await userService.getUserById(isValidToken._id);
     if (!user) {
       return next(createHttpError(401, "Unauthorized"));
     }
 
     const safeUser = {
-      id: user._id,
+      _id: user._id,
       email: user.email,
-      name: user.name,
+      username: user.username,
     };
 
     req.token = safeUser;

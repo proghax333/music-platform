@@ -14,6 +14,7 @@ import { ReviewModule } from "./features/review/review.module.js";
 import { CourseModule } from "./features/course/course.module.js";
 import { ChatModule } from "./features/chat/chat.module.js";
 import { CartModule } from "./features/cart/cart.module.js";
+import { FileModule } from "./features/file/file.module.js";
 
 async function main() {
   const di = createDIContainer();
@@ -33,7 +34,7 @@ async function main() {
   app.use(express.urlencoded({ extended: true }));
 
   // Register the authMiddleware to be accessable throughout the app.
-  di.service("authMiddleware", authMiddleware, "userService", "authService");
+  di.factory("authMiddleware", authMiddleware);
 
   await GraphQLModule.registerGraphQLModule(di);
   await DBModule.registerDBModule(di);
@@ -46,6 +47,7 @@ async function main() {
   await CourseModule.registerCourseModule(di);
   await ChatModule.registerChatModule(di);
   await CartModule.registerCartModule(di);
+  await FileModule.registerFileModule(di);
 
   /** @type {GraphQLModule} */
   const graphqlModule = di.container.graphqlModule;
@@ -125,10 +127,12 @@ async function main() {
 
   // const authRouter = di.container.authRouter.build();
 
-  // const v1Router = express.Router().use("/auth", authRouter);
+  const fileRouter = di.container.fileRouter;
 
-  // // Register the v1 router.
-  // app.use("/api/v1", v1Router);
+  const v1Router = express.Router().use("/files", fileRouter);
+
+  // Register the v1 router.
+  app.use("/api/v1", v1Router);
 
   const PORT = process.env.PORT || 3500;
 
