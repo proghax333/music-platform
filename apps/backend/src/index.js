@@ -82,7 +82,9 @@ async function main() {
   const courseResolver = di.container.courseResolver;
   /** @type {import("./features/cart/cart.resolver.js").CartResolver} */
   const cartResolver = di.container.cartResolver;
-  
+  /** @type {import("./features/chat/chat.resolver.js").ChatResolver} */
+  const chatResolver = di.container.chatResolver;
+
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
   graphqlModule.addResolvers(userResolver.getResolvers());
@@ -90,7 +92,7 @@ async function main() {
   graphqlModule.addResolvers(reviewResolver.getResolvers());
   graphqlModule.addResolvers(courseResolver.getResolvers());
   graphqlModule.addResolvers(cartResolver.getResolvers());
-  // graphqlModule.addResolvers();
+  graphqlModule.addResolvers(chatResolver.getResolvers());
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();

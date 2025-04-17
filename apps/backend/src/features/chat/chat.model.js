@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { createFindDataLoader } from "../../lib/dataloader.js";
 
 ///////////////////////
@@ -11,8 +11,6 @@ import { createFindDataLoader } from "../../lib/dataloader.js";
  * @returns {mongoose.Model}
  */
 export const createConversationModel = ({ db }) => {
-  const { Schema } = db;
-
   const ConversationSchema = new Schema(
     {
       isGroup: { type: Boolean, default: false },
@@ -45,8 +43,6 @@ export const createConversationDataLoader = ({ Conversation }) => {
  * @returns {mongoose.Model}
  */
 export const createMessageModel = ({ db }) => {
-  const { Schema } = db;
-
   const MessageSchema = new Schema(
     {
       conversation: {
@@ -56,6 +52,7 @@ export const createMessageModel = ({ db }) => {
       },
       sender: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
       content: { type: String },
+      type: { type: String },
       attachments: [
         {
           url: String,
@@ -102,8 +99,6 @@ export const createMessageDataLoader = ({ Message }) => {
  * @returns {mongoose.Model}
  */
 export const createTypingIndicatorModel = ({ db }) => {
-  const { Schema } = db;
-
   const TypingIndicatorSchema = new Schema(
     {
       conversation: { type: Schema.Types.ObjectId, ref: "Conversation" },
@@ -134,8 +129,6 @@ export const createTypingIndicatorDataLoader = ({ TypingIndicator }) => {
  * @returns {mongoose.Model}
  */
 export const createMessageEditHistoryModel = ({ db }) => {
-  const { Schema } = db;
-
   const MessageEditHistorySchema = new Schema({
     message: { type: Schema.Types.ObjectId, ref: "Message" },
     editor: { type: Schema.Types.ObjectId, ref: "Profile" },

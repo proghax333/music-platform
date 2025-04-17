@@ -8,6 +8,7 @@ import {
   createTypingIndicatorDataLoader,
   createTypingIndicatorModel,
 } from "./chat.model.js";
+import { ChatResolver } from "./chat.resolver.js";
 
 export class ChatModule {
   /**
@@ -27,5 +28,7 @@ export class ChatModule {
       "MessageEditHistoryDataLoader",
       createMessageEditHistoryDataLoader
     );
+
+    di.service("chatResolver", ChatResolver);
   }
 }
