@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 import { createFindDataLoader } from "../../lib/dataloader.js";
 
 ///////////////////////
@@ -15,9 +15,14 @@ export const createConversationModel = ({ db }) => {
     {
       isGroup: { type: Boolean, default: false },
       name: { type: String },
-      avatar: { type: String },
-      participants: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
-      admins: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
+      avatar: { id: Schema.Types.ObjectId, url: String },
+      participants: {
+        type: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
+      },
+      admins: {
+        type: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
+        required: true,
+      },
       lastMessage: { type: Schema.Types.ObjectId, ref: "Message" },
     },
     { timestamps: true }
@@ -55,6 +60,7 @@ export const createMessageModel = ({ db }) => {
       type: { type: String },
       attachments: [
         {
+          id: Schema.Types.ObjectId,
           url: String,
           type: {
             type: String,
