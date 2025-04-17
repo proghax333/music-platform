@@ -39,10 +39,28 @@ export class CartResolver {
 
   createCartItem = resolver(async (parent, args, context, info) => {
     const { profile, variant, quantity } = args.input;
-    const quantityNumber = Number(quantity);
 
-    if(isNaN(quantityNumber) || quantityNumber <= 0) {
-      throw createHttpError(400, "Invalid quantity provided.");
+    if (isNaN(quantity) || quantity <= 0) {
+      throw createHttpError(400, "Quantity must be greater than 1.");
+    }
+
+    const existingItem = await this.CartItem.findOne({
+      profile,
+      variant,
+    });
+
+    if (existingItem) {
+      // update existing item.
+      const updatedItem = await this.CartItem.findOneAndUpdate(
+        { profile, variant },
+        { $inc: { quantity } },
+        { new: true }
+      );
+
+      return {
+        message: "Cart item updated.",
+        cartItem: updatedItem,
+      };
     }
 
     const result = await this.CartItem.create({
@@ -59,8 +77,11 @@ export class CartResolver {
 
   updateCartItem = resolver(async (parent, args, context, info) => {
     const { quantity } = args.input;
-
     const { id } = args;
+
+    if (isNaN(quantity) || quantity <= 0) {
+      throw createHttpError(400, "Quantity must be greater than 1.");
+    }
 
     const result = await this.CartItem.findByIdAndUpdate(
       id,
