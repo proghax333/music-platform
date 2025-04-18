@@ -17,7 +17,7 @@ export class CourseModule {
    * Registers services in the container.
    * @param {import("bottlejs")} di - The unique name of the service.
    */
-  static async registerCourseModule(di) {
+  static async register(di) {
     di.factory("Course", createCourseModel);
     di.factory("Section", createSectionModel);
     di.factory("Lesson", createLessonModel);

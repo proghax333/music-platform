@@ -5,7 +5,7 @@ export class DBModule {
    * Registers a service in the container.
    * @param {import("bottlejs")} di - The unique name of the service.
    */
-  static async registerDBModule(di) {
+  static async register(di) {
     let db = await createConnection(process.env.MONGODB_URI);
 
     /**

@@ -65,6 +65,16 @@ export class ReviewResolver {
     };
   });
 
+  Review_resources = async (parent, args, context) => {
+    const result = await this.File.find({
+      _id: {
+        $in: parent.resources,
+      },
+    });
+
+    return result;
+  };
+
   getResolvers = () => {
     return {
       Query: {
@@ -75,6 +85,9 @@ export class ReviewResolver {
         createReview: this.createReview,
         updateReview: this.updateReview,
         deleteReview: this.deleteReview,
+      },
+      Review: {
+        resources: this.Review_resources,
       },
     };
   };

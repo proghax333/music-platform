@@ -10,7 +10,7 @@ export class ProfileModule {
    * Registers a service in the container.
    * @param {import("bottlejs")} di - The unique name of the service.
    */
-  static async registerProfileModule(di) {
+  static async register(di) {
     di.factory("Profile", createProfileModel);
     di.factory("ProfileDataLoader", createProfileDataLoader);
 

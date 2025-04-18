@@ -10,7 +10,7 @@ export class GraphQLModule {
    * Registers a service in the container.
    * @param {import("bottlejs")} di - The unique name of the service.
    */
-  static async registerGraphQLModule(di) {
+  static async register(di) {
     di.service("graphqlModule", GraphQLModule);
 
     return di;

@@ -59,6 +59,8 @@ export class ProductResolver {
       "UserDataLoader",
       "BrandDataLoader",
       "CategoryDataLoader",
+
+      "File",
     ];
   }
 
@@ -502,6 +504,16 @@ export class ProductResolver {
     return productPostingConnection;
   };
 
+  Product_images = async (parent, args, context) => {
+    const result = await this.File.find({
+      _id: {
+        $in: parent.images,
+      },
+    });
+
+    return result;
+  };
+
   ProductPosting_variant = async (parent, args, context) => {
     const variant = await this.ProductVariantDataLoader.load(parent.variant);
     return variant.toObject();
@@ -514,6 +526,16 @@ export class ProductResolver {
     }
 
     return product;
+  };
+
+  ProductVariant_images = async (parent, args, context) => {
+    const result = await this.File.find({
+      _id: {
+        $in: parent.images,
+      },
+    });
+
+    return result;
   };
 
   Category_children = async (parent, args, context) => {
@@ -564,9 +586,11 @@ export class ProductResolver {
 
         variants: this.Product_variants,
         productPostings: this.Product_productPostings,
+        images: this.Product_images,
       },
       ProductVariant: {
         product: this.ProductVariant_product,
+        images: this.ProductVariant_images,
       },
       ProductPosting: {
         variant: this.ProductPosting_variant,

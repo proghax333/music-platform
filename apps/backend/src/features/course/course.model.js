@@ -21,7 +21,7 @@ export const createCourseModel = ({ db }) => {
         },
       ],
       tags: [String],
-      images: [{ url: String }],
+      images: [{ type: Schema.Types.ObjectId, ref: "File" }],
       published: { type: Boolean, default: false },
       sections: [{ type: Schema.Types.ObjectId, ref: "Section" }],
     },
@@ -90,7 +90,7 @@ export const createLessonModel = ({ db }) => {
       resources: [
         {
           title: String,
-          url: String,
+          file: { type: Schema.Types.ObjectId, ref: "File" },
           type: { type: String, enum: ["pdf", "link", "image", "file"] },
         },
       ],

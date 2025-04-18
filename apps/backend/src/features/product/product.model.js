@@ -44,16 +44,9 @@ export const createProductModel = ({ db }) => {
       name: { type: String, required: true, trim: true },
       description: { type: String, required: true, trim: true },
       images: {
-        type: [
-          {
-            id: { type: String },
-            url: { type: String, required: true },
-          },
-        ],
+        type: [{ type: Schema.Types.ObjectId, ref: "File" }],
         required: true,
-        validate: nonNullNonEmptyArray(
-          "images must a non-empty array of objects"
-        ),
+        validate: nonNullNonEmptyArray("images must a non-empty array of IDs"),
       },
       sku: { type: String },
       features: {
@@ -92,14 +85,9 @@ export const createProductVariantModel = ({ db }) => {
   const ProductVariantSchema = new Schema({
     product: { type: Types.ObjectId, ref: "Product", required: true },
     name: { type: String, required: true, trim: true },
-    description: { type: String,trim: true },
+    description: { type: String, trim: true },
     type: { type: String },
-    images: [
-      {
-        id: { type: String },
-        url: { type: String, required: true },
-      },
-    ],
+    images: [{ type: Schema.Types.ObjectId, ref: "File" }],
     sku: { type: String },
     features: [
       {

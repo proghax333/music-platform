@@ -15,7 +15,7 @@ export class ChatModule {
    * Registers services in the container.
    * @param {import("bottlejs")} di - The unique name of the service.
    */
-  static async registerChatModule(di) {
+  static async register(di) {
     di.factory("Conversation", createConversationModel);
     di.factory("Message", createMessageModel);
     di.factory("TypingIndicator", createTypingIndicatorModel);

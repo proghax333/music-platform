@@ -9,7 +9,7 @@ type Profile {
   _id: ObjectId!
   user: User
   name: String!
-  avatar: String
+  avatar: File
   bio: String
   settings: Object
 }
@@ -33,9 +33,15 @@ type Greeting {
   message: GreetingMessage!
 }
 
-type Image {
-  id: String!
+type File {
+  _id: ObjectId!
+  name: String!
+  size: Int!
+  type: String!
   url: String!
+  uploader: User!
+  metadata: Object!
+  active: Boolean
 }
 
 type ProductVariantEdge {
@@ -82,7 +88,7 @@ type Product {
   _id: ObjectId!
   name: String!
   description: String!
-  images: [Image]!
+  images: [File]!
   sku: String
   features: [Feature]!
   price: String!
@@ -113,7 +119,7 @@ type ProductVariant {
   name: String
   description: String
   type: String
-  images: [Image]
+  images: [File]
   sku: String
   features: [Object]
   price: String
@@ -161,8 +167,8 @@ type CategoryConnection {
 
 type Review_resource {
   title: String
-  url: String
   type: String
+  file: File
 }
 
 type Review {
@@ -190,16 +196,12 @@ type ReviewConnection {
 
 ### Course ###
 
-type Course_image {
-  url: String
-}
-
 type Course {
   _id: ObjectId!
   title: String!
   description: String!
   instructors: [Profile!]
-  images: [Course_image!]
+  images: [ObjectId!]
   published: Boolean
   sections: [Section!]
 
@@ -226,14 +228,14 @@ type Section {
 
 type Lesson_resource {
   title: String
-  url: String
   type: String
+  file: File
 }
 
 type Lesson {
   title: String
   content: String
-  videoUrl: String
+  file: File
   resources: [Lesson_resource]
 
   createdAt: Date
@@ -417,11 +419,6 @@ type SignupMutationResponse {
   user: User
 }
 
-input ImageInput {
-  id: String!
-  url: String!
-}
-
 input FeatureInput {
   name: String!
   value: String!
@@ -433,7 +430,7 @@ input CreateProductInput_variants {
   name: String
   description: String
   type: String
-  images: [ImageInput]
+  images: [ObjectId!]
   sku: String
   features: [Object]
   price: String
@@ -442,7 +439,7 @@ input CreateProductInput_variants {
 input CreateProductInput {
   name: String!
   description: String!
-  images: [ImageInput]!
+  images: [ObjectId!]
   sku: String
   features: [FeatureInput]!
   price: String!
@@ -467,7 +464,7 @@ input UpdateProductInput_variants {
   name: String
   description: String
   type: String
-  images: [ImageInput]
+  images: [ObjectId!]
   sku: String
   features: [FeatureInput]
   price: String
@@ -477,7 +474,7 @@ input UpdateProductInput {
   _id: ObjectId
   name: String
   description: String
-  images: [ImageInput]
+  images: [ObjectId!]
   sku: String
   features: [FeatureInput]
   price: String
@@ -508,7 +505,7 @@ input CreateProductVariantInput {
   name: String
   description: String
   type: String
-  images: [ImageInput]
+  images: [ObjectId]
   sku: String
   features: [Object]
   price: String
@@ -528,7 +525,7 @@ input UpdateProductVariantInput {
   name: String
   description: String
   type: String
-  images: [ImageInput]
+  images: [ObjectId]
   sku: String
   features: [Object]
   price: String
@@ -667,8 +664,8 @@ type DeleteBrandResponse {
 ### Review ###
 input ReviewResourceInput {
   title: String
-  url: String
   type: String
+  file: ObjectId
 }
 
 input CreateReviewInput {
@@ -716,15 +713,11 @@ type DeleteReviewResponse {
 ### Course Inputs ###
 #####################
 
-input CourseImageInput {
-  url: String
-}
-
 input CreateCourseInput {
   title: String!
   description: String
   instructors: [ObjectId!]!
-  images: [CourseImageInput]
+  images: [ObjectId!]
   published: Boolean
   sections: [ObjectId!]
 }
@@ -742,7 +735,7 @@ input UpdateCourseInput {
   title: String
   description: String
   instructors: [ObjectId!]
-  images: [CourseImageInput]
+  images: [ObjectId!]
   published: Boolean
   sections: [ObjectId!]
 }
@@ -862,15 +855,15 @@ type DeleteSectionResponse {
 
 input LessonResourceInput {
   title: String
-  url: String
   type: String # Should match ["pdf", "link", "image", "file"]
+  file: ObjectId
 }
 
 input CreateLessonInput {
   course: ObjectId
   title: String!
   content: String
-  videoUrl: String
+  file: ObjectId!
   resources: [LessonResourceInput]
 }
 
@@ -886,7 +879,7 @@ input UpdateLessonInput {
   _id: ObjectId!
   title: String
   content: String
-  videoUrl: String
+  file: ObjectId
   resources: [LessonResourceInput]
 }
 

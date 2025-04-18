@@ -9,6 +9,7 @@ export const createReviewModel = ({ db }) => {
       refType: { type: String },
       refId: { type: Types.ObjectId },
       rating: { type: Number },
+      resources: [{ type: Schema.Types.ObjectId, ref: "File" }],
       content: { type: String },
     },
     {

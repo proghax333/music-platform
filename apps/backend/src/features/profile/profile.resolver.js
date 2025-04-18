@@ -17,6 +17,8 @@ export class ProfileResolver {
 
       "UserDataLoader",
       "ProfileDataLoader",
+
+      "File",
     ];
   }
 
@@ -43,6 +45,14 @@ export class ProfileResolver {
     return user;
   };
 
+  Profile_avatar = async (parent, args, context) => {
+    const result = await this.File.findOne({
+      _id: parent.avatar,
+    });
+
+    return result;
+  };
+
   getResolvers = () => {
     return {
       Query: {
@@ -51,6 +61,7 @@ export class ProfileResolver {
 
       Profile: {
         user: this.Profile_user,
+        avatar: this.Profile_avatar,
       },
     };
   };

@@ -36,18 +36,18 @@ async function main() {
   // Register the authMiddleware to be accessable throughout the app.
   di.factory("authMiddleware", authMiddleware);
 
-  await GraphQLModule.registerGraphQLModule(di);
-  await DBModule.registerDBModule(di);
+  await GraphQLModule.register(di);
+  await DBModule.register(di);
 
-  await UserModule.registerUserModule(di);
-  await ProfileModule.registerProfileModule(di);
-  await AuthModule.registerAuthModule(di);
-  await ProductModule.registerProductModule(di);
-  await ReviewModule.registerReviewModule(di);
-  await CourseModule.registerCourseModule(di);
-  await ChatModule.registerChatModule(di);
-  await CartModule.registerCartModule(di);
-  await FileModule.registerFileModule(di);
+  await UserModule.register(di);
+  await ProfileModule.register(di);
+  await AuthModule.register(di);
+  await ProductModule.register(di);
+  await ReviewModule.register(di);
+  await CourseModule.register(di);
+  await ChatModule.register(di);
+  await CartModule.register(di);
+  await FileModule.register(di);
 
   /** @type {GraphQLModule} */
   const graphqlModule = di.container.graphqlModule;
@@ -86,6 +86,8 @@ async function main() {
   const cartResolver = di.container.cartResolver;
   /** @type {import("./features/chat/chat.resolver.js").ChatResolver} */
   const chatResolver = di.container.chatResolver;
+  /** @type {import("./features/file/file.resolver.js").FileResolver} */
+  const fileResolver = di.container.fileResolver;
 
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
@@ -95,6 +97,7 @@ async function main() {
   graphqlModule.addResolvers(courseResolver.getResolvers());
   graphqlModule.addResolvers(cartResolver.getResolvers());
   graphqlModule.addResolvers(chatResolver.getResolvers());
+  graphqlModule.addResolvers(fileResolver.getResolvers());
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();

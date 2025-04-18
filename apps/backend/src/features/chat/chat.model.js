@@ -15,7 +15,7 @@ export const createConversationModel = ({ db }) => {
     {
       isGroup: { type: Boolean, default: false },
       name: { type: String },
-      avatar: { id: Schema.Types.ObjectId, url: String },
+      avatar: { type: Schema.Types.ObjectId, ref: "File" },
       participants: {
         type: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
       },
@@ -60,8 +60,7 @@ export const createMessageModel = ({ db }) => {
       type: { type: String },
       attachments: [
         {
-          id: Schema.Types.ObjectId,
-          url: String,
+          file: { type: Schema.Types.ObjectId, ref: "File" },
           type: {
             type: String,
             enum: ["image", "video", "file", "audio"],

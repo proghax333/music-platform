@@ -7,7 +7,7 @@ export class UserModule {
    * Registers a service in the container.
    * @param {import("bottlejs")} di - The unique name of the service.
    */
-  static async registerUserModule(di) {
+  static async register(di) {
     di.factory("User", createUserModel);
     di.factory("UserDataLoader", createUserDataLoader);
 
