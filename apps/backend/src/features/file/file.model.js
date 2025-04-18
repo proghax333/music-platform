@@ -31,7 +31,7 @@ export const createFileModel = ({ db }) => {
       },
       uploader: {
         type: Schema.Types.ObjectId,
-        ref: "Profile",
+        ref: "User",
         required: true,
       },
       metadata: {
