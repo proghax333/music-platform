@@ -20,7 +20,11 @@ mutation LoginMutation($input: LoginMutationInput!) {
       profiles {
         _id
         name
-        avatar
+        avatar {
+          _id
+          name
+          url
+        }
         bio
       }
     }

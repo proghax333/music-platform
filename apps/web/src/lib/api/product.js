@@ -5,7 +5,7 @@ import { GRAPHQL_ENDPOINT } from "../graphql";
 export const QUERY_PRODUCTS = () => ["products"];
 
 export const useProductsQuery = () => {
-    const query = `
+  const query = `
 query ListProduct{
   products {
     edges {
@@ -30,7 +30,7 @@ query ListProduct{
               type
 
               images {
-                id
+                _id
                 url
               }
             }
@@ -42,22 +42,22 @@ query ListProduct{
 }
     `;
 
-    return useQuery({
-        queryKey: QUERY_PRODUCTS(),
-        queryFn: async () => {
-            const res = await api.post(GRAPHQL_ENDPOINT, {
-                query,
-            });
+  return useQuery({
+    queryKey: QUERY_PRODUCTS(),
+    queryFn: async () => {
+      const res = await api.post(GRAPHQL_ENDPOINT, {
+        query,
+      });
 
-            return res.data.data.products;
-        }
-    })
+      return res.data.data.products;
+    },
+  });
 };
 
 export const QUERY_PRODUCTVARIANT = (id) => ["productVariants", id];
 
 export const useProductVariantQuery = (id) => {
-    const query = `
+  const query = `
 query GetVariant($id: ObjectId!) {
     productVariant(id: $id) {
       _id
@@ -79,7 +79,7 @@ query GetVariant($id: ObjectId!) {
               type
               description
               images {
-                id
+                _id
                 url
               }
             }
@@ -88,7 +88,7 @@ query GetVariant($id: ObjectId!) {
       }
 
       images {
-        id
+        _id
         url
       }
     }
@@ -96,18 +96,17 @@ query GetVariant($id: ObjectId!) {
 
 `;
 
-    return useQuery({
-        queryKey: QUERY_PRODUCTVARIANT(id),
-        queryFn: async () => {
-            const res = await api.post(GRAPHQL_ENDPOINT, {
-                query,
-                variables: {
-                    id
-                }
-            });
+  return useQuery({
+    queryKey: QUERY_PRODUCTVARIANT(id),
+    queryFn: async () => {
+      const res = await api.post(GRAPHQL_ENDPOINT, {
+        query,
+        variables: {
+          id,
+        },
+      });
 
-            return res.data.data.productVariant;
-        }
-    })
+      return res.data.data.productVariant;
+    },
+  });
 };
-

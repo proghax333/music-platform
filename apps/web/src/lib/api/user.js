@@ -19,7 +19,11 @@ query MeQuery {
     profiles {
         _id
         name
-        avatar
+        avatar {
+          _id
+          name
+          url
+        }
         bio
     }
   }
