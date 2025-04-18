@@ -1,4 +1,5 @@
 import { resolver } from "../../lib/graphql.js";
+import { paginate } from "../../lib/pagination.js";
 
 export class FileResolver {
   /** @type {import("mongoose").Model} */
@@ -15,6 +16,21 @@ export class FileResolver {
     return ["File", "User", "FileDataLoader"];
   }
 
+  files = async (parent, args, context) => {
+    const userId = context.user?._id;
+
+    if (!userId) {
+      throw new Error("Not logged in");
+    }
+
+    const pipeline = await this.File.aggregate().match({
+      uploader: userId,
+    });
+
+    const page = await paginate(pipeline, args);
+    return page;
+  };
+
   File_uploader = async (parent, args, context) => {
     const result = await this.User.findById(parent.uploader);
     return result;
@@ -22,6 +38,9 @@ export class FileResolver {
 
   getResolvers() {
     return {
+      Query: {
+        files: this.files,
+      },
       File: {
         uploader: this.File_uploader,
       },

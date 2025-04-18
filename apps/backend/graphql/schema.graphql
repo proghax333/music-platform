@@ -20,6 +20,15 @@ type User {
   email: String!
   providers: [AuthProvider!]!
   profiles: [Profile!]!
+
+  files(
+    before: String
+    after: String
+    first: Int
+    last: Int
+    sort: String
+  ): FileConnection
+
   createdAt: Date!
   updatedAt: Date!
 }
@@ -42,6 +51,17 @@ type File {
   uploader: User!
   metadata: Object!
   active: Boolean
+}
+
+type FileEdge {
+  node: File
+  cursor: String
+}
+
+type FileConnection {
+  edges: [FileEdge!]
+  pageInfo: PageInfo
+  totalCount: Int
 }
 
 type ProductVariantEdge {
@@ -368,6 +388,14 @@ type Query {
   review(id: ObjectId!): Review
 
   cartItems(profile: ObjectId!): [CartItem!]!
+
+  files(
+    before: String
+    after: String
+    first: Int
+    last: Int
+    sort: String
+  ): FileConnection
 }
 
 ########################

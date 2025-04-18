@@ -51,10 +51,26 @@ export class UserResolver {
     return user;
   };
 
+  User_files = async (parent, args, context) => {
+    const userId = context.user?._id;
+
+    if (!userId) {
+      throw new Error("Not logged in");
+    }
+
+    const pipeline = await this.File.aggregate().match({
+      uploader: userId,
+    });
+
+    const page = await paginate(pipeline, args);
+    return page;
+  };
+
   getResolvers = () => {
     return {
       User: {
         profiles: this.User_profiles,
+        files: this.User_files,
       },
       Query: {
         me: this.me,
