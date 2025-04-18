@@ -45,11 +45,11 @@ type Greeting {
 type File {
   _id: ObjectId!
   name: String!
-  size: Int!
-  type: String!
+  size: Int
+  type: String
   url: String!
   uploader: User!
-  metadata: Object!
+  metadata: Object
   active: Boolean
 }
 
@@ -1088,6 +1088,51 @@ type DeleteCartItemResponse {
   errors: [String!]
 }
 
+# File
+
+input CreateFileInput {
+  name: String
+  size: Int
+  type: String
+  url: String!
+  metadata: Object
+  active: Boolean
+}
+
+type CreateFileResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  file: File
+}
+
+input UpdateFileInput {
+  name: String
+  size: Int
+  type: String
+  url: String
+  metadata: Object
+  active: Boolean
+}
+
+type UpdateFileResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  file: File
+}
+
+type DeleteFileResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
 ### ------ ###
 
 type Mutation {
@@ -1169,13 +1214,19 @@ type Mutation {
     input: UpdateQuizAttemptInput!
   ): UpdateQuizAttemptResponse!
   deleteQuizAttempt(id: ObjectId!): DeleteQuizAttemptResponse!
-  #Cart
+
+  # Cart mutations
   createCartItem(input: CreateCartItemInput!): CreateCartItemResponse!
   deleteCartItem(id: ObjectId!): DeleteCartItemResponse!
   updateCartItem(
     id: ObjectId!
     input: UpdateCartItemInput!
   ): UpdateCartItemResponse!
+
+  # File mutations
+  createFile(input: CreateFileInput!): CreateFileResponse!
+  updateFile(id: ObjectId!, input: UpdateFileInput!): UpdateFileResponse!
+  deleteFile(id: ObjectId!): DeleteFileResponse
 }
 
 """

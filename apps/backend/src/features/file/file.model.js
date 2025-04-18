@@ -15,15 +15,15 @@ export const createFileModel = ({ db }) => {
     {
       name: {
         type: String,
-        required: true,
+        // required: true,
       },
       size: {
         type: Number,
-        required: true, // in bytes
+        // required: true, // in bytes
       },
       type: {
         type: String,
-        required: true, // MIME type (e.g., image/png, application/pdf)
+        // required: true, // MIME type (e.g., image/png, application/pdf)
       },
       url: {
         type: String,
