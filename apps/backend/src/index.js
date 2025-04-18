@@ -31,6 +31,7 @@ async function main() {
     })
   );
   app.use(express.json());
+  app.use("/files", express.static("./files"));
   app.use(express.urlencoded({ extended: true }));
 
   // Register the authMiddleware to be accessable throughout the app.

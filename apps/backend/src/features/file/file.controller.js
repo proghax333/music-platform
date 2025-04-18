@@ -45,7 +45,7 @@ export class FileController {
           name: req.file.originalname,
           size: req.file.size,
           type: req.file.mimetype,
-          url: `/uploads/${req.file.filename}`,
+          url: `${process.env.API_URL}/files/${req.file.filename}`,
           uploader: req.user._id,
         });
 
