@@ -181,16 +181,22 @@ function MainNav({ className }) {
                         }}
                       >
                         <NavLink
-                          className="p-2 px-4"
+                          className="p-2 px-4 hover:bg-neutral-200"
                           to={`/profiles/${session.getCurrentProfile()._id}`}
                         >
                           Profile
                         </NavLink>
-                        <NavLink className="p-2 px-4" to={"/settings"}>
+                        <NavLink
+                          className="p-2 px-4 hover:bg-neutral-200"
+                          to={"/settings"}
+                        >
                           Settings
                         </NavLink>
                         <hr />
-                        <NavLink className="p-2 px-4" to={"/logout"}>
+                        <NavLink
+                          className="p-2 px-4 hover:bg-neutral-200"
+                          to={"/logout"}
+                        >
                           Logout
                         </NavLink>
                       </div>
