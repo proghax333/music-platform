@@ -2,6 +2,9 @@ import DataLoader from "dataloader";
 
 export const createFindDataLoader = (Model) => {
   const loader = new DataLoader(async (keys) => {
+    // IMPORTANT: DISABLE CACHING.
+    loader.clearAll();
+
     const idMap = {};
     for (let idx = 0; idx < keys.length; ++idx) {
       const key = keys[idx];
