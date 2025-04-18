@@ -1,6 +1,6 @@
 import MainNav from "@/components/main-nav";
 import React, { useState } from "react";
-import { useParams } from "react-router";
+import { NavLink, useParams } from "react-router";
 import { Rating as StarComponent } from "react-simple-star-rating";
 import Demo from "@/modules/shop/Demo";
 import { useProductVariantQuery } from "@/lib/api/product";
@@ -213,7 +213,11 @@ function ShopDescription() {
             <h1 className="text-2xl pr-2">Variant :</h1>
             <div className="flex gap-4">
               {variants.map((variant) => (
-                <div key={variant._id} className="relative group">
+                <NavLink
+                  key={variant._id}
+                  className="relative group block"
+                  to={`/shop/${variant._id}`}
+                >
                   <button className="border-2 w-24 h-28 flex items-center justify-center">
                     <img
                       src={variant.images[0]?.url}
@@ -224,7 +228,7 @@ function ShopDescription() {
                   <div className="absolute top-1 left-1/2 transform -translate-x-1/2 bg-black text-white text-s px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
                     {variant.name}
                   </div>
-                </div>
+                </NavLink>
               ))}
             </div>
           </div>
