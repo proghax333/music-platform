@@ -59,7 +59,7 @@ export class FileController {
 
   uploadMultiple = () => [
     this.authMiddleware,
-    this.upload.array("files", 10),
+    this.upload.array("files", 100),
     async (req, res) => {
       try {
         if (!req.files || req.files.length === 0)
