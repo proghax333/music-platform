@@ -486,6 +486,7 @@ export class ProductResolver {
       first,
       last,
       sort,
+      all: true,
     });
 
     return productVariantConnection;
@@ -500,7 +501,10 @@ export class ProductResolver {
       variant: { $in: variants.map((x) => x._id) },
     });
 
-    const productPostingConnection = await paginate(pipeline, args);
+    const productPostingConnection = await paginate(pipeline, {
+      ...args,
+      all: true,
+    });
     return productPostingConnection;
   };
 
