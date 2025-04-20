@@ -55,7 +55,7 @@ function Cart() {
     updateCartItemMutation.mutate({
       id: item._id,
       updatedData: {
-        quantity: String(Number(item.quantity) + 1),
+        quantity: item.quantity + 1,
       },
     });
   };
@@ -64,7 +64,7 @@ function Cart() {
     updateCartItemMutation.mutate({
       id: item._id,
       updatedData: {
-        quantity: String(Number(item.quantity) - 1),
+        quantity: item.quantity - 1,
       },
     });
   };

@@ -2,6 +2,7 @@ import MainNav from "@/components/main-nav";
 import { useProductsQuery } from "@/lib/api/product";
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router";
+import { useAddToCartMutation } from "@/lib/api/cart";
 import { useSession } from "../session/useSession";
 
 function Shop() {
@@ -50,8 +51,39 @@ function Shop() {
 }
 
 function ProductCard({ product }) {
-  // const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const selectedVariant = product.variants.edges[0].node;
+
+  const { getCurrentProfile } = useSession();
+  const currentProfile = getCurrentProfile();
+
+  const addToCartMutation = useAddToCartMutation({
+    onSuccess: () => {
+      console.log("Added Iten");
+    },
+    onError: (err) => {
+      alert(err.message || "Failed to add item.");
+    },
+  });
+
+  const handleAddToCart = () => {
+    if (!currentProfile?._id) {
+      alert("Please login to add to cart");
+      return;
+    }
+
+    const selectedVariant = product?.variants?.edges?.[0]?.node;
+
+    if (!selectedVariant?._id) {
+      alert("No variant selected");
+      return;
+    }
+
+    addToCartMutation.mutate({
+      profileId: currentProfile._id,
+      variantId: selectedVariant._id,
+      quantity: 1,
+    });
+  };
 
   return (
     <div className="flex-row border-r-2 border-b-2 w-80 mx-4 mb-4 overflow-hidden">
@@ -75,9 +107,8 @@ function ProductCard({ product }) {
         {product.variants.edges.map(({ node: variant }, index) => (
           <div
             key={index}
-            className={`w-6 h-6 mx-2 border-2 mt-2 border-black rounded-full cursor-pointer`}
+            className="w-6 h-6 mx-2 border-2 mt-2 border-black rounded-full cursor-pointer"
             style={{ backgroundColor: variant.name }}
-            // onClick={() => setSelectedColor(color)}
           ></div>
         ))}
       </div>
@@ -88,10 +119,13 @@ function ProductCard({ product }) {
       </p>
 
       <div className="flex justify-center gap-2 mt-2 pb-2 px-2">
-        <button className="border-2 border-black flex-1 h-10 py-2 font-semibold  rounded-lg bg-black text-white hover:border-orange-600 hover:scale-105 hover:bg-orange-500 hover:text-white transition duration-300">
+        <button className="border-2 border-black flex-1 h-10 py-2 font-semibold rounded-lg bg-black text-white hover:border-orange-600 hover:scale-105 hover:bg-orange-500 hover:text-white transition duration-300">
           Buy Now
         </button>
-        <button className="border-2 border-black flex-1 h-10 font-semibold text-black rounded-lg hover:border-orange-400 hover:scale-105 hover:bg-orange-400 hover:text-white transition duration-300">
+        <button
+          onClick={handleAddToCart}
+          className="border-2 border-black flex-1 h-10 font-semibold text-black rounded-lg hover:border-orange-400 hover:scale-105 hover:bg-orange-400 hover:text-white transition duration-300"
+        >
           Add to Cart
         </button>
       </div>

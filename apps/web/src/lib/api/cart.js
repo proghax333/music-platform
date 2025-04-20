@@ -30,8 +30,58 @@ export const useDeleteCartItemMutation = (options = {}) => {
   });
 };
 
-export const useUpdateCartItemMutation = (options = {}) => {
-  const query = `mutation UpdateCartItem($updateCartItemId: ObjectId!, $updateCartItemInput: UpdateCartItemInput!) {
+export const useAddToCartMutation = (options = {}) => {
+  const query = `mutation AddToCart($input: CreateCartItemInput!) {
+    createCartItem(input: $input) {
+      code
+      message
+      success
+      cartItem {
+        _id
+        quantity
+        total
+        variant {
+          _id
+          name
+          price
+          images {
+            url
+          }
+          product {
+            name
+          }
+        }
+      }
+    }
+  }`;
+
+  return useMutation({
+    mutationFn: async ({ profileId, variantId, quantity = 1 }) => {
+      const response = await api.post(GRAPHQL_ENDPOINT, {
+        query,
+        variables: {
+          input: {
+            profile: profileId,
+            variant: variantId,
+            quantity: quantity,
+          },
+        },
+      });
+
+      const data = response.data.data.createCartItem;
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+
+      return data.cartItem;
+    },
+    ...options,
+  });
+};
+
+
+export const useUpdateCartItemMutation = (options = {}) =>{
+    const query = `mutation UpdateCartItem($updateCartItemId: ObjectId!, $updateCartItemInput: UpdateCartItemInput!) {
   updateCartItem(id: $updateCartItemId, input: $updateCartItemInput) {
     message
     code

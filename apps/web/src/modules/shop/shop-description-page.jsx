@@ -4,6 +4,8 @@ import { NavLink, useParams } from "react-router";
 import { Rating as StarComponent } from "react-simple-star-rating";
 import Demo from "@/modules/shop/Demo";
 import { useProductVariantQuery } from "@/lib/api/product";
+import { useAddToCartMutation } from "@/lib/api/cart";
+import { useSession } from "../session/useSession";
 
 export function StarRating({ rating, setRating }) {
   const handleRating = (rate) => {
@@ -99,6 +101,30 @@ function ShopDescription() {
     if (startIdx > 0) setStartIdx(startIdx - 1);
   };
 
+  const { getCurrentProfile } = useSession();
+  const currentProfile = getCurrentProfile();
+  const addToCartMutation = useAddToCartMutation({
+    onSuccess: () => {
+      console.log("Added Iten");
+    },
+    onError: (err) => {
+      alert(err.message || "Failed to add item.");
+    },
+  });
+
+  const handleAddToCart = () => {
+    if (!currentProfile?._id) {
+      alert("Please login to add to cart");
+      return;
+    }
+
+    addToCartMutation.mutate({
+      profileId: currentProfile._id,
+      variantId: data._id,
+      quantity: 1,
+    });
+  };
+
   const handleSubmitReview = () => {
     if (userRating === 0 || comment.trim() === "") return;
     const newReview = {
@@ -134,6 +160,7 @@ function ShopDescription() {
   }
 
   const { name, description, price, images, product } = data;
+
   const variants = product.variants.edges.map((edge) => edge.node);
   const visibleImages = images.slice(startIdx, startIdx + 4);
   const mainImage = images[selectImg]?.url;
@@ -238,7 +265,10 @@ function ShopDescription() {
               <button className="w-[50%] h-9 border-r-4 bg-secondary-400">
                 Buy Now
               </button>
-              <button className="w-[50%] h-9 border-r-4 bg-secondary-400">
+              <button
+                onClick={handleAddToCart}
+                className="w-[50%] h-9 border-r-4 bg-secondary-400"
+              >
                 Add To Cart
               </button>
             </div>
