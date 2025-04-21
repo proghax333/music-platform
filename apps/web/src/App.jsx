@@ -86,7 +86,7 @@ function RootRouter() {
             <Route index element={<AboutPage />} />
           </Route>
 
-          <Route path="practice">
+          <Route path="Task">
             <Route index element={<PracticePage />} />
           </Route>
 

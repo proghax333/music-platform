@@ -15,6 +15,7 @@ import { CourseModule } from "./features/course/course.module.js";
 import { ChatModule } from "./features/chat/chat.module.js";
 import { CartModule } from "./features/cart/cart.module.js";
 import { FileModule } from "./features/file/file.module.js";
+import { TaskModule } from "./features/task/task.module.js";
 
 async function main() {
   const di = createDIContainer();
@@ -49,6 +50,7 @@ async function main() {
   await ChatModule.register(di);
   await CartModule.register(di);
   await FileModule.register(di);
+  await TaskModule.register(di);
 
   /** @type {GraphQLModule} */
   const graphqlModule = di.container.graphqlModule;
@@ -89,6 +91,8 @@ async function main() {
   const chatResolver = di.container.chatResolver;
   /** @type {import("./features/file/file.resolver.js").FileResolver} */
   const fileResolver = di.container.fileResolver;
+  /** @type {import("./features/task/task.resolver.js").TaskResolver} */
+  const taskResolver = di.container.taskResolver;
 
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
@@ -99,6 +103,8 @@ async function main() {
   graphqlModule.addResolvers(cartResolver.getResolvers());
   graphqlModule.addResolvers(chatResolver.getResolvers());
   graphqlModule.addResolvers(fileResolver.getResolvers());
+  graphqlModule.addResolvers(taskResolver.getResolvers());
+
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();

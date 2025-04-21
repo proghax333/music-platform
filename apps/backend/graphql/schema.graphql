@@ -330,6 +330,17 @@ type CartItem {
   total: String!
 }
 
+## Task
+
+type Task {
+  _id: ID!
+  title: String
+  difficulty: String
+  movie: String
+  status: String
+  acceptance: String
+}
+
 ###
 # Queries: All GraphQL queries.
 ###
@@ -396,6 +407,9 @@ type Query {
     last: Int
     sort: String
   ): FileConnection
+
+  tasks: [Task!]!
+  task(id: ID!): Task
 }
 
 ########################
@@ -1133,6 +1147,49 @@ type DeleteFileResponse {
   errors: [String!]
 }
 
+#Task
+
+input CreateTaskInput {
+  title: String
+  movie: String
+  status: String
+  acceptance: String
+  difficulty: String
+}
+
+type CreateTaskResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  task: Task
+}
+
+input UpdateTaskInput {
+  title: String
+  movie: String
+  status: String
+  acceptance: String
+  difficulty: String
+}
+
+type UpdateTaskResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  task: Task
+}
+
+type DeleteTaskResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
 ### ------ ###
 
 type Mutation {
@@ -1227,6 +1284,11 @@ type Mutation {
   createFile(input: CreateFileInput!): CreateFileResponse!
   updateFile(id: ObjectId!, input: UpdateFileInput!): UpdateFileResponse!
   deleteFile(id: ObjectId!): DeleteFileResponse
+
+  # Task Mutation
+  createTask(input: CreateTaskInput!): CreateTaskResponse!
+  updateTask(id: ObjectId!, input: UpdateTaskInput!): UpdateTaskResponse!
+  deleteTask(id: ObjectId!): DeleteTaskResponse!
 }
 
 """

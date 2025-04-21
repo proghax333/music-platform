@@ -63,7 +63,7 @@ function MainNav({ className }) {
       path: "/lessons",
     },
     {
-      name: "Practice",
+      name: "Task",
       path: "/Task",
     },
     {
