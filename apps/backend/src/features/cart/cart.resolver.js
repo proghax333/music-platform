@@ -1,5 +1,6 @@
 import createHttpError from "http-errors";
 import { resolver } from "../../lib/graphql.js";
+import { Decimal } from "../../lib/decimal.js";
 
 export class CartResolver {
   /** @type {import("mongoose").Model} */
@@ -117,10 +118,13 @@ export class CartResolver {
 
   CartItem_total = async (parent, args, context) => {
     const variant = await this.ProductVariantDataLoader.load(parent.variant);
-    const { quantity } = parent;
+    let { quantity } = parent;
 
-    const total = Number(variant.price) * Number(quantity);
-    return total.toFixed(2);
+    const price = new Decimal(variant.price);
+    const q = new Decimal(quantity);
+    const total = price.mul(q);
+
+    return total.toFixed(2, Decimal.ROUND_UP);
   };
 
   CartItem_variant = async (parent, args, context) => {
