@@ -116,7 +116,7 @@ export class CartResolver {
   });
 
   CartItem_total = async (parent, args, context) => {
-    const variant = await this.ProductVariant.findById(parent.variant);
+    const variant = await this.ProductVariantDataLoader.load(parent.variant);
     const { quantity } = parent;
 
     const total = Number(variant.price) * Number(quantity);
