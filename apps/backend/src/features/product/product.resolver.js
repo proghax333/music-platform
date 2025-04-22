@@ -4,6 +4,7 @@ import { paginate } from "../../lib/pagination.js";
 
 import z from "zod";
 import {
+  createSearchRegExp,
   escapeRegExp,
   sortValidationSchema,
   validate,
@@ -80,13 +81,12 @@ export class ProductResolver {
       const validatedFilter = this.productsFilterValidationSchema.parse(
         args.filter
       );
+
+      // Remove to prevent incorrect filtering because of the non-existent `content` property.
       delete args.filter.content;
 
       if (validatedFilter.content) {
-        const searchRegex = new RegExp(
-          escapeRegExp(validatedFilter.content),
-          "i"
-        );
+        const searchRegex = createSearchRegExp(validatedFilter.content);
 
         filterPipeline.push({
           $match: {

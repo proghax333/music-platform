@@ -31,3 +31,7 @@ export const sortValidationSchema = z.array(z.record(z.number()));
 export function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
+export function createSearchRegExp(str) {
+  return escapeRegExp(str);
+}
