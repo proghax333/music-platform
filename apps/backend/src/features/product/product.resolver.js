@@ -2,6 +2,13 @@ import createHttpError from "http-errors";
 import { resolver } from "../../lib/graphql.js";
 import { paginate } from "../../lib/pagination.js";
 
+import z from "zod";
+import {
+  escapeRegExp,
+  sortValidationSchema,
+  validate,
+} from "../../lib/validation.js";
+
 export class ProductResolver {
   /** @type {import("mongoose").Model} */
   Product;
@@ -64,10 +71,42 @@ export class ProductResolver {
     ];
   }
 
+  productsFilterValidationSchema = z.object({
+    content: z.string(),
+  });
   products = async (parent, args, context) => {
-    const pipeline = this.Product.aggregate();
+    let filterPipeline = [];
+    if (args.filter) {
+      const validatedFilter = this.productsFilterValidationSchema.parse(
+        args.filter
+      );
+      delete args.filter.content;
 
-    const productConnection = await paginate(pipeline, args);
+      if (validatedFilter.content) {
+        const searchRegex = new RegExp(
+          escapeRegExp(validatedFilter.content),
+          "i"
+        );
+
+        filterPipeline.push({
+          $match: {
+            $or: [
+              { name: { $regex: searchRegex } },
+              { description: { $regex: searchRegex } },
+            ],
+          },
+        });
+      }
+    }
+
+    if (args.sort) {
+      sortValidationSchema.parse(args.sort);
+    }
+
+    const pipeline = this.Product.aggregate(filterPipeline);
+    const productConnection = await paginate(pipeline, {
+      ...args,
+    });
     return productConnection;
   };
 

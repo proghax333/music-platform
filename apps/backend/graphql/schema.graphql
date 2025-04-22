@@ -1,3 +1,8 @@
+input SortField {
+  field: String
+  direction: String
+}
+
 type AuthProvider {
   providerId: String!
   provider: String!
@@ -26,7 +31,7 @@ type User {
     after: String
     first: Int
     last: Int
-    sort: String
+    sort: SortField
   ): FileConnection
 
   createdAt: Date!
@@ -121,7 +126,7 @@ type Product {
     after: String
     first: Int
     last: Int
-    sort: String
+    sort: SortField
   ): ProductVariantConnection
 
   productPostings(
@@ -129,7 +134,7 @@ type Product {
     after: String
     first: Int
     last: Int
-    sort: String
+    sort: SortField
   ): ProductPostingConnection
 }
 
@@ -359,7 +364,7 @@ type Query {
     last: Int
     before: String
     after: String
-    sort: String
+    sort: SortField
     filter: Object
   ): ProductConnection
 
@@ -371,7 +376,7 @@ type Query {
     last: Int
     before: String
     after: String
-    sort: String
+    sort: SortField
     filter: Object
   ): BrandConnection
 
@@ -380,7 +385,7 @@ type Query {
     last: Int
     before: String
     after: String
-    sort: String
+    sort: SortField
     filter: Object
   ): CategoryConnection
 
@@ -391,7 +396,7 @@ type Query {
     last: Int
     before: String
     after: String
-    sort: String
+    sort: SortField
 
     refId: ObjectId!
   ): ReviewConnection
@@ -405,7 +410,7 @@ type Query {
     after: String
     first: Int
     last: Int
-    sort: String
+    sort: SortField
   ): FileConnection
 
   tasks: [Task!]!

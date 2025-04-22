@@ -1,3 +1,5 @@
+import z from "zod";
+
 /**
  * Validation middleware for Zod schemas.
  * @param {import("zod").Schema} schema
@@ -22,4 +24,10 @@ export function validate(
       next(error);
     }
   };
+}
+
+export const sortValidationSchema = z.array(z.record(z.number()));
+
+export function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
