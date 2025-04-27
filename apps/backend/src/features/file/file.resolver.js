@@ -19,11 +19,11 @@ export class FileResolver {
 
   createFile = resolver(async (parent, args, context) => {
     if (!context.user?._id) {
-      throw new Error("Not logged in.");
+      // throw new Error("Not logged in.");
     }
 
     const data = args.input;
-    data.uploader = context.user._id;
+    // data.uploader = context.user._id;
 
     const file = await this.File.create({
       ...data,
@@ -37,7 +37,7 @@ export class FileResolver {
 
   updateFile = resolver(async (parent, args, context) => {
     if (!context.user?._id) {
-      throw new Error("Not logged in.");
+      // throw new Error("Not logged in.");
     }
     const data = args.input;
 
@@ -57,7 +57,7 @@ export class FileResolver {
 
   deleteFile = resolver(async (parent, args, context) => {
     if (!context.user?._id) {
-      throw new Error("Not logged in.");
+      // throw new Error("Not logged in.");
     }
     const file = await this.File.findByIdAndDelete(args.id);
 
@@ -74,7 +74,7 @@ export class FileResolver {
     const userId = context.user?._id;
 
     if (!userId) {
-      throw new Error("Not logged in");
+      // throw new Error("Not logged in");
     }
 
     const pipeline = await this.File.aggregate().match({

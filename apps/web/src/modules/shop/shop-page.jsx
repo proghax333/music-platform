@@ -98,9 +98,6 @@ function ProductCard({ product }) {
         <p className="text-sm ml-6 text-center mt-6 text-black font-bold">
           {product.name}
         </p>
-        <p className="text-lg text-black text-center ml-6">
-          {product.description}
-        </p>
       </NavLink>
 
       <div className="flex mx-2 justify-center">
