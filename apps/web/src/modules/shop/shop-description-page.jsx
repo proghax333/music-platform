@@ -203,9 +203,9 @@ function ShopDescription() {
               </button>
             </div>
 
-            <div>
+            <div className="flex-1 flex items-center justify-center">
               <img
-                className="w-full h-auto max-h-[70svh] mx-4 object-contain justify-center items-center"
+                className="w-full h-auto max-h-[70svh] mx-4 object-contain"
                 src={mainImage}
                 alt="Main Product"
               />

@@ -60,7 +60,9 @@ function EventCard() {
       <div className="text-base-content-50 w-full border-l border-r pb-2">
         <div className="flex w-full justify-between">
           <div className="ml-28">
-            <h3 className="mt-4 font-bold text-xl">Event Name</h3>
+            <h3 className="mt-4 font-bold text-xl">
+              <NavLink to="/events/123">Event Name</NavLink>
+            </h3>
 
             <p className="text-sm text-base-600">100+ interested</p>
 
