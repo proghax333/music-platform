@@ -226,8 +226,7 @@ function Task() {
                     selectedGenre === genre
                       ? "bg-black text-white"
                       : "bg-gray-500 text-white hover:bg-gray-700"
-                  }`}
-                >
+                  }`}>
                   {genre}
                 </button>
               ))}
@@ -239,8 +238,7 @@ function Task() {
               <select
                 className="p-2 border rounded"
                 onChange={(e) => setSelectedDifficulty(e.target.value)}
-                value={selectedDifficulty}
-              >
+                value={selectedDifficulty}>
                 {difficulties.map((difficulty) => (
                   <option key={difficulty} value={difficulty}>
                     {difficulty}

@@ -30,6 +30,35 @@ export const useTasksQuery = () => {
   });
 };
 
+export const QUERY_TASK = (id) => ["tasks", id];
+export const useTaskQuery = (id) => {
+  const query = `
+  query Task($id: ObjectId!) {
+  task(id: $id) {
+    _id
+    title
+    movie
+    difficulty
+    status
+    acceptance
+  }
+}`;
+
+  return useQuery({
+    queryKey: QUERY_TASK(),
+    queryFn: async () => {
+      const response = await api.post(GRAPHQL_ENDPOINT, {
+        query: query,
+        variables: {
+          id,
+        },
+      });
+
+      return response.data.data.task;
+    },
+  });
+};
+
 export const useCreateTaskMutation = (options = {}) => {
   const query = `mutation CreateTask($input: CreateTaskInput!) {
   createTask(input: $input) {

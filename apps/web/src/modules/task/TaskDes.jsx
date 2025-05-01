@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router";
 import { MdPlayCircleFilled } from "react-icons/md";
 import MainNav from "@/components/main-nav";
+import { useTaskQuery } from "@/lib/api/task";
 
 const askdes = [
   {
@@ -188,47 +189,49 @@ const askdes = [
 
 const TaskDes = () => {
   const { id } = useParams();
-  console.log("This is for id ", typeof id);
-  const song = askdes.find((item) => {
-    return item.id == id;
-  });
+  const { isLoading, isSuccess, isError, data: song } = useTaskQuery(id);
+
   return (
     <>
       <MainNav />
-      <div className="flex flex-col h-screen">
-        <div className="p-2  text-white flex justify-end mr-8">
-          <button className="px-6 py-3 bg-gray-800 rounded-lg  ">Submit</button>
-        </div>
-
-        <div className="flex flex-1 border-t">
-          <div className="w-1/2 p-4 border-r border-gray-300 overflow-auto">
-            <h2 className="text-xl font-semibold mb-4">Song Description</h2>
-            <div key={song.id}>
-              <p>{song.songDes}</p>
-              <h3 className="text-lg font-semibold mt-4">Artist:</h3>
-              <p>{song.artist}</p>
-              <h3 className="text-lg font-semibold mt-4">Album:</h3>
-              <p>{song.album}</p>
-              <h3 className="text-lg font-semibold mt-4">Lyrics:</h3>
-              <pre className="bg-gray-200 p-2 rounded">{song.lyrics}</pre>
-            </div>
+      {isSuccess && (
+        <div className="flex flex-col h-screen">
+          <div className="p-2  text-white flex justify-end mr-8">
+            <button className="px-6 py-3 bg-gray-800 rounded-lg  ">
+              Submit
+            </button>
           </div>
 
-          {/* Right Column - Video and Audio Recording */}
-          <div className="w-1/2 p-4 overflow-auto">
-            <h2 className="text-xl font-semibold mb-4">Video Section</h2>
-            <div className="bg-neutral-950 w-full lg:h-auto aspect-[16/9] flex items-center justify-center">
-              <button>
-                <MdPlayCircleFilled className="text-neutral-50" size={42} />
-              </button>
+          <div className="flex flex-1 border-t">
+            <div className="w-1/2 p-4 border-r border-gray-300 overflow-auto">
+              <h2 className="text-xl font-semibold mb-4">Song Description</h2>
+              <div key={song.id}>
+                <p>{song.songDes}</p>
+                <h3 className="text-lg font-semibold mt-4">Artist:</h3>
+                <p>{song.artist}</p>
+                <h3 className="text-lg font-semibold mt-4">Album:</h3>
+                <p>{song.album}</p>
+                <h3 className="text-lg font-semibold mt-4">Lyrics:</h3>
+                <pre className="bg-gray-200 p-2 rounded">{song.lyrics}</pre>
+              </div>
             </div>
-            <h2 className="text-xl font-semibold mb-4">Audio Recording</h2>
-            <div className="w-full h-24 bg-gray-200 flex items-center justify-center rounded">
-              <p>Record Audio Here</p>
+
+            {/* Right Column - Video and Audio Recording */}
+            <div className="w-1/2 p-4 overflow-auto">
+              <h2 className="text-xl font-semibold mb-4">Video Section</h2>
+              <div className="bg-neutral-950 w-full lg:h-auto aspect-[16/9] flex items-center justify-center">
+                <button>
+                  <MdPlayCircleFilled className="text-neutral-50" size={42} />
+                </button>
+              </div>
+              <h2 className="text-xl font-semibold mb-4">Audio Recording</h2>
+              <div className="w-full h-24 bg-gray-200 flex items-center justify-center rounded">
+                <p>Record Audio Here</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

@@ -414,7 +414,7 @@ type Query {
   ): FileConnection
 
   tasks: [Task!]!
-  task(id: ID!): Task
+  task(id: ObjectId!): Task
 }
 
 ########################
