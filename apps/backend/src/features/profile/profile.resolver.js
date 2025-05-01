@@ -1,3 +1,5 @@
+import { createHttpError } from "../../lib/http.js";
+
 export class ProfileResolver {
   /** @type {import("./profile.service.js").ProfileService} */
   profileService;

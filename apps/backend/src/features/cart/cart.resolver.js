@@ -1,4 +1,4 @@
-import createHttpError from "http-errors";
+import { createHttpError } from "../../lib/http.js";
 import { resolver } from "../../lib/graphql.js";
 import { Decimal } from "../../lib/decimal.js";
 

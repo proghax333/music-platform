@@ -1,6 +1,6 @@
 import { paginate } from "../../lib/pagination.js";
 import { resolver } from "../../lib/graphql.js";
-import createHttpError from "http-errors";
+import { createHttpError } from "../../lib/http.js";
 
 export class ReviewResolver {
   /** @type {import("mongoose").Model} */

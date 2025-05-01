@@ -5,6 +5,10 @@ export const createFindDataLoader = (Model) => {
     // IMPORTANT: DISABLE CACHING.
     loader.clearAll();
 
+    if(keys.length === 0) {
+      return [];
+    }
+
     const idMap = {};
     for (let idx = 0; idx < keys.length; ++idx) {
       const key = keys[idx];
@@ -26,6 +30,8 @@ export const createFindDataLoader = (Model) => {
         result[idx] = item;
       }
     }
+
+    result[keys.length - 1] = result[keys.length - 1];
 
     return result;
   });
