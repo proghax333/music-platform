@@ -437,6 +437,13 @@ type LoginMutationResponse {
   refreshToken: String
 }
 
+type LogoutMutationResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
 input RefreshTokenMutationInput {
   refreshToken: String!
 }
@@ -1200,7 +1207,7 @@ type DeleteTaskResponse {
 type Mutation {
   login(input: LoginMutationInput!): LoginMutationResponse!
   signup(input: SignupMutationInput!): SignupMutationResponse!
-  logout: Boolean!
+  logout: LogoutMutationResponse!
   refreshToken(input: RefreshTokenMutationInput): RefreshTokenMutationResponse!
 
   # Product mutations

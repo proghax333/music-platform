@@ -37,14 +37,17 @@ import { SessionProvider } from "./modules/session/SessionProvider";
 import { WaitForSessionLoading } from "./modules/session/WaitForSessionLoading";
 import ChatsPage from "./modules/chat/chats-page";
 import { ChatMainPanel } from "./modules/chat/chats-main-panel";
+import RootLayout from "@/ui/layouts/RootLayout";
+import Logout from "./pages/logout";
 
 function RootRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/">
+        <Route path="/" element={<RootLayout />}>
           <Route index element={<HomePage />} />
           <Route path="login" element={<Login />} />
+          <Route path="logout" element={<Logout />} />
 
           <Route path="settings">
             <Route index element={<Settings />} />

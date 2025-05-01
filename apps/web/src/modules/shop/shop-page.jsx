@@ -2,8 +2,10 @@ import MainNav from "@/components/main-nav";
 import { useProductsQuery } from "@/lib/api/product";
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router";
-import { useAddToCartMutation } from "@/lib/api/cart";
+import { QUERY_CARTITEMS, useAddToCartMutation } from "@/lib/api/cart";
 import { useSession } from "../session/useSession";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Shop() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,12 +58,21 @@ function ProductCard({ product }) {
   const { getCurrentProfile } = useSession();
   const currentProfile = getCurrentProfile();
 
+  const queryClient = useQueryClient();
+
   const addToCartMutation = useAddToCartMutation({
     onSuccess: () => {
       console.log("Added Iten");
+      toast.success("Item added to cart.", {
+        position: "bottom-right",
+      });
+
+      queryClient.invalidateQueries([QUERY_CARTITEMS(currentProfile?._id)]);
     },
     onError: (err) => {
-      alert(err.message || "Failed to add item.");
+      toast.error("Could not add item to cart.", {
+        position: "bottom-right",
+      });
     },
   });
 
@@ -105,8 +116,7 @@ function ProductCard({ product }) {
           <div
             key={index}
             className="w-6 h-6 mx-2 border-2 mt-2 border-black rounded-full cursor-pointer"
-            style={{ backgroundColor: variant.name }}
-          ></div>
+            style={{ backgroundColor: variant.name }}></div>
         ))}
       </div>
 
@@ -121,8 +131,7 @@ function ProductCard({ product }) {
         </button>
         <button
           onClick={handleAddToCart}
-          className="border-2 border-black flex-1 h-10 font-semibold text-black rounded-lg hover:border-orange-400 hover:scale-105 hover:bg-orange-400 hover:text-white transition duration-300"
-        >
+          className="border-2 border-black flex-1 h-10 font-semibold text-black rounded-lg hover:border-orange-400 hover:scale-105 hover:bg-orange-400 hover:text-white transition duration-300">
           Add to Cart
         </button>
       </div>

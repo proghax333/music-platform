@@ -79,9 +79,8 @@ export const useAddToCartMutation = (options = {}) => {
   });
 };
 
-
-export const useUpdateCartItemMutation = (options = {}) =>{
-    const query = `mutation UpdateCartItem($updateCartItemId: ObjectId!, $updateCartItemInput: UpdateCartItemInput!) {
+export const useUpdateCartItemMutation = (options = {}) => {
+  const query = `mutation UpdateCartItem($updateCartItemId: ObjectId!, $updateCartItemInput: UpdateCartItemInput!) {
   updateCartItem(id: $updateCartItemId, input: $updateCartItemInput) {
     message
     code
@@ -124,7 +123,7 @@ export const useUpdateCartItemMutation = (options = {}) =>{
   });
 };
 
-export const useCartItemsQuery = (profile) => {
+export const useCartItemsQuery = (profile, options = {}) => {
   const query = `query CartItems($profile: ObjectId!) {
   cartItems(profile: $profile) {
     _id
@@ -159,5 +158,6 @@ export const useCartItemsQuery = (profile) => {
       });
       return response.data.data.cartItems;
     },
+    ...options,
   });
 };

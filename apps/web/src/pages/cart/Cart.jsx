@@ -8,7 +8,7 @@ import {
 import { useSession } from "@/modules/session/useSession";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { NavLink } from "react-router";
+import { Navigate, NavLink } from "react-router";
 
 function Cart() {
   const cart = [
@@ -30,7 +30,7 @@ function Cart() {
     isSuccess,
     data: cartItems,
     refetch: refetchCartItems,
-  } = useCartItemsQuery(currentProfile._id);
+  } = useCartItemsQuery(currentProfile?._id);
 
   const updateCartItemMutation = useUpdateCartItemMutation({
     onSuccess: () => {
@@ -84,6 +84,10 @@ function Cart() {
     return getSubtotal() + getShipping();
   };
 
+  if (!currentProfile) {
+    return <Navigate to={"/login"} />;
+  }
+
   return (
     <>
       <MainNav />
@@ -101,8 +105,7 @@ function Cart() {
               {cartItems.map((item) => (
                 <div
                   key={item._id}
-                  className="flex border-b pb-4 mb-6 hover:shadow-xl transition duration-300 ease-in-out"
-                >
+                  className="flex border-b pb-4 mb-6 hover:shadow-xl transition duration-300 ease-in-out">
                   <div className="flex-shrink-0">
                     <img
                       src={item.variant.images[0].url}
@@ -134,8 +137,7 @@ function Cart() {
                           item.quantity == "1"
                             ? handleRemove(item._id)
                             : Decreased(item)
-                        }
-                      >
+                        }>
                         <p className="text-2xl">-</p>
                       </button>
                       <span className="mx-4 text-xl font-semibold">
@@ -143,8 +145,7 @@ function Cart() {
                       </span>
                       <button
                         className="px-4 py-1 bg-black text-white  rounded-full"
-                        onClick={() => Increased(item)}
-                      >
+                        onClick={() => Increased(item)}>
                         <p className="text-2xl">+</p>
                       </button>
                     </div>
@@ -155,8 +156,7 @@ function Cart() {
 
                     <button
                       className="mt-4 text-red-500 font-medium hover:underline"
-                      onClick={() => handleRemove(item._id)}
-                    >
+                      onClick={() => handleRemove(item._id)}>
                       Remove Item
                     </button>
                   </div>
@@ -183,8 +183,7 @@ function Cart() {
                 </div>
                 <NavLink
                   to="/checkout"
-                  className="block text-center w-full py-3 bg-primary-700 text-white text-xl rounded-lg hover:bg-primary-800 transition mt-6"
-                >
+                  className="block text-center w-full py-3 bg-primary-700 text-white text-xl rounded-lg hover:bg-primary-800 transition mt-6">
                   Checkout
                 </NavLink>
               </div>

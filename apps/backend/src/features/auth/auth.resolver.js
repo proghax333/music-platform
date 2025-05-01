@@ -41,6 +41,12 @@ export class AuthResolver {
     };
   });
 
+  logout = resolver(async (parent, args, context) => {
+    return {
+      message: "Logged out successfully",
+    };
+  });
+
   refreshToken = resolver(async (parent, args, context) => {
     const { refreshToken } = args.input;
     const accessToken = this.authService.refreshAccessToken(refreshToken);
@@ -55,6 +61,7 @@ export class AuthResolver {
       Mutation: {
         signup: this.signup,
         login: this.login,
+        logout: this.logout,
         refreshToken: this.refreshToken,
       },
     };

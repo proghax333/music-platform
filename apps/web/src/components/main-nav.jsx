@@ -13,6 +13,7 @@ import SiteLogo from "./site-logo";
 import { FaShoppingCart } from "react-icons/fa";
 import { Popover } from "@mui/material";
 import { useSession } from "@/modules/session/useSession";
+import { useCartItemsQuery } from "@/lib/api/cart";
 
 function MainNav({ className }) {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
@@ -48,6 +49,17 @@ function MainNav({ className }) {
   const showLargeMenu = !showSmallMenu;
 
   const session = useSession();
+  const currentProfile = session.getCurrentProfile();
+
+  const {
+    isLoading,
+    isError,
+    isSuccess,
+    data: cartItems,
+    refetch: refetchCartItems,
+  } = useCartItemsQuery(currentProfile?._id, {
+    enabled: session.isLoggedIn,
+  });
 
   const items = [
     {
@@ -87,8 +99,7 @@ function MainNav({ className }) {
       className={cls(
         "flex flex-col border-b lg:border lg:rounded-md lg:mt-2 lg:mx-4",
         className
-      )}
-    >
+      )}>
       <div
         className={cls(
           `
@@ -97,8 +108,7 @@ function MainNav({ className }) {
             p-3
           `,
           showLargeMenu && "justify-start"
-        )}
-      >
+        )}>
         <SiteLogo />
 
         {showSmallMenu && (
@@ -108,8 +118,7 @@ function MainNav({ className }) {
                 initial={{ opacity: 0, rotate: -90 }}
                 animate={{ opacity: 1, rotate: 0 }}
                 exit={{ option: 0, rotate: 90 }}
-                layout
-              >
+                layout>
                 {!isOpen && <RxHamburgerMenu className="w-6 h-6" />}
                 {isOpen && <RxCross1 className="w-6 h-6" />}
               </motion.div>
@@ -133,29 +142,45 @@ function MainNav({ className }) {
                         `
                         // index === 0 && "bg-neutral-50 text-neutral-content-50"
                       )}
-                      to={menuItem.path}
-                    >
+                      to={menuItem.path}>
                       {menuItem.name}
                     </NavLink>
                   );
                 })}
 
                 <div className="ml-auto flex items-center justify-center gap-4">
-                  <NavLink
-                    to={"/cart"}
-                    className="w-12 h-12 rounded-full border flex items-center"
-                  >
-                    <FaShoppingCart className="ml-3" size={20} />
-                  </NavLink>
+                  {session.isLoggedIn && (
+                    <NavLink
+                      to={"/cart"}
+                      className="w-12 h-12 rounded-full border flex items-center relative">
+                      <FaShoppingCart className="ml-3" size={20} />
+                      {session.isLoggedIn && isSuccess && (
+                        <span className="absolute -bottom-1 -right-1 text-sm rounded-full p-1 bg-white">
+                          {cartItems.length}
+                        </span>
+                      )}
+                    </NavLink>
+                  )}
 
-                  <button
-                    aria-describedby={menuId}
-                    onClick={handleOpenMenu}
-                    className="w-12 h-12 bg-accent-400 border border-accent-300 text-lg text-accent-content-400 rounded-full flex items-center justify-center"
-                    ref={menuAnchorElRef}
-                  >
-                    A
-                  </button>
+                  {session.isLoggedIn && (
+                    <button
+                      aria-describedby={menuId}
+                      onClick={handleOpenMenu}
+                      className="w-12 h-12 bg-accent-400 border border-accent-300 text-lg text-accent-content-400 rounded-full flex items-center justify-center"
+                      ref={menuAnchorElRef}>
+                      A
+                    </button>
+                  )}
+
+                  {!session.isLoggedIn && (
+                    <NavLink
+                      className={cls(
+                        "p-2 px-8 bg-primary-900 text-primary-content-900 font-bold"
+                      )}
+                      to="/login">
+                      Login
+                    </NavLink>
+                  )}
 
                   {session.isLoggedIn && (
                     <Popover
@@ -170,33 +195,28 @@ function MainNav({ className }) {
                       transformOrigin={{
                         vertical: "top",
                         horizontal: "center",
-                      }}
-                    >
+                      }}>
                       <div
                         className="min-w-52 flex flex-col"
                         onClick={(e) => {
                           if (e.target.tagName === "A") {
                             handleCloseMenu();
                           }
-                        }}
-                      >
+                        }}>
                         <NavLink
                           className="p-2 px-4 hover:bg-neutral-200"
-                          to={`/profiles/${session.getCurrentProfile()._id}`}
-                        >
+                          to={`/profiles/${session.getCurrentProfile()._id}`}>
                           Profile
                         </NavLink>
                         <NavLink
                           className="p-2 px-4 hover:bg-neutral-200"
-                          to={"/settings"}
-                        >
+                          to={"/settings"}>
                           Settings
                         </NavLink>
                         <hr />
                         <NavLink
                           className="p-2 px-4 hover:bg-neutral-200"
-                          to={"/logout"}
-                        >
+                          to={"/logout"}>
                           Logout
                         </NavLink>
                       </div>
@@ -216,8 +236,7 @@ function MainNav({ className }) {
               className="border-t w-full"
               initial={{ opacity: 0.5 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            ></motion.div>
+              exit={{ opacity: 0 }}></motion.div>
             <motion.div
               initial={{
                 height: 0,
@@ -229,8 +248,7 @@ function MainNav({ className }) {
                 height: 0,
               }}
               className="overflow-hidden"
-              layout
-            >
+              layout>
               <div className="flex flex-col">
                 {smallMenuItems.map((menuItem, index) => {
                   return (
@@ -246,8 +264,7 @@ function MainNav({ className }) {
                         )}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                      >
+                        exit={{ opacity: 0 }}>
                         {menuItem.name}
                       </motion.div>
                     </NavLink>
