@@ -9,6 +9,7 @@ import {
   createTypingIndicatorModel,
 } from "./chat.model.js";
 import { ChatResolver } from "./chat.resolver.js";
+import { ChatServer } from "./chat.server.js";
 
 export class ChatModule {
   /**
@@ -30,5 +31,6 @@ export class ChatModule {
     );
 
     di.service("chatResolver", ChatResolver);
+    di.service("chatServer", ChatServer);
   }
 }

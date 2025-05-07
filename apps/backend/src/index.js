@@ -17,9 +17,15 @@ import { CartModule } from "./features/cart/cart.module.js";
 import { FileModule } from "./features/file/file.module.js";
 import { TaskModule } from "./features/task/task.module.js";
 
+import http from "node:http";
+
 async function main() {
   const di = createDIContainer();
   const app = express();
+  const server = http.createServer(app);
+
+  // Register HTTP server
+  di.constant("server", server);
 
   await EnvModule.registerEnvModule(di);
   const _env = di.container.env;
@@ -142,10 +148,12 @@ async function main() {
   app.get("/graphql", graphqlApolloSandboxMiddleware);
   app.use("/graphql", graphqlExpressMiddleware);
 
-  // const authRouter = di.container.authRouter.build();
+  /** Chat server registration */
+  /** @type {import("./features/chat/chat.server.js").ChatServer} */
+  const chatServer = di.container.chatServer;
+  await chatServer.initialize();
 
   const fileRouter = di.container.fileRouter;
-
   const v1Router = express.Router().use("/files", fileRouter);
 
   // Register the v1 router.
@@ -153,7 +161,7 @@ async function main() {
 
   const PORT = process.env.PORT || 3500;
 
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}. :)`);
   });
 }
