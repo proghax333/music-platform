@@ -24,9 +24,17 @@ async function main() {
   await EnvModule.registerEnvModule(di);
   const _env = di.container.env;
 
+  const ORIGINS = ["http://localhost:5173"];
+
   app.use(
     cors({
-      origin: ["http://localhost:5173"],
+      origin: (origin, cb) => {
+        if (origin !== undefined && !ORIGINS.includes(origin)) {
+          cb(new Error("Invalid origin."));
+        }
+
+        cb(null, origin);
+      },
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       credentials: true,
     })
@@ -104,7 +112,6 @@ async function main() {
   graphqlModule.addResolvers(chatResolver.getResolvers());
   graphqlModule.addResolvers(fileResolver.getResolvers());
   graphqlModule.addResolvers(taskResolver.getResolvers());
-
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();
