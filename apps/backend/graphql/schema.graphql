@@ -226,7 +226,7 @@ type Course {
   title: String!
   description: String!
   instructors: [Profile!]
-  images: [ObjectId!]
+  images: [File!]
   published: Boolean
   sections: [Section!]
 
@@ -346,6 +346,17 @@ type Task {
   acceptance: String
 }
 
+type CourseEdge {
+  node: Review
+  cursor: String
+}
+
+type CourseConnection {
+  totalCount: Int
+  edges: [CourseEdge!]
+  pageInfo: PageInfo
+}
+
 ###
 # Queries: All GraphQL queries.
 ###
@@ -415,6 +426,14 @@ type Query {
 
   tasks: [Task!]!
   task(id: ObjectId!): Task
+
+  courses(
+    before: String
+    after: String
+    first: Int
+    last: Int
+    sort: SortField
+  ): CourseConnection
 }
 
 ########################

@@ -1,5 +1,6 @@
 import { resolver } from "../../lib/graphql.js";
 import { createHttpError } from "../../lib/http.js";
+import { paginate } from "../../lib/pagination.js";
 
 export class CourseResolver {
   /** @type {import("mongoose").Model} */
@@ -12,6 +13,10 @@ export class CourseResolver {
   Quiz;
   /** @type {import("mongoose").Model} */
   QuizAttempt;
+  /** @type {import("mongoose").Model} */
+  Profile;
+  /** @type {import("mongoose").Model} */
+  File;
 
   /** @type {import("dataloader")} */
   CourseDataLoader;
@@ -33,6 +38,8 @@ export class CourseResolver {
       "Lesson",
       "Quiz",
       "QuizAttempt",
+      "Profile",
+      "File",
 
       "CourseDataLoader",
       "SectionDataLoader",
@@ -230,6 +237,55 @@ export class CourseResolver {
       message: "Quiz attempt deleted.",
     };
   });
+
+  courses = async (parent, args, context) => {
+    const pipeline = this.Course.aggregate();
+
+    const page = await paginate(pipeline, args);
+    return page;
+  };
+
+  Course_instructors = async (parent, args, context) => {
+    if (!parent.instructors || parent.instructors.length === 0) {
+      return [];
+    }
+
+    const result = await this.Profile.find({
+      _id: {
+        $in: parent.instructors,
+      },
+    });
+
+    return result;
+  };
+
+  Course_images = async (parent, args, context) => {
+    if (!parent.images || parent.images.length === 0) {
+      return [];
+    }
+
+    const result = await this.File.find({
+      _id: {
+        $in: parent.images,
+      },
+    });
+
+    return result;
+  };
+
+  Course_sections = async (parent, args, context) => {
+    if (!parent.sections || parent.sections.length === 0) {
+      return [];
+    }
+
+    const result = await this.Section.find({
+      _id: {
+        $in: parent.sections,
+      },
+    });
+
+    return result;
+  };
 
   getResolvers = () => {
     return {
