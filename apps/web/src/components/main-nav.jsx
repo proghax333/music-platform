@@ -99,7 +99,8 @@ function MainNav({ className }) {
       className={cls(
         "flex flex-col border-b lg:border lg:rounded-md lg:mt-2 lg:mx-4",
         className
-      )}>
+      )}
+    >
       <div
         className={cls(
           `
@@ -108,7 +109,8 @@ function MainNav({ className }) {
             p-3
           `,
           showLargeMenu && "justify-start"
-        )}>
+        )}
+      >
         <SiteLogo />
 
         {showSmallMenu && (
@@ -118,7 +120,8 @@ function MainNav({ className }) {
                 initial={{ opacity: 0, rotate: -90 }}
                 animate={{ opacity: 1, rotate: 0 }}
                 exit={{ option: 0, rotate: 90 }}
-                layout>
+                layout
+              >
                 {!isOpen && <RxHamburgerMenu className="w-6 h-6" />}
                 {isOpen && <RxCross1 className="w-6 h-6" />}
               </motion.div>
@@ -142,7 +145,8 @@ function MainNav({ className }) {
                         `
                         // index === 0 && "bg-neutral-50 text-neutral-content-50"
                       )}
-                      to={menuItem.path}>
+                      to={menuItem.path}
+                    >
                       {menuItem.name}
                     </NavLink>
                   );
@@ -152,7 +156,8 @@ function MainNav({ className }) {
                   {session.isLoggedIn && (
                     <NavLink
                       to={"/cart"}
-                      className="w-12 h-12 rounded-full border flex items-center relative">
+                      className="w-12 h-12 rounded-full border flex items-center relative"
+                    >
                       <FaShoppingCart className="ml-3" size={20} />
                       {session.isLoggedIn && isSuccess && (
                         <span className="absolute -bottom-1 -right-1 text-sm rounded-full p-1 bg-white">
@@ -167,7 +172,8 @@ function MainNav({ className }) {
                       aria-describedby={menuId}
                       onClick={handleOpenMenu}
                       className="w-12 h-12 bg-accent-400 border border-accent-300 text-lg text-accent-content-400 rounded-full flex items-center justify-center"
-                      ref={menuAnchorElRef}>
+                      ref={menuAnchorElRef}
+                    >
                       A
                     </button>
                   )}
@@ -177,7 +183,8 @@ function MainNav({ className }) {
                       className={cls(
                         "p-2 px-8 bg-primary-900 text-primary-content-900 font-bold"
                       )}
-                      to="/login">
+                      to="/login"
+                    >
                       Login
                     </NavLink>
                   )}
@@ -195,28 +202,33 @@ function MainNav({ className }) {
                       transformOrigin={{
                         vertical: "top",
                         horizontal: "center",
-                      }}>
+                      }}
+                    >
                       <div
                         className="min-w-52 flex flex-col"
                         onClick={(e) => {
                           if (e.target.tagName === "A") {
                             handleCloseMenu();
                           }
-                        }}>
+                        }}
+                      >
                         <NavLink
                           className="p-2 px-4 hover:bg-neutral-200"
-                          to={`/profiles/${session.getCurrentProfile()._id}`}>
+                          to={`/profiles/${session.getCurrentProfile()._id}`}
+                        >
                           Profile
                         </NavLink>
                         <NavLink
                           className="p-2 px-4 hover:bg-neutral-200"
-                          to={"/settings"}>
+                          to={"/settings"}
+                        >
                           Settings
                         </NavLink>
                         <hr />
                         <NavLink
                           className="p-2 px-4 hover:bg-neutral-200"
-                          to={"/logout"}>
+                          to={"/logout"}
+                        >
                           Logout
                         </NavLink>
                       </div>
@@ -236,7 +248,8 @@ function MainNav({ className }) {
               className="border-t w-full"
               initial={{ opacity: 0.5 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}></motion.div>
+              exit={{ opacity: 0 }}
+            ></motion.div>
             <motion.div
               initial={{
                 height: 0,
@@ -248,13 +261,16 @@ function MainNav({ className }) {
                 height: 0,
               }}
               className="overflow-hidden"
-              layout>
+              layout
+            >
               <div className="flex flex-col">
                 {smallMenuItems.map((menuItem, index) => {
                   return (
-                    <NavLink to={menuItem.path}>
+                    <NavLink
+                      to={menuItem.path}
+                      key={`nav-item-small-${menuItem.path}`}
+                    >
                       <motion.div
-                        key={`nav-item-main-${menuItem.path}`}
                         className={cls(
                           `
                           p-4 font-lato border-b w-full cursor-pointer hover:bg-neutral-100 hover:text-neutral-content-100
@@ -264,7 +280,8 @@ function MainNav({ className }) {
                         )}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}>
+                        exit={{ opacity: 0 }}
+                      >
                         {menuItem.name}
                       </motion.div>
                     </NavLink>
