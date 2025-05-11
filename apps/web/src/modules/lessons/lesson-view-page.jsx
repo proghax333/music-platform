@@ -1,83 +1,114 @@
 import MainNav from "@/components/main-nav";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import React from "react";
 
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdExpand, MdExpandMore } from "react-icons/md";
 import { MdShare } from "react-icons/md";
 import { MdPlayCircleFilled } from "react-icons/md";
 
 function LessonViewPage() {
-  const lessons = [
+  const sections = [
     {
-      id: 1,
+      _id: "66400a001f4a2c9a1d000001",
       title: "Strumming Basics",
-      description: "Learn the basics of strumming and common patterns.",
-      thumbnail: "https://placehold.co/80x64?text=Strumming+Basics",
+      course: "courseObjectId",
+      items: [
+        {
+          type: "Lesson",
+          ref: {
+            title: "Strumming Basics",
+            content: "Learn the basics of strumming and common patterns.",
+            videoUrl: "",
+            resources: [],
+          },
+        },
+      ],
+      order: 1,
     },
     {
-      id: 2,
+      _id: "66400a001f4a2c9a1d000002",
       title: "Complex Patterns",
-      description: "Get to know new and complex patterns.",
-      thumbnail: "https://placehold.co/80x64?text=Complex+Patterns",
+      course: "courseObjectId",
+      items: [
+        {
+          type: "Lesson",
+          ref: {
+            title: "Complex Patterns",
+            content: "Get to know new and complex patterns.",
+            videoUrl: "",
+            resources: [],
+          },
+        },
+      ],
+      order: 2,
     },
     {
-      id: 3,
+      _id: "66400a001f4a2c9a1d000003",
       title: "Chord Transitions",
-      description: "Improve your ability to switch between chords smoothly.",
-      thumbnail: "https://placehold.co/80x64?text=Chord+Transitions",
+      course: "courseObjectId",
+      items: [
+        {
+          type: "Lesson",
+          ref: {
+            title: "Chord Transitions",
+            content: "Improve your ability to switch between chords smoothly.",
+            videoUrl: "",
+            resources: [],
+          },
+        },
+      ],
+      order: 3,
     },
     {
-      id: 4,
+      _id: "66400a001f4a2c9a1d000004",
       title: "Fingerpicking 101",
-      description: "Learn the fundamentals of fingerpicking.",
-      thumbnail: "https://placehold.co/80x64?text=Fingerpicking+101",
+      course: "courseObjectId",
+      items: [
+        {
+          type: "Lesson",
+          ref: {
+            title: "Fingerpicking 101",
+            content: "Learn the fundamentals of fingerpicking.",
+            videoUrl: "",
+            resources: [],
+          },
+        },
+      ],
+      order: 4,
     },
     {
-      id: 5,
+      _id: "66400a001f4a2c9a1d000005",
       title: "Barre Chords",
-      description: "Master the essential barre chord shapes.",
-      thumbnail: "https://placehold.co/80x64?text=Barre+Chords",
+      course: "courseObjectId",
+      items: [
+        {
+          type: "Lesson",
+          ref: {
+            title: "Barre Chords",
+            content: "Master the essential barre chord shapes.",
+            videoUrl: "",
+            resources: [],
+          },
+        },
+      ],
+      order: 5,
     },
     {
-      id: 6,
+      _id: "66400a001f4a2c9a1d000006",
       title: "Rhythm & Timing",
-      description: "Develop a strong sense of rhythm and timing.",
-      thumbnail: "https://placehold.co/80x64?text=Rhythm+and+Timing",
-    },
-    {
-      id: 7,
-      title: "Scales & Improvisation",
-      description: "Explore scales and how to use them for improvisation.",
-      thumbnail: "https://placehold.co/80x64?text=Scales+and+Improvisation",
-    },
-    {
-      id: 8,
-      title: "Blues Guitar Basics",
-      description: "Learn the fundamentals of blues guitar playing.",
-      thumbnail: "https://placehold.co/80x64?text=Blues+Guitar+Basics",
-    },
-    {
-      id: 9,
-      title: "Lead Guitar Techniques",
-      description: "Discover techniques for playing lead guitar.",
-      thumbnail: "https://placehold.co/80x64?text=Lead+Guitar+Techniques",
-    },
-    {
-      id: 10,
-      title: "Fingerstyle Arrangements",
-      description: "Arrange songs in a fingerstyle playing method.",
-      thumbnail: "https://placehold.co/80x64?text=Fingerstyle+Arrangements",
-    },
-    {
-      id: 11,
-      title: "Songwriting with Guitar",
-      description: "Learn how to use guitar for songwriting.",
-      thumbnail: "https://placehold.co/80x64?text=Songwriting+with+Guitar",
-    },
-    {
-      id: 12,
-      title: "Advanced Soloing",
-      description: "Enhance your soloing techniques and phrasing.",
-      thumbnail: "https://placehold.co/80x64?text=Advanced+Soloing",
+      course: "courseObjectId",
+      items: [
+        {
+          type: "Lesson",
+          ref: {
+            title: "Rhythm & Timing",
+            content: "Develop a strong sense of rhythm and timing.",
+            videoUrl: "",
+            resources: [],
+          },
+        },
+      ],
+      order: 6,
     },
   ];
 
@@ -141,16 +172,16 @@ function LessonViewPage() {
           </div>
         </div>
 
-        {/* lessons section */}
-        <div className="flex flex-col border rounded-lg my-4 mx-4 lg:ml-8 lg:max-w-sm lg:my-0 lg:mb-4 lg:mt-4">
-          <h2 className="font-bold m-4">Lessons</h2>
+        {/* Sections */}
+        <div className="flex flex-col border rounded-lg my-4 px-4 lg:ml-8 lg:max-w-sm lg:my-0 lg:mb-4 lg:mt-4 w-full">
+          <h2 className="font-bold m-4">Sections</h2>
 
           <div className="border-t"></div>
 
           <div className="max-h-80 overflow-y-auto lg:max-h-none flex-1">
-            {lessons.map((lesson) => {
+            {sections.map((lesson) => {
               return (
-                <LessonItem key={`lesson-item-${lesson.id}`} data={lesson} />
+                <SectionItem key={`lesson-item-${lesson._id}`} data={lesson} />
               );
             })}
           </div>
@@ -161,9 +192,37 @@ function LessonViewPage() {
 }
 
 function LessonItem({ data }) {
+  const { ref: item, type } = data;
+
+  return (
+    <div className="border-t [&:not(:last-child)]:border-b p-4 cursor-pointer hover:bg-neutral-100">
+      {item.title}
+    </div>
+  );
+}
+
+function SectionItem({ data }) {
   return (
     <div className="group [&:not(:last-child)]:border-b flex">
-      <img
+      <Accordion className="w-full">
+        <AccordionSummary
+          expandIcon={<MdExpandMore />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <p>{data.title}</p>
+        </AccordionSummary>
+        <AccordionDetails
+          sx={{
+            padding: 0,
+          }}
+        >
+          {data.items.map((item) => {
+            return <LessonItem key={`lesson_item_${item._id}`} data={item} />;
+          })}
+        </AccordionDetails>
+      </Accordion>
+      {/* <img
         src={data.thumbnail}
         className="min-w-20 min-h-16 bg-neutral-500 border-b m-2 rounded-md"
       />
@@ -172,7 +231,7 @@ function LessonItem({ data }) {
           {data.title}
         </a>
         <p className="text-sm text-neutral-700">{data.description}</p>
-      </div>
+      </div> */}
     </div>
   );
 }
