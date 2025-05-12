@@ -113,6 +113,8 @@ export async function paginate(
   if (hasExtraItem) results.pop();
   if (isPaginatingBackward) results.reverse();
 
+  const nodes = results;
+
   const edges = results.map((item) => ({
     node: item,
     cursor: encodeCursor(buildCursor(item, sort)),
@@ -120,6 +122,7 @@ export async function paginate(
 
   return {
     edges,
+    nodes,
     pageInfo: {
       startCursor: edges[0]?.cursor ?? null,
       endCursor: edges.at(-1)?.cursor ?? null,
