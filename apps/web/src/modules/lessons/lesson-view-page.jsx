@@ -138,7 +138,13 @@ exercitationem odit aliquam neque quam quaerat eaque!`,
     },
   ];
 
-  const lesson = sections[0].items[0].ref;
+  const item = sections[0].items[0];
+
+  let pageUI = null;
+
+  if (item.type === "Lesson") {
+    pageUI = <Lesson data={item.ref} />;
+  }
 
   return (
     <>
@@ -151,75 +157,7 @@ exercitationem odit aliquam neque quam quaerat eaque!`,
           overflow-y-auto
         "
       >
-        <div className="mt-4 lg:ml-4 lg:flex-1 lg:overflow-y-auto lg:mb-4">
-          <div className="flex flex-col w-full">
-            {/* video player */}
-            <div className="bg-neutral-950 w-full lg:h-auto aspect-[16/9] flex items-center justify-center">
-              <button>
-                <MdPlayCircleFilled className="text-neutral-50" size={42} />
-              </button>
-            </div>
-          </div>
-
-          <div className="flex flex-col w-full p-4">
-            <h3 className="font-bold text-2xl">{lesson.title}</h3>
-
-            <p className="mt-2 text-base-700">{lesson.content}</p>
-
-            <div className="flex flex-wrap gap-2 mt-4">
-              {lesson.tags.map((item) => {
-                return (
-                  <div
-                    key={`lesson-tag-${item}`}
-                    className="rounded-full p-1 px-4 text-sm border border-neutral-400"
-                  >
-                    {item}
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-4 flex flex-row gap-2">
-              <button className="text-sm shadow-md rounded-lg p-2 px-3 pr-4 bg-primary-600 text-primary-content-600 flex items-center gap-2">
-                <MdAdd size={18} />
-                <p className="text-center content-center">Add to Watch Later</p>
-              </button>
-
-              <button className="text-sm shadow-md rounded-lg p-2 px-3 pr-4 bg-accent-600 text-accent-content-600 flex items-center gap-2">
-                <MdShare size={18} />
-                <p className="text-center content-center">Share</p>
-              </button>
-            </div>
-
-            <div className="pt-4">
-              <h2 className="text-lg font-bold">Resources</h2>
-
-              <div className="border my-2">
-                {lesson.resources.length === 0 && <div>No resources.</div>}
-                {lesson.resources.length > 0 && (
-                  <ol className="flex flex-col gap-2">
-                    {lesson.resources.map((resource) => {
-                      return (
-                        <li
-                          key={`lesson_item_${resource._id}`}
-                          className="flex gap-4 p-2 [&:not(:last-of-type)]:border-b"
-                        >
-                          <a href={resource.file.url}>{resource.title}</a>
-                          <a
-                            href={resource.file.url}
-                            className="ml-auto underline text-blue-600 text-ellipsis"
-                          >
-                            Download
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        {pageUI}
 
         {/* Sections */}
         <div className="flex flex-col lg:border rounded-lg my-4 p-4 lg:p-0 lg:ml-8 lg:max-w-sm lg:my-0 lg:mb-4 lg:mt-4 w-full">
@@ -240,6 +178,83 @@ exercitationem odit aliquam neque quam quaerat eaque!`,
         </div>
       </main>
     </>
+  );
+}
+
+function Lesson({ data }) {
+  const item = data;
+
+  return (
+    <div className="mt-4 lg:ml-4 lg:flex-1 lg:overflow-y-auto lg:mb-4">
+      {/* video player */}
+      <div className="flex flex-col w-full">
+        <div className="bg-neutral-950 w-full lg:h-auto aspect-[16/9] flex items-center justify-center">
+          <button>
+            <MdPlayCircleFilled className="text-neutral-50" size={42} />
+          </button>
+        </div>
+      </div>
+
+      {/* details */}
+      <div className="flex flex-col w-full p-4">
+        <h3 className="font-bold text-2xl">{item.title}</h3>
+
+        <p className="mt-2 text-base-700">{item.content}</p>
+
+        <div className="flex flex-wrap gap-2 mt-4">
+          {item.tags.map((item) => {
+            return (
+              <div
+                key={`lesson-tag-${item}`}
+                className="rounded-full p-1 px-4 text-sm border border-neutral-400"
+              >
+                {item}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-4 flex flex-row gap-2">
+          <button className="text-sm shadow-md rounded-lg p-2 px-3 pr-4 bg-primary-600 text-primary-content-600 flex items-center gap-2">
+            <MdAdd size={18} />
+            <p className="text-center content-center">Add to Watch Later</p>
+          </button>
+
+          <button className="text-sm shadow-md rounded-lg p-2 px-3 pr-4 bg-accent-600 text-accent-content-600 flex items-center gap-2">
+            <MdShare size={18} />
+            <p className="text-center content-center">Share</p>
+          </button>
+        </div>
+
+        <div className="pt-4">
+          <h2 className="text-lg font-bold">Resources</h2>
+
+          <div className="border my-2">
+            {item.resources.length === 0 && <div>No resources.</div>}
+            {item.resources.length > 0 && (
+              <ol className="flex flex-col gap-2">
+                {item.resources.map((resource) => {
+                  return (
+                    <li
+                      key={`lesson_item_${resource._id}`}
+                      className="flex gap-4 p-2 [&:not(:last-of-type)]:border-b"
+                    >
+                      <a href={resource.file.url}>{resource.title}</a>
+                      <a
+                        href={resource.file.url}
+                        className="ml-auto underline text-blue-600 text-ellipsis"
+                      >
+                        Download
+                      </a>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
