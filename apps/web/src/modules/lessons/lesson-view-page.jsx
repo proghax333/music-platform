@@ -228,9 +228,12 @@ exercitationem odit aliquam neque quam quaerat eaque!`,
           <div className="border-t"></div>
 
           <div className="max-h-80 overflow-y-auto lg:max-h-none flex-1">
-            {sections.map((lesson) => {
+            {sections.map((section) => {
               return (
-                <SectionItem key={`lesson-item-${lesson._id}`} data={lesson} />
+                <SectionItem
+                  key={`section-item-${section._id}`}
+                  data={section}
+                />
               );
             })}
           </div>
@@ -270,16 +273,6 @@ function SectionItem({ data }) {
           })}
         </AccordionDetails>
       </Accordion>
-      {/* <img
-        src={data.thumbnail}
-        className="min-w-20 min-h-16 bg-neutral-500 border-b m-2 rounded-md"
-      />
-      <div className="p-2">
-        <a className="font-bold text-sm" href="#">
-          {data.title}
-        </a>
-        <p className="text-sm text-neutral-700">{data.description}</p>
-      </div> */}
     </div>
   );
 }
