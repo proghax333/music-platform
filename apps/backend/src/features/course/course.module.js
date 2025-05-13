@@ -3,10 +3,6 @@ import {
   createCourseModel,
   createLessonDataLoader,
   createLessonModel,
-  createQuizAttemptDataLoader,
-  createQuizAttemptModel,
-  createQuizDataLoader,
-  createQuizModel,
   createSectionDataLoader,
   createSectionModel,
 } from "./course.model.js";
@@ -21,14 +17,10 @@ export class CourseModule {
     di.factory("Course", createCourseModel);
     di.factory("Section", createSectionModel);
     di.factory("Lesson", createLessonModel);
-    di.factory("Quiz", createQuizModel);
-    di.factory("QuizAttempt", createQuizAttemptModel);
 
     di.factory("CourseDataLoader", createCourseDataLoader);
     di.factory("SectionDataLoader", createSectionDataLoader);
     di.factory("LessonDataLoader", createLessonDataLoader);
-    di.factory("QuizDataLoader", createQuizDataLoader);
-    di.factory("QuizAttemptDataLoader", createQuizAttemptDataLoader);
 
     di.service("courseResolver", CourseResolver);
   }

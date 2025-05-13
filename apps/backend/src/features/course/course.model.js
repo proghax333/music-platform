@@ -57,7 +57,7 @@ export const createSectionModel = ({ db }) => {
           },
           type: {
             type: String,
-            enum: ["Lesson", "Quiz"],
+            enum: ["Lesson"],
             required: true,
           },
         },
@@ -94,6 +94,10 @@ export const createLessonModel = ({ db }) => {
           type: { type: String, enum: ["pdf", "link", "image", "file"] },
         },
       ],
+      tags: {
+        type: [{ type: String }],
+        default: [],
+      },
     },
     { timestamps: true }
   );
@@ -103,99 +107,4 @@ export const createLessonModel = ({ db }) => {
 
 export const createLessonDataLoader = ({ Lesson }) => {
   return createFindDataLoader(Lesson);
-};
-
-/**
- * Creates and returns the Quiz model using the given Mongoose connection.
- *
- * @param {Object} params
- * @param {import("mongoose").Connection} params.db
- * @returns {import("mongoose").Model}
- */
-export const createQuizModel = ({ db }) => {
-  const QuestionSchema = new Schema(
-    {
-      type: {
-        type: String,
-        enum: [
-          "multiple-choice",
-          "true-false",
-          "fill-in-the-blank",
-          "matching",
-        ],
-        required: true,
-      },
-      text: { type: String, required: true },
-      options: [
-        {
-          text: String,
-          isCorrect: Boolean,
-        },
-      ],
-      correctAnswers: [String],
-      matchPairs: [
-        {
-          left: String,
-          right: String,
-        },
-      ],
-      explanation: { type: String },
-      points: { type: Number, default: 1 },
-    },
-    { _id: false }
-  );
-
-  const QuizSchema = new Schema(
-    {
-      title: { type: String, required: true },
-      description: { type: String },
-      timeLimit: { type: Number },
-      randomizeQuestions: { type: Boolean, default: false },
-      passingScore: { type: Number },
-      questions: [QuestionSchema],
-      course: { type: Schema.Types.ObjectId, ref: "Course" },
-    },
-    { timestamps: true }
-  );
-
-  return db.model("Quiz", QuizSchema);
-};
-
-export const createQuizDataLoader = ({ Quiz }) => {
-  return createFindDataLoader(Quiz);
-};
-
-/**
- * Creates and returns the QuizAttempt model using the given Mongoose connection.
- *
- * @param {Object} params
- * @param {import("mongoose").Connection} params.db
- * @returns {import("mongoose").Model}
- */
-export const createQuizAttemptModel = ({ db }) => {
-  const QuizAttemptSchema = new Schema(
-    {
-      quiz: { type: Schema.Types.ObjectId, ref: "Quiz", required: true },
-      user: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
-      answers: [
-        {
-          questionIndex: Number,
-          selectedOptions: [String],
-          writtenAnswer: String,
-          matchedPairs: [{ left: String, right: String }],
-          isCorrect: Boolean,
-        },
-      ],
-      score: { type: Number },
-      completedAt: { type: Date },
-      duration: { type: Number },
-    },
-    { timestamps: true }
-  );
-
-  return db.model("QuizAttempt", QuizAttemptSchema);
-};
-
-export const createQuizAttemptDataLoader = ({ QuizAttempt }) => {
-  return createFindDataLoader(QuizAttempt);
 };

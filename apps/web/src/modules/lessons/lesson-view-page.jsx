@@ -17,9 +17,30 @@ function LessonViewPage() {
           type: "Lesson",
           ref: {
             title: "Strumming Basics",
-            content: "Learn the basics of strumming and common patterns.",
+            content: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Unde eum
+animi ratione, officiis obcaecati voluptatibus quibusdam, cumque
+aspernatur architecto accusamus tempora velit nulla,
+exercitationem odit aliquam neque quam quaerat eaque!`,
             videoUrl: "",
-            resources: [],
+            resources: [
+              {
+                title: "Transcript",
+                file: {
+                  id: "123123",
+                  url: "fileurl",
+                },
+                type: "pdf",
+              },
+              {
+                title: "Source Code",
+                file: {
+                  id: "123123",
+                  url: "fileurl",
+                },
+                type: "zip",
+              },
+            ],
+            tags: ["Guitar", "Techniques"],
           },
         },
       ],
@@ -37,6 +58,7 @@ function LessonViewPage() {
             content: "Get to know new and complex patterns.",
             videoUrl: "",
             resources: [],
+            tags: ["Guitar", "Techniques"],
           },
         },
       ],
@@ -54,6 +76,7 @@ function LessonViewPage() {
             content: "Improve your ability to switch between chords smoothly.",
             videoUrl: "",
             resources: [],
+            tags: ["Guitar", "Techniques"],
           },
         },
       ],
@@ -71,6 +94,7 @@ function LessonViewPage() {
             content: "Learn the fundamentals of fingerpicking.",
             videoUrl: "",
             resources: [],
+            tags: ["Guitar", "Techniques"],
           },
         },
       ],
@@ -88,6 +112,7 @@ function LessonViewPage() {
             content: "Master the essential barre chord shapes.",
             videoUrl: "",
             resources: [],
+            tags: ["Guitar", "Techniques"],
           },
         },
       ],
@@ -105,12 +130,15 @@ function LessonViewPage() {
             content: "Develop a strong sense of rhythm and timing.",
             videoUrl: "",
             resources: [],
+            tags: ["Guitar", "Techniques"],
           },
         },
       ],
       order: 6,
     },
   ];
+
+  const lesson = sections[0].items[0].ref;
 
   return (
     <>
@@ -134,19 +162,12 @@ function LessonViewPage() {
           </div>
 
           <div className="flex flex-col w-full p-4">
-            <h3 className="font-bold text-2xl">
-              Strumming 101: Basic Patterns
-            </h3>
+            <h3 className="font-bold text-2xl">{lesson.title}</h3>
 
-            <p className="mt-2 text-base-700">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Unde eum
-              animi ratione, officiis obcaecati voluptatibus quibusdam, cumque
-              aspernatur architecto accusamus tempora velit nulla,
-              exercitationem odit aliquam neque quam quaerat eaque!
-            </p>
+            <p className="mt-2 text-base-700">{lesson.content}</p>
 
             <div className="flex flex-wrap gap-2 mt-4">
-              {["Guitar", "Strumming", "Techniques"].map((item) => {
+              {lesson.tags.map((item) => {
                 return (
                   <div
                     key={`lesson-tag-${item}`}
@@ -169,12 +190,40 @@ function LessonViewPage() {
                 <p className="text-center content-center">Share</p>
               </button>
             </div>
+
+            <div className="pt-4">
+              <h2 className="text-lg font-bold">Resources</h2>
+
+              <div className="border my-2">
+                {lesson.resources.length === 0 && <div>No resources.</div>}
+                {lesson.resources.length > 0 && (
+                  <ol className="flex flex-col gap-2">
+                    {lesson.resources.map((resource) => {
+                      return (
+                        <li
+                          key={`lesson_item_${resource._id}`}
+                          className="flex gap-4 p-2 [&:not(:last-of-type)]:border-b"
+                        >
+                          <a href={resource.file.url}>{resource.title}</a>
+                          <a
+                            href={resource.file.url}
+                            className="ml-auto underline text-blue-600 text-ellipsis"
+                          >
+                            Download
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Sections */}
-        <div className="flex flex-col border rounded-lg my-4 px-4 lg:ml-8 lg:max-w-sm lg:my-0 lg:mb-4 lg:mt-4 w-full">
-          <h2 className="font-bold m-4">Sections</h2>
+        <div className="flex flex-col lg:border rounded-lg my-4 p-4 lg:p-0 lg:ml-8 lg:max-w-sm lg:my-0 lg:mb-4 lg:mt-4 w-full">
+          <h2 className="font-bold p-4 bg-black text-white">Sections</h2>
 
           <div className="border-t"></div>
 
@@ -207,8 +256,7 @@ function SectionItem({ data }) {
       <Accordion className="w-full">
         <AccordionSummary
           expandIcon={<MdExpandMore />}
-          aria-controls="panel1-content"
-          id="panel1-header"
+          className="bg-slate-300"
         >
           <p>{data.title}</p>
         </AccordionSummary>
