@@ -338,6 +338,7 @@ type CartItem {
   _id: ObjectId!
   profile: Profile
   variant: ProductVariant
+  productPosting: ProductPosting
   quantity: Int!
   total: String!
 }
@@ -362,6 +363,64 @@ type CourseConnection {
   totalCount: Int
   edges: [CourseEdge!]
   nodes: [Course]
+  pageInfo: PageInfo
+}
+
+type OrderItem {
+  sku: String
+  name: String
+  seller: Object
+  productPosting: ProductPosting
+  price: String
+  quantity: Int
+  total: String
+}
+
+type Order_offer {
+  type: String
+  name: String
+  code: String
+  discount: String
+}
+
+type OrderDetails_address {
+  line1: String
+  line2: String
+  lines: [String]
+  landmark: String
+  city: String
+  state: String
+  country: String
+  postalCode: String
+}
+
+type OrderDetails {
+  billingAddress: OrderDetails_address
+  shippingAddress: OrderDetails_address
+  contacts: [String]
+}
+
+type Order {
+  _id: ObjectId!
+  profile: Profile
+  details: OrderDetails
+  items: [OrderItem!]
+  offers: [Order_offer]
+  total: String
+  createdAt: Date
+  updatedAt: Date
+  status: String
+}
+
+type OrderEdge {
+  node: Order
+  cursor: String
+}
+
+type OrderConnection {
+  totalCount: Int
+  edges: [OrderEdge!]
+  nodes: [Order]
   pageInfo: PageInfo
 }
 
@@ -442,6 +501,14 @@ type Query {
     last: Int
     sort: SortField
   ): CourseConnection
+
+  orders(
+    before: String
+    after: String
+    first: Int
+    last: Int
+    sort: SortField
+  ): OrderConnection
 }
 
 ########################
@@ -1111,6 +1178,7 @@ type DeleteQuizAttemptResponse {
 input CreateCartItemInput {
   profile: ObjectId!
   variant: ObjectId!
+  productPosting: ObjectId!
   quantity: Int!
 }
 
@@ -1125,6 +1193,7 @@ type CreateCartItemResponse {
 input UpdateCartItemInput {
   _id: ObjectId
   quantity: Int
+  productPosting: ObjectId
 }
 
 type UpdateCartItemResponse {
@@ -1186,7 +1255,7 @@ type DeleteFileResponse {
   errors: [String!]
 }
 
-#Task
+# Task
 
 input CreateTaskInput {
   title: String
@@ -1223,6 +1292,67 @@ type UpdateTaskResponse {
 }
 
 type DeleteTaskResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+}
+
+# Order
+
+input OrderDetailsInput_address {
+  line1: String
+  line2: String
+  lines: [String]
+  landmark: String
+  city: String
+  state: String
+  country: String
+  postalCode: String
+}
+
+input OrderDetailsInput {
+  billingAddress: OrderDetailsInput_address
+  shippingAddress: OrderDetailsInput_address
+  contacts: [String]
+}
+
+input OrderInput_offer {
+  type: String
+  name: String
+  code: String
+  discount: String
+}
+
+input CreateOrderInput {
+  details: OrderDetailsInput!
+  offers: [OrderInput_offer!]
+  profile: ObjectId!
+}
+
+type CreateOrderResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  order: Order
+}
+
+input UpdateOrderInput {
+  _id: ObjectId
+}
+
+type UpdateOrderResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  order: Order
+}
+
+type DeleteOrderResponse {
   code: Int!
   success: Boolean!
   message: String
@@ -1328,6 +1458,11 @@ type Mutation {
   createTask(input: CreateTaskInput!): CreateTaskResponse!
   updateTask(id: ObjectId!, input: UpdateTaskInput!): UpdateTaskResponse!
   deleteTask(id: ObjectId!): DeleteTaskResponse!
+
+  # Order mutation
+  createOrder(input: CreateOrderInput!): CreateOrderResponse!
+  updateOrder(id: ObjectId!, input: UpdateOrderInput!): UpdateOrderResponse!
+  deleteOrder(id: ObjectId!): DeleteOrderResponse!
 }
 
 """

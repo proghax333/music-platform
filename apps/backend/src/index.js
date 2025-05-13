@@ -18,6 +18,7 @@ import { FileModule } from "./features/file/file.module.js";
 import { TaskModule } from "./features/task/task.module.js";
 
 import http from "node:http";
+import { OrderModule } from "./features/order/order.module.js";
 
 async function main() {
   const di = createDIContainer();
@@ -65,6 +66,7 @@ async function main() {
   await CartModule.register(di);
   await FileModule.register(di);
   await TaskModule.register(di);
+  await OrderModule.register(di);
 
   /** @type {GraphQLModule} */
   const graphqlModule = di.container.graphqlModule;
