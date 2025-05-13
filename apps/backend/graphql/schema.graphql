@@ -345,7 +345,7 @@ type CartItem {
 ## Task
 
 type Task {
-  _id: ID!
+  _id: ObjectId!
   title: String
   difficulty: String
   movie: String
