@@ -19,6 +19,7 @@ import { TaskModule } from "./features/task/task.module.js";
 
 import http from "node:http";
 import { OrderModule } from "./features/order/order.module.js";
+import { AddressModule } from "./features/address/address.module.js";
 
 async function main() {
   const di = createDIContainer();
@@ -67,6 +68,7 @@ async function main() {
   await FileModule.register(di);
   await TaskModule.register(di);
   await OrderModule.register(di);
+  await AddressModule.register(di);
 
   /** @type {GraphQLModule} */
   const graphqlModule = di.container.graphqlModule;
@@ -109,8 +111,10 @@ async function main() {
   const fileResolver = di.container.fileResolver;
   /** @type {import("./features/task/task.resolver.js").TaskResolver} */
   const taskResolver = di.container.taskResolver;
-  /** @type {import("./features/task/task.resolver.js").TaskResolver} */
+  /** @type {import("./features/order/order.resolver.js").OrderResolver} */
   const orderResolver = di.container.taskResolver;
+  /** @type {import("./features/address/address.resolver.js").AddressResolver} */
+  const addressResolver = di.container.addressResolver;
 
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
@@ -123,6 +127,7 @@ async function main() {
   graphqlModule.addResolvers(fileResolver.getResolvers());
   graphqlModule.addResolvers(taskResolver.getResolvers());
   graphqlModule.addResolvers(orderResolver.getResolvers());
+  graphqlModule.addResolvers(addressResolver.getResolvers());
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();

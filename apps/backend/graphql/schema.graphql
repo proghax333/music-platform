@@ -424,6 +424,32 @@ type OrderConnection {
   pageInfo: PageInfo
 }
 
+type Address {
+  _id: ObjectId!
+  profile: Profile!
+
+  line1: String
+  line2: String
+  lines: [String]
+  landmark: String
+  city: String
+  state: String
+  country: String
+  postalCode: String
+}
+
+type AddressEdge {
+  node: Address
+  cursor: String
+}
+
+type AddressConnection {
+  totalCount: Int
+  edges: [AddressEdge!]
+  nodes: [Address]
+  pageInfo: PageInfo
+}
+
 ###
 # Queries: All GraphQL queries.
 ###
@@ -509,6 +535,14 @@ type Query {
     last: Int
     sort: SortField
   ): OrderConnection
+
+  addresses(
+    before: String
+    after: String
+    first: Int
+    last: Int
+    sort: SortField
+  ): AddressConnection
 }
 
 ########################
@@ -1359,6 +1393,59 @@ type DeleteOrderResponse {
   errors: [String!]
 }
 
+# Address
+
+input CreateAddressInput {
+  profile: ObjectId!
+
+  line1: String
+  line2: String
+  lines: [String]
+  landmark: String
+  city: String
+  state: String
+  country: String
+  postalCode: String
+}
+
+type CreateAddressResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  address: Address
+}
+
+input UpdateAddressInput {
+  line1: String
+  line2: String
+  lines: [String]
+  landmark: String
+  city: String
+  state: String
+  country: String
+  postalCode: String
+}
+
+type UpdateAddressResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  address: Address
+}
+
+type DeleteAddressResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  errors: [String!]
+
+  address: Address
+}
+
 ### ------ ###
 
 type Mutation {
@@ -1463,6 +1550,14 @@ type Mutation {
   createOrder(input: CreateOrderInput!): CreateOrderResponse!
   updateOrder(id: ObjectId!, input: UpdateOrderInput!): UpdateOrderResponse!
   deleteOrder(id: ObjectId!): DeleteOrderResponse!
+
+  # Address mutation
+  createAddress(input: CreateAddressInput!): CreateAddressResponse!
+  updateAddress(
+    id: ObjectId!
+    input: UpdateAddressInput!
+  ): UpdateAddressResponse!
+  deleteAddress(id: ObjectId!): DeleteAddressResponse!
 }
 
 """
