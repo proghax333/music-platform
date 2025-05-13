@@ -1,4 +1,5 @@
 import { createOrderDataLoader, createOrderModel } from "./order.model.js";
+import { OrderResolver } from "./order.resolver.js";
 
 export class OrderModule {
   /**
@@ -9,5 +10,7 @@ export class OrderModule {
     di.factory("Order", createOrderModel);
 
     di.factory("OrderDataLoader", createOrderDataLoader);
+
+    di.service("orderResolver", OrderResolver);
   }
 }

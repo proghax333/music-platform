@@ -109,6 +109,8 @@ async function main() {
   const fileResolver = di.container.fileResolver;
   /** @type {import("./features/task/task.resolver.js").TaskResolver} */
   const taskResolver = di.container.taskResolver;
+  /** @type {import("./features/task/task.resolver.js").TaskResolver} */
+  const orderResolver = di.container.taskResolver;
 
   graphqlModule.addResolvers(authResolver.getResolvers());
   graphqlModule.addResolvers(profileResolver.getResolvers());
@@ -120,6 +122,7 @@ async function main() {
   graphqlModule.addResolvers(chatResolver.getResolvers());
   graphqlModule.addResolvers(fileResolver.getResolvers());
   graphqlModule.addResolvers(taskResolver.getResolvers());
+  graphqlModule.addResolvers(orderResolver.getResolvers());
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();
