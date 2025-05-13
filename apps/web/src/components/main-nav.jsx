@@ -84,13 +84,41 @@ function MainNav({ className }) {
     },
   ];
 
-  const smallMenuItems = [
-    ...items,
-    {
-      name: "Account",
-      path: "/account",
-    },
-  ];
+  const smallMenuItems = [...items];
+
+  if (session.isLoggedIn) {
+    smallMenuItems.push(
+      {
+        name: `Cart ${isSuccess ? `(${cartItems.length})` : ""}`,
+        path: "/cart",
+      },
+      {
+        name: "Profile",
+        path: "/profiles/me",
+      },
+      {
+        name: "Settings",
+        path: "/settings",
+      },
+      {
+        name: "Log out",
+        path: "/logout",
+      }
+    );
+  }
+
+  if (!session.isLoggedIn) {
+    smallMenuItems.push(
+      {
+        name: "Log In",
+        path: "/login",
+      },
+      {
+        name: "Sign Up",
+        path: "/signup",
+      }
+    );
+  }
 
   const largeMenuItems = [...items];
 
@@ -241,6 +269,7 @@ function MainNav({ className }) {
         )}
       </div>
 
+      {/* small screen menu */}
       <AnimatePresence>
         {showSmallMenu && isOpen && (
           <>
@@ -276,7 +305,6 @@ function MainNav({ className }) {
                           p-4 font-lato border-b w-full cursor-pointer hover:bg-neutral-100 hover:text-neutral-content-100
                           transition-colors
                         `
-                          // index === 0 && "bg-neutral-50 text-neutral-content-50"
                         )}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
