@@ -22,9 +22,13 @@ export function decodeCursor(cursor) {
  * @param {string} [options.after]
  * @param {number} [options.first]
  * @param {number} [options.last]
+ * @param {number} [options.offset]
+ * @param {number} [options.limit]
+ * @param {number} [options.page]
  * @param {Object} [options.filter]
  * @param {Array<{ field: string, direction: 'asc' | 'desc' }>} [options.sort]
  * @param {boolean} [options.all]
+ * @param {string} [options.type] - "cursor", "offset", or "page"
  */
 export async function paginate(
   aggregate,
@@ -33,9 +37,13 @@ export async function paginate(
     after,
     first,
     last,
+    offset = 0,
+    limit = 10,
+    page = 1,
     filter = {},
     sort = [{ field: "_id", direction: "asc" }],
     all = false,
+    type = "cursor", // "cursor", "offset", or "page"
   },
   aggregateOptions = undefined
 ) {
@@ -46,17 +54,12 @@ export async function paginate(
     basePipeline.push({ $match: filter });
   }
 
-  const isPaginatingBackward = !!last;
-  const limit = first ?? last ?? 10;
-
-  // Build sort object for MongoDB
   const sortObj = {};
   for (const { field, direction } of sort) {
-    sortObj[field] =
-      (isPaginatingBackward ? -1 : 1) * (direction === "desc" ? -1 : 1);
+    sortObj[field] = direction === "desc" ? -1 : 1;
   }
 
-  // "All" mode
+  // Handle "all" mode
   if (all) {
     const allItems = await model
       .aggregate([...basePipeline, { $sort: sortObj }])
@@ -67,70 +70,174 @@ export async function paginate(
       cursor: encodeCursor(buildCursor(item, sort)),
     }));
 
+    const totalCount = allItems.length;
+
+    const pageInfo = {
+      startCursor: null,
+      endCursor: null,
+      hasNextPage: false,
+      hasPreviousPage: false,
+      currentPage: null,
+      totalPages: null,
+      offset: null,
+    };
+
+    if (type === "cursor") {
+      pageInfo.startCursor = edges[0]?.cursor ?? null;
+      pageInfo.endCursor = edges.at(-1)?.cursor ?? null;
+      // no next/prev in all mode
+    }
+
+    if (type === "offset") {
+      pageInfo.offset = 0;
+      // all results are returned, so no paging
+    }
+
+    if (type === "page") {
+      pageInfo.currentPage = 1;
+      pageInfo.totalPages = 1;
+    }
+
     return {
       edges,
-      pageInfo: {
-        startCursor: edges[0]?.cursor ?? null,
-        endCursor: edges.at(-1)?.cursor ?? null,
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
-      totalCount: edges.length,
+      nodes: allItems,
+      pageInfo,
+      totalCount,
     };
   }
 
-  // Decode cursor
-  const cursorData = before
-    ? decodeCursor(before)
-    : after
-    ? decodeCursor(after)
-    : null;
+  let results = [];
+  let totalCount = 0;
+  const countPipeline = [...basePipeline, { $count: "count" }];
 
-  // Build cursor comparison filter
-  const cursorFilter = buildCursorFilter(
-    sort,
-    cursorData,
-    before ? "before" : after ? "after" : null
-  );
+  if (type === "cursor") {
+    const isPaginatingBackward = !!last;
+    const cursorLimit = first ?? last ?? 10;
 
-  const paginationPipeline = [...basePipeline];
-  if (cursorFilter) {
-    paginationPipeline.push({ $match: cursorFilter });
+    for (const { field, direction } of sort) {
+      sortObj[field] =
+        (isPaginatingBackward ? -1 : 1) * (direction === "desc" ? -1 : 1);
+    }
+
+    const cursorData = before
+      ? decodeCursor(before)
+      : after
+      ? decodeCursor(after)
+      : null;
+
+    const cursorFilter = buildCursorFilter(
+      sort,
+      cursorData,
+      before ? "before" : after ? "after" : null
+    );
+
+    const pipeline = [...basePipeline];
+    if (cursorFilter) pipeline.push({ $match: cursorFilter });
+    pipeline.push({ $sort: sortObj });
+    pipeline.push({ $limit: cursorLimit + 1 });
+
+    const [res, countRes] = await Promise.all([
+      model.aggregate(pipeline, aggregateOptions).exec(),
+      model.aggregate(countPipeline, aggregateOptions).exec(),
+    ]);
+
+    results = res;
+    totalCount = countRes[0]?.count ?? 0;
+
+    const hasExtraItem = results.length > cursorLimit;
+    if (hasExtraItem) results.pop();
+    if (isPaginatingBackward) results.reverse();
+
+    const edges = results.map((item) => ({
+      node: item,
+      cursor: encodeCursor(buildCursor(item, sort)),
+    }));
+
+    return {
+      edges,
+      nodes: results,
+      pageInfo: {
+        startCursor: edges[0]?.cursor ?? null,
+        endCursor: edges.at(-1)?.cursor ?? null,
+        hasNextPage: isPaginatingBackward ? !!before : hasExtraItem,
+        hasPreviousPage: isPaginatingBackward ? hasExtraItem : !!after,
+        currentPage: null,
+        totalPages: null,
+        offset: null,
+      },
+      totalCount,
+    };
   }
 
-  paginationPipeline.push({ $sort: sortObj });
-  paginationPipeline.push({ $limit: limit + 1 });
+  if (type === "offset") {
+    const pipeline = [
+      ...basePipeline,
+      { $sort: sortObj },
+      { $skip: offset },
+      { $limit: limit },
+    ];
 
-  const countPipeline = [...basePipeline, { $count: "count" }];
-  const [results, totalResult] = await Promise.all([
-    model.aggregate(paginationPipeline, aggregateOptions).exec(),
-    model.aggregate(countPipeline, aggregateOptions).exec(),
-  ]);
+    const [res, countRes] = await Promise.all([
+      model.aggregate(pipeline, aggregateOptions).exec(),
+      model.aggregate(countPipeline, aggregateOptions).exec(),
+    ]);
 
-  const totalCount = totalResult[0]?.count ?? 0;
+    results = res;
+    totalCount = countRes[0]?.count ?? 0;
 
-  const hasExtraItem = results.length > limit;
-  if (hasExtraItem) results.pop();
-  if (isPaginatingBackward) results.reverse();
+    return {
+      edges: results.map((node) => ({
+        node,
+        cursor: encodeCursor(buildCursor(node, sort)),
+      })),
+      nodes: results,
+      pageInfo: {
+        hasNextPage: offset + limit < totalCount,
+        hasPreviousPage: offset > 0,
+        offset,
+      },
+      totalCount,
+    };
+  }
 
-  const nodes = results;
+  if (type === "page") {
+    const pageOffset = (page - 1) * limit;
 
-  const edges = results.map((item) => ({
-    node: item,
-    cursor: encodeCursor(buildCursor(item, sort)),
-  }));
+    const pipeline = [
+      ...basePipeline,
+      { $sort: sortObj },
+      { $skip: pageOffset },
+      { $limit: limit },
+    ];
 
-  return {
-    edges,
-    nodes,
-    pageInfo: {
-      startCursor: edges[0]?.cursor ?? null,
-      endCursor: edges.at(-1)?.cursor ?? null,
-      hasNextPage: isPaginatingBackward ? !!before : hasExtraItem,
-      hasPreviousPage: isPaginatingBackward ? hasExtraItem : !!after,
-    },
-    totalCount,
-  };
+    const [res, countRes] = await Promise.all([
+      model.aggregate(pipeline, aggregateOptions).exec(),
+      model.aggregate(countPipeline, aggregateOptions).exec(),
+    ]);
+
+    results = res;
+    totalCount = countRes[0]?.count ?? 0;
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      edges: results.map((node) => ({
+        node,
+        cursor: encodeCursor(buildCursor(node, sort)),
+      })),
+      nodes: results,
+      pageInfo: {
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+        currentPage: page,
+        totalPages,
+        offset: pageOffset,
+      },
+      totalCount,
+    };
+  }
+
+  throw new Error(`Unknown pagination type: ${type}`);
 }
 
 /**

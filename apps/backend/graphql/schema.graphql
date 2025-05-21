@@ -1565,10 +1565,22 @@ The specification includes the pagination metadata
 in a common type.
 """
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
+  # Cursor pagination
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
   startCursor: String
   endCursor: String
+
+  # Offset pagination
+  offset: Int
+  limit: Int
+
+  # Page pagination
+  currentPage: Int
+  totalPages: Int
+
+  # Universal
+  totalCount: Int
 }
 
 scalar Date
