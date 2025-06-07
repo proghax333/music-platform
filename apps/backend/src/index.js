@@ -30,9 +30,9 @@ async function main() {
   di.constant("server", server);
 
   await EnvModule.registerEnvModule(di);
-  const _env = di.container.env;
+  const env = di.container.env;
 
-  const ORIGINS = ["http://localhost:5173"];
+  const ORIGINS = ["http://localhost:5173", env.API_URL];
 
   app.use(
     cors({
