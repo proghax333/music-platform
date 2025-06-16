@@ -1212,7 +1212,7 @@ type DeleteQuizAttemptResponse {
 input CreateCartItemInput {
   profile: ObjectId!
   variant: ObjectId!
-  productPosting: ObjectId!
+  productPosting: ObjectId
   quantity: Int!
 }
 
