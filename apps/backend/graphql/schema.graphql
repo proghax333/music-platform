@@ -573,7 +573,7 @@ type LogoutMutationResponse {
 }
 
 input RefreshTokenMutationInput {
-  refreshToken: String!
+  refreshToken: String
 }
 
 type RefreshTokenMutationResponse {

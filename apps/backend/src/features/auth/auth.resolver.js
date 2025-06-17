@@ -67,7 +67,9 @@ export class AuthResolver {
   });
 
   refreshToken = resolver(async (parent, args, context) => {
-    const { refreshToken } = args.input;
+    const refreshTokenFromCookie = context.req.cookies.refreshToken;
+
+    const { refreshToken } = refreshTokenFromCookie || args.input;
     const accessToken = this.authService.refreshAccessToken(refreshToken);
 
     return {
