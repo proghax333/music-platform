@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { createDIContainer } from "./lib/di.js";
 import { AuthModule } from "./features/auth/auth.module.js";
 import { UserModule } from "./features/user/user.module.js";
@@ -47,6 +48,7 @@ async function main() {
       credentials: true,
     })
   );
+  app.use(cookieParser());
   app.use(express.json());
   app.use("/files", express.static("./files"));
   app.use(express.urlencoded({ extended: true }));
@@ -131,7 +133,6 @@ async function main() {
 
   const graphqlApolloSandboxMiddleware =
     await graphqlModule.createApolloSandboxMiddleware();
-
   const graphqlExpressMiddleware = await graphqlModule.createExpressMiddleware({
     context: async ({ req, res }) => {
       const authMiddleware = di.container.authMiddleware;
@@ -139,7 +140,9 @@ async function main() {
       const authService = di.container.authService;
 
       let user = null;
-      const token = req.headers["authorization"]?.split(" ")?.[1];
+      const token =
+        req.cookies["accessToken"] ||
+        req.headers["authorization"]?.split(" ")?.[1];
       if (token) {
         user = await authService.getUserFromToken(token);
       }

@@ -3,12 +3,10 @@ import { createHttpError } from "../../lib/http.js";
 
 export function authMiddleware({ userService, authService }) {
   return controller(async (req, res, next) => {
-    let token = req.headers.authorization;
+    let token = req.cookies.accessToken || req.headers.authorization;
 
     if (token && token.startsWith("Bearer ")) {
       token = token.slice(7, token.length);
-    } else {
-      return next(createHttpError(401, "Unauthorized"));
     }
 
     if (!token) {

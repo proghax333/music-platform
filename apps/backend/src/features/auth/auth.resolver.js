@@ -33,6 +33,20 @@ export class AuthResolver {
       password
     );
 
+    const { res } = context;
+    res.cookie("accessToken", accessToken, {
+      maxAge: 1000 * 60 * 15, // 15 minutes
+      sameSite: "None",
+      secure: true,
+      httpOnly: true,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 15 minutes
+      sameSite: "None",
+      secure: true,
+      httpOnly: true,
+    });
+
     return {
       message: "Logged in successfully",
       user,
@@ -42,6 +56,11 @@ export class AuthResolver {
   });
 
   logout = resolver(async (parent, args, context) => {
+    const { res } = context;
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
     return {
       message: "Logged out successfully",
     };

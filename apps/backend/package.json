@@ -16,6 +16,7 @@
     "@apollo/server": "^4.11.3",
     "bcrypt": "^5.1.1",
     "bottlejs": "^2.0.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dataloader": "^2.2.3",
     "decimal.js": "^10.5.0",
